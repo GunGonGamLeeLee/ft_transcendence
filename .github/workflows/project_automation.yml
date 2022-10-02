@@ -97,7 +97,7 @@ jobs:
         uses: leonsteinhaeuser/project-beta-automations@v1.2.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          user: Hyoj-Kim
+          organization: GunGonGamLeeLee
           project_id: 1
           resource_node_id: ${{ needs.check_event.outputs.node_id }}
           status_value: ${{ needs.check_event.outputs.to }} # Target status
