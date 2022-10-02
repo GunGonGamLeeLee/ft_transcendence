@@ -1,9 +1,166 @@
-<mxfile host="app.diagrams.net" modified="2022-09-30T05:26:04.434Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36" etag="Ui_Y6ucqa0FwmtrgNPNX" version="20.3.7" type="github" pages="2">
-  <diagram id="IaDnct2tfX-B5yZFs9V7" name="Login logic flow">
-    <mxGraphModel dx="2046" dy="1031" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2022-10-02T21:43:28.339Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15" etag="HTSSBsmVnRAn4Q5wt_fm" version="20.4.0" type="github" pages="2">
+  <diagram id="IaDnct2tfX-B5yZFs9V7" name="OAuth Login logic flow">
+    <mxGraphModel dx="830" dy="685" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-1" value="User&#xa;(== Browser)" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="80" width="100" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-2" value="Front End" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="100" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-3" value="trigger login" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="175" y="160" as="sourcePoint" />
+            <mxPoint x="345" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-4" value="Back End" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="80" width="120" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-5" value="some backend logic&lt;br&gt;(find/create db, init jwt...)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-4">
+          <mxGeometry y="630" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-6" value="42 OAuth" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="80" width="100" height="730" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-7" value="return login page to browser" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0.292;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-6" target="Q11vwroGGGqTPVLoYvQJ-1">
+          <mxGeometry x="0.017" y="-10" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="290" as="sourcePoint" />
+            <mxPoint x="660" y="240" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-8" value="send login info to 42 oauth" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" target="Q11vwroGGGqTPVLoYvQJ-6">
+          <mxGeometry x="-0.0237" y="10" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="320" as="sourcePoint" />
+            <mxPoint x="270" y="300" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-9" value="redirect browser to backend with query by redirect_uri" style="endArrow=classic;html=1;rounded=0;exitX=0.51;exitY=0.385;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-6" target="Q11vwroGGGqTPVLoYvQJ-4">
+          <mxGeometry x="-0.0056" y="-20" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="375" as="sourcePoint" />
+            <mxPoint x="640" y="325" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-10" value="&amp;nbsp; &amp;nbsp;query: code, state" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="350" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-11" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.492;exitY=0.449;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-4" target="Q11vwroGGGqTPVLoYvQJ-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="575" y="470" as="sourcePoint" />
+            <mxPoint x="625" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-12" value="request access token with query (by fetch or axios.., method POST)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-11">
+          <mxGeometry x="-0.0028" y="3" relative="1" as="geometry">
+            <mxPoint x="1" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-13" value="query:&lt;br&gt;code, state, redirect_uri, client_id, client_secret, grant_type" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="405" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-14" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" target="Q11vwroGGGqTPVLoYvQJ-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="500" as="sourcePoint" />
+            <mxPoint x="630" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-15" value="response with body" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-14">
+          <mxGeometry x="0.0199" y="2" relative="1" as="geometry">
+            <mxPoint x="1" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-16" value="body:&lt;br&gt;access_token&lt;br&gt;refresh_token&lt;br&gt;expired_in&lt;br&gt;..." style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="490" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-17" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.508;exitY=0.699;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-4" target="Q11vwroGGGqTPVLoYvQJ-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="650" as="sourcePoint" />
+            <mxPoint x="570" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-18" value="request user info by access_token" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-17">
+          <mxGeometry x="0.0919" y="1" relative="1" as="geometry">
+            <mxPoint x="-9" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-19" value="header:&lt;br&gt;Authorization: bearer access_token" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="590" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-20" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.48;exitY=0.795;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-6" target="Q11vwroGGGqTPVLoYvQJ-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="730" as="sourcePoint" />
+            <mxPoint x="600" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-21" value="response with body contains user info" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-20">
+          <mxGeometry x="-0.0364" y="1" relative="1" as="geometry">
+            <mxPoint y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0.962;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-5" target="Q11vwroGGGqTPVLoYvQJ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-23" value="redirect browser to front end" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-22">
+          <mxGeometry x="0.2142" y="-2" relative="1" as="geometry">
+            <mxPoint x="21" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-24" value="red: internal backend logic&lt;br&gt;(can&#39;t see in browser)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="20" y="10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-25" value="black: http request/response with browser" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-26" value="redirect browser to oauth with query" style="endArrow=classic;html=1;rounded=0;verticalAlign=middle;horizontal=1;exitX=0.517;exitY=0.158;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-4" target="Q11vwroGGGqTPVLoYvQJ-6">
+          <mxGeometry x="0.104" y="17" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="180" as="sourcePoint" />
+            <mxPoint x="175" y="170" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-27" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.508;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.52;exitY=0.133;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Q11vwroGGGqTPVLoYvQJ-2" target="Q11vwroGGGqTPVLoYvQJ-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="200" as="sourcePoint" />
+            <mxPoint x="450" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-28" value="redirect browser to back end" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Q11vwroGGGqTPVLoYvQJ-27">
+          <mxGeometry x="0.1126" y="-1" relative="1" as="geometry">
+            <mxPoint x="-6" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-29" value="query:&lt;br&gt;client id,&lt;br&gt;state,&lt;br&gt;redirect_uri,&lt;br&gt;response_type" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="180" width="140" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-30" value="Data" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="890" width="510" height="210" as="geometry">
+            <mxRectangle x="170" y="890" width="70" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-31" value="client_id: 42 api client id" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="30" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-32" value="client_secret: 42 api client secret" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="60" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-33" value="state: random long string for security, must be equal all the time" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="90" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-34" value="redirect_uri: redirect uri of backend. used by 42 oauth, must be eualt all the time" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="120" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-35" value="response_type: api response type. just use code." style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="150" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Q11vwroGGGqTPVLoYvQJ-36" value="grant_type: api response type. just use authorization_code" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;" vertex="1" parent="Q11vwroGGGqTPVLoYvQJ-30">
+          <mxGeometry y="180" width="510" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
