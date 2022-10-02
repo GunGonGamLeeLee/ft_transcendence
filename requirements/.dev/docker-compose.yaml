@@ -1,0 +1,46 @@
+version: "3.3"
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ../
+      dockerfile: .dev/dockerfile.backend
+    restart: always
+    volumes:
+      - ../backend:/app
+    networks:
+      - net
+    ports:
+      - 3000:3000
+    tty: true
+
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ../
+  #     dockerfile: dev/dockerfile.frontend
+  #   restart: always
+  #   volumes:
+  #     - ../frontend:/app
+  #   networks:
+  #     - net
+  #   ports:
+  #     - 4242:4242
+
+  # database:
+  #   container_name: database
+  #   build:
+  #     context: ../
+  #     dockerfile: dev/dockerfile.database
+  #   restart: always
+  #   networks:
+  #     - net
+  #   ports:
+  #     - 5432:5432
+  #   environment:
+  #     POSTGRES_PASSWORD: "1234" # 나중에 수정!
+
+networks:
+  net:
+    driver: bridge

@@ -1,0 +1,6 @@
+FROM node:16.17.1-alpine3.15
+WORKDIR /app
+COPY ./.dev/entrypoint.frontend.sh /
+ENTRYPOINT ["/entrypoint.frontend.sh"]
+
+EXPOSE 3000

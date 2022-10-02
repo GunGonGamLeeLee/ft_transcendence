@@ -1,0 +1,8 @@
+FROM node:16.17.1-alpine3.15
+WORKDIR /app
+COPY ./.dev/entrypoint.backend.sh /
+ENTRYPOINT ["/bin/sh"]
+# ENTRYPOINT ["/entrypoint.backend.sh"]
+STOPSIGNAL SIGKILL
+
+EXPOSE 3000
