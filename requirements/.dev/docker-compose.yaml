@@ -26,20 +26,22 @@ services:
       - net
     ports:
       - 4242:4242
-    tty: true
 
-  # database:
-  #   container_name: database
-  #   build:
-  #     context: ../
-  #     dockerfile: dev/dockerfile.database
-  #   restart: always
-  #   networks:
-  #     - net
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     POSTGRES_PASSWORD: "1234" # 나중에 수정!
+  database:
+    container_name: database
+    build:
+      context: ../
+      dockerfile: .dev/dockerfile.database
+    restart: always
+    volumes:
+      - ../database:/database
+    networks:
+      - net
+    ports:
+      - 4245:4245
+    environment:
+      POSTGRES_PASSWORD: "1234" # 나중에 수정!
+    tty: true
 
 networks:
   net:

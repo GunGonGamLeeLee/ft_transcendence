@@ -5,4 +5,4 @@ then
 	npm i
 fi
 
-exec npm run start
+exec npm run dev

@@ -1,3 +1,4 @@
 #!/bin/sh
 
-createdb test
+postgres -D /database -p 4245
+
