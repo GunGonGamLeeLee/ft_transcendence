@@ -12,21 +12,21 @@ services:
     networks:
       - net
     ports:
-      - 3000:3000
-    tty: true
+      - 4243:4243
 
-  # frontend:
-  #   container_name: frontend
-  #   build:
-  #     context: ../
-  #     dockerfile: dev/dockerfile.frontend
-  #   restart: always
-  #   volumes:
-  #     - ../frontend:/app
-  #   networks:
-  #     - net
-  #   ports:
-  #     - 4242:4242
+  frontend:
+    container_name: frontend
+    build:
+      context: ../
+      dockerfile: .dev/dockerfile.frontend
+    restart: always
+    volumes:
+      - ../frontend:/app
+    networks:
+      - net
+    ports:
+      - 4242:4242
+    tty: true
 
   # database:
   #   container_name: database
