@@ -1,3 +1,6 @@
 #!/bin/sh
 
-createdb test
+createdb User
+createdb MatchHistory
+createdb FriendList
+createdb BlockList
