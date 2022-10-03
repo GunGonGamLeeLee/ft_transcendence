@@ -1,0 +1,157 @@
+openapi: "3.0.2"
+info:
+  title: Mypark
+  version: "0.1"
+servers:
+  - url: http://localhost:8000
+paths:
+  /login:
+    get:
+      responses:
+        "301":
+          description: redirect to 42 auth
+  /login/code: # non reachable from front
+    get:
+      responses:
+        "301":
+          description: redirect to http://localhost:3000/lobby(react router) with jwt login token cookie(?)
+  /users/profile?id: # fetch this at start
+    get:
+      responses:
+        "200":
+          description: get my profile, response body, json {uid, u_display_name, rate, match history, }
+          # match id with stored friend is
+          # can use to player, player's friend both
+​
+  /users/profile/name:
+    post:
+      responses:
+        "200":
+          description: edit my profile body, json { u_display_name }
+​
+  /users/profile/img:
+    get:
+      responses:
+        "200":
+          description: "get my profile image uri"
+    post:
+      responses:
+        "201":
+          description: "post my profile image body, json {uid, image}"
+    delete:
+      responses:
+        "200":
+          description: "delete my profile image"
+​
+  /users/friend/list:
+    get:
+      responses:
+        "200":
+          description: get all list of friends, body, json [ {uid, u_display_name}, {}, ] # should save in fe
+  /users/friend/stat:
+    get: # socket
+      responses:
+        "200":
+          description: get status of all friends. body, json [{id, stat}]
+  /users/friend/follow?id: # other player's id
+    post:
+      responses:
+        "200":
+          description: request folllow, response, query(?), isSuccess(bool) # should add friend list on fe
+    delete:
+      responses:
+        "200":
+          description: request unfollow
+  /users/friend/block?id:
+    post:
+      responses:
+        "200":
+          description: request block
+​
+  /users/status:
+    post:
+      responses:
+        "200":
+          description: update my status req body json { status }
+​
+  /channel/list?page=n:
+    get:
+      responses:
+        "200":
+          description: get list of channels, body, json [{channel_id, channel_name, curr_users_number, isProtected}, ...]
+​
+  /channel/enter: # could be used at invite accepting # socket
+    post:
+      responses:
+        "301":
+          description: request enter to channel, body, json {id, password}, response json { isSuccess }
+​
+  /channel/create: # socket
+    description: request add channel, body, json {channel_name, password, isPrivate}, response json { isSuccess..? }
+​
+  /channel/update: # 방 속성 수정
+    post:
+      responses:
+        "200":
+          description: request add channel, body, json {channel_name, password, isPrivate}, response json { isSuccess..? }
+​
+  /channel/search:
+    post:
+      responses:
+        "200":
+          description: request search channel, body, json {channel_name}, response json [{channel_id, channel_name, curr_users_number, is_protected}]
+​
+  /channel/invite: #socket
+    post:
+      responses:
+        "200":
+          description: request invite user to channel, body, json {channel_id, user_id}, response json {isSuccess}
+    delete:
+      responses:
+        "200":
+          description: request deny invite channel, body, json {isBlock}(query?)
+​
+
+
+  /channel/message: #socket
+    description: channel_id, message => client.data.name, messaage
+​
+  /channel/dm: #socket
+    description: messaage => client.data.name , messaage
+​
+  /game/invite: #socket
+    post:
+      responses:
+        "200":
+          description: "request invite player to game, waiting result of inivitation, body, json { uid, game options response, body, json {isSuccess}"
+​
+  /game/watch: #socket
+    post:
+      responses:
+        "200":
+          description: " request body { uid, u_display_name }(피관전자) response body {isSuccess}"
+​
+  /game/macth-waiting: #socket
+    post:
+      responses:
+        "200":
+          description: "requset match waiting, response, body {isSuccess}"
+    delete:
+      responses:
+        "200":
+          description: "cancel match waiting"
+​
+  /game/match-start: #socket
+    description: "data { uid, u_display_name, rating }, { other_id, u_display_name, rating }"
+​
+  /game/match-end: # socket
+    description: "data {}"
+​
+  /game/round-end: # socket
+    description: "data { score of the game }"
+​
+  /game/round-state: # socket
+    description: "data { position, direction... }"
+​
+  /game/round-state-update: # socket
+    description: "from client, send round state"
