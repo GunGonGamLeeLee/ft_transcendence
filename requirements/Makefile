@@ -11,8 +11,22 @@ MKDIR	= mkdir -p
 
 help:
 	@echo usage: make [target]
+	@echo
+	@echo "*INSTALL PACKAGE IN CONTAINER*"
+	@echo make install cont=CONTAINER_NAME pack=PACKAGE_NAME
+	@echo
+	@echo "*UNINSTALL PACKAGE IN CONTAINER*"
+	@echo make uninstall cont=CONTAINER_NAME pack=PACKAGE_NAME
+	@echo
+
 
 #dev operations
+
+install:
+	@docker exec $(cont) npm install --save $(pack)
+
+uninstall:
+	@docker exec $(cont) npm uninstall --save $(pack)
 
 dev-up:
 	@$(DOCKER_COMPOSE) $(DEV_DOCKER_COMPOSE_FLAGS) up
