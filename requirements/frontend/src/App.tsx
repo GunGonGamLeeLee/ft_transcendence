@@ -1,13 +1,13 @@
-import { RecoilRoot, useRecoilState } from 'recoil';
+import { RecoilRoot } from 'recoil';
 import './App.css';
-import { loginState } from './components/atoms/recoilAtoms';
 import { LoginChecker } from './components/LoginChecker';
+import { Lobby } from './pages/lobby/Lobby';
 
 function App() {
   return (
     <RecoilRoot>
       <LoginChecker>
-        <h1>After Login</h1>
+        <Lobby />
       </LoginChecker>
     </RecoilRoot>
   );

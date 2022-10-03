@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { Login } from './pages/login/Login';
-import { loginState } from './atoms/recoilAtoms';
-import jwt_decode from 'jwt-decode';
+import { loginState } from '../atoms/recoilAtoms';
+import { Login } from '../pages/login/Login';
 
 interface LoginCheckerProps {
   children: React.ReactNode;

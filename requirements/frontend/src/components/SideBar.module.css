@@ -1,0 +1,7 @@
+.hideContent {
+  visibility: hidden;
+}
+
+.revealContent {
+  visibility: visible;
+}
