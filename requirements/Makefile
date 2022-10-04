@@ -18,9 +18,16 @@ help:
 	@echo "*UNINSTALL PACKAGE IN CONTAINER*"
 	@echo make uninstall cont=CONTAINER_NAME pack=PACKAGE_NAME
 	@echo
+	@echo "*UPDATE PACKAGE IN CONTAINER*"
+	@echo make install cont=CONTAINER_NAME
+	@echo
+
 
 
 #dev operations
+
+update:
+	@docker exec $(cont) npm install
 
 install:
 	@docker exec $(cont) npm install --save $(pack)
