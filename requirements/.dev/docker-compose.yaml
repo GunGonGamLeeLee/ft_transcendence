@@ -40,7 +40,10 @@ services:
     ports:
       - 4245:4245
     environment:
-      POSTGRES_PASSWORD: "1234" # 나중에 수정!
+      POSTGRES_PASSWORD: "1234" # FIXME 나중에 수정!
+      PGPORT: 4245
+      PGDATA: '/database'
+
     tty: true
 
 networks:
