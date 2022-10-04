@@ -8,4 +8,5 @@ export default defineConfig({
     host: 'localhost',
     port: 4242,
   },
+  envDir: './.env',
 });

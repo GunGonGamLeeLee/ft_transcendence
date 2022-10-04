@@ -1,24 +1,24 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { loginState } from '../atoms/recoilAtoms';
+import { loginState } from '../atoms/loginState';
+import { userDisplayNameState, userProfileImgState } from '../atoms/userState';
 import { Login } from '../pages/login/Login';
 
 interface LoginCheckerProps {
   children: React.ReactNode;
 }
 
-interface TokenData {
-  // ?
-  id: number;
-}
-
 export function LoginChecker({ children }: LoginCheckerProps) {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const [userDisplayName, setUserDisplayName] =
+    useRecoilState(userDisplayNameState);
+  const [userProfileImg, setUserProfileImg] =
+    useRecoilState(userProfileImgState);
 
   const localToken = localStorage.getItem('token');
 
   const authorizeToken = async () => {
-    return await fetch(`http://localhost:8000/profile`, {
+    return await fetch(`${import.meta.env.VITE_BACKEND_EP}/profile`, {
       headers: {
         Authorization: `Bearer ${localToken}`,
       },
@@ -39,10 +39,17 @@ export function LoginChecker({ children }: LoginCheckerProps) {
       //   if (!res.ok) {
       //     localStorage.removeItem('token');
       //     setIsLoggedIn(false);
+      //   } else {
+      //
       //   }
       // });
     }
   });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+    }
+  }, [isLoggedIn]);
 
   return <>{isLoggedIn ? children : <Login />}</>;
 }

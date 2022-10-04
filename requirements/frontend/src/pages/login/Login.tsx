@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { loginState } from '../../atoms/recoilAtoms';
+import { loginState } from '../../atoms/loginState';
 
 export function Login() {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
