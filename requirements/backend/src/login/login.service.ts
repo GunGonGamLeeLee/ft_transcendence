@@ -38,16 +38,14 @@ export class LoginService {
   }
 
   createQrCode(id: number) {
+    const userSecret = authenticator.generateSecret();
     const otpauth = authenticator.keyuri(
       id.toString(),
       'transcendence',
-      authenticator.generateSecret(),
+      userSecret,
     );
 
-    console.log(otpauth);
     const res = this.toDataUrl(otpauth);
-    console.log(res);
-
     return res;
   }
 }
