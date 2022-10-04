@@ -17,14 +17,6 @@ export function LoginChecker({ children }: LoginCheckerProps) {
 
   const localToken = localStorage.getItem('token');
 
-  const authorizeToken = async () => {
-    return await fetch(`${import.meta.env.VITE_BACKEND_EP}/profile`, {
-      headers: {
-        Authorization: `Bearer ${localToken}`,
-      },
-    });
-  };
-
   useEffect(() => {
     if (!isLoggedIn) {
       console.log('not logged in');
@@ -33,7 +25,7 @@ export function LoginChecker({ children }: LoginCheckerProps) {
         setIsLoggedIn(true);
       }
     } else {
-      console.log('validate');
+      console.log('logined');
       // const response = authorizeToken();
       // response.then((res) => {
       //   if (!res.ok) {
