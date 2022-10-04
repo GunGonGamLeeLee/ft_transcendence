@@ -1,9 +1,14 @@
-import { Controller, Post, Get, Headers, Res, Body, Req } from '@nestjs/common';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Controller, Post, Get, Headers, Res, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { LoginService } from './login.service';
 import { TokenPayloadDto } from './token.payload.dto';
+
+export interface UserInfo {
+  id: number;
+  secret: string;
+}
 
 @Controller('login')
 export class LoginController {
@@ -12,9 +17,10 @@ export class LoginController {
   @ApiTags('login')
   @Get('oauth')
   loginOauth(@Res() res: Response) {
+    const userInfo = this.loginService.loginOauth();
     const payload: TokenPayloadDto = {
-      id: this.loginService.loginOauth(),
-      qr: false, // FIXME !this.loginService.getUserInfoTwoStep();
+      id: userInfo.id,
+      qr: false, // FIXME !userInfo.twoStep;
     };
     res.header({
       token: this.loginService.issueToken(payload),
@@ -25,9 +31,7 @@ export class LoginController {
   }
 
   @ApiTags('login')
-  @ApiHeader({
-    name: 'token',
-  })
+  @ApiHeader({ name: 'token' })
   @Get('qr')
   sendQrCode(@Headers() header) {
     const id = this.loginService.getIdInJwt(header.token);
@@ -35,17 +39,20 @@ export class LoginController {
   }
 
   @ApiTags('login')
-  @ApiHeader({
-    name: 'token',
-  })
-  @Post('qr')
-  validateOtp(@Req() req, @Res() res: Response) {
-    // 뭔가 더 하나?
-    const userId = this.loginService.getIdInJwt(req.header.token);
-    const secret = 'asdf'; // FIXME this.loginService.getUserSecret(id);
+  @ApiHeader({ name: 'token' })
+  @ApiBody({})
+  @Post('otp')
+  validateOtp(@Body() body, @Headers() header, @Res() res: Response) {
+    const userId = this.loginService.getIdInJwt(header.token);
+    const userInfo = this.loginService.getUserInfo(userId);
+    const secret = userInfo.secret;
     const token = authenticator.generate(secret);
-    console.log(token);
-    console.log(req.body);
+    // console.log(token);
+    // console.log(body.code);
+
+    if (token != body.code) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
 
     const payload: TokenPayloadDto = {
       id: userId,

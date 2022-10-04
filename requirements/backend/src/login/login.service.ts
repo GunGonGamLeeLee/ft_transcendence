@@ -5,11 +5,14 @@ import { authenticator } from '@otplib/preset-default';
 import * as qrcode from 'qrcode';
 import { resolve } from 'path';
 import { rejects } from 'assert';
+import { UserInfo } from './login.controller';
 
 @Injectable()
 export class LoginService {
   loginOauth() {
-    return Math.random();
+    return {
+      id: Math.random(),
+    };
   }
 
   issueToken(payload: TokenPayloadDto) {
@@ -47,5 +50,13 @@ export class LoginService {
 
     const res = this.toDataUrl(otpauth);
     return res;
+  }
+
+  // FIXME DB 조회
+  getUserInfo(id: number): UserInfo {
+    return {
+      id,
+      secret: 'asdf',
+    };
   }
 }
