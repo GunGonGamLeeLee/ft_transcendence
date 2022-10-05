@@ -1,0 +1,32 @@
+.myprofile {
+  display: flex;
+  align-items: center;
+  width: 320;
+  height: 180px;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: rgb(199, 171, 254);
+}
+
+.myprofile__img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.myprofile__text {
+  width: 200px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.myprofile__name {
+  font-size: 30px;
+}
+
+.myprofile__rating {
+  font-size: 20px;
+}

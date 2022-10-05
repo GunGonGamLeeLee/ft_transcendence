@@ -1,14 +1,14 @@
 import SideBar from '../../components/SideBar/SideBar';
-import Menu from './Menu';
 import { LoginChecker } from '../../components/LoginChecker';
 import Body from '../../components/Body';
+import ChannelList from './ChannelList';
 
-export function Lobby() {
+export function Channel() {
   return (
     <>
       <LoginChecker>
         <Body>
-          <Menu />
+          <ChannelList />
           <SideBar />
         </Body>
       </LoginChecker>

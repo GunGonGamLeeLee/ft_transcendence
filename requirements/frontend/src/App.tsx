@@ -3,7 +3,9 @@ import { RecoilRoot } from 'recoil';
 import './App.css';
 import { Lobby } from './pages/lobby/Lobby';
 import { Login } from './pages/login/Login';
+import { Channel } from './pages/channel/Channel';
 import { Navigate } from 'react-router-dom';
+// import Channel from './pages/channel/channel';
 
 function Root() {
   const localToken = localStorage.getItem('token');
@@ -20,6 +22,7 @@ function App() {
           <Route path='/' element={<Root />} />
           <Route path='/login' element={<Login />} />
           <Route path='/lobby' element={<Lobby />} />
+          <Route path='/channel' element={<Channel />} />
         </Routes>
       </Router>
     </RecoilRoot>

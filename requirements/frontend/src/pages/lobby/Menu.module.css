@@ -1,4 +1,7 @@
 .Menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 960px;
   height: 720px;
 }

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styles from './Menu.module.css';
 
 export default function Menu() {
@@ -13,9 +14,10 @@ export default function Menu() {
 
   return (
     <div className={styles.Menu}>
-      <button onClick={onChannelClick}>channel</button>
       <button onClick={onMatchMakeClick}>match make</button>
-      <button onClick={onProfileClick}>profile</button>
+      <button onClick={onChannelClick}>
+        <Link to='/channel'>channel</Link>
+      </button>
     </div>
   );
 }

@@ -1,0 +1,7 @@
+.li {
+  display: flex;
+  width: 850px;
+  height: 60px;
+  background-color: rgb(255, 229, 229);
+  border-radius: 10px;
+}
