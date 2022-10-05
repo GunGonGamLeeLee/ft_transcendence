@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  uid: number;
 
   @Column()
   displayName: string;
@@ -18,5 +18,5 @@ export class UserEntity {
   isTwoStep: boolean;
 
   @Column()
-  secret: string;
+  qrSecret: string;
 }
