@@ -1,10 +1,16 @@
-import { Navigate, Route } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '../atoms/loginState';
+import { JwtPayload } from '../pages/login/Types';
 
-interface LoginCheckerProps {
-  children: React.ReactNode;
-}
+export function LoginChecker() {
+  const isLoggedIn = useRecoilValue(loginState); // needed..?
+  const token = localStorage.getItem('token');
+  console.log('checker');
+  if (isLoggedIn || (token && jwtDecode<JwtPayload>(token).qr)) {
+    return <Outlet />;
+  }
 
-export function LoginChecker({ children }: LoginCheckerProps) {
-  const localToken = localStorage.getItem('token');
-  return <>{localToken ? children : <Navigate to='/login' />}</>;
+  return <Navigate to='login' replace={true} />;
 }

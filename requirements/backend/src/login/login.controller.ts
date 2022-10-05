@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Headers, Res, Body, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Headers,
+  Res,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
@@ -22,12 +31,10 @@ export class LoginController {
       id: userInfo.id,
       qr: false, // FIXME !userInfo.twoStep;
     };
-    res.header({
-      token: this.loginService.issueToken(payload),
-    });
+    res.cookie('token', this.loginService.issueToken(payload));
     if (payload.qr == false)
-      return res.redirect('http://localhost:4242/qr', 301); // qr code (x) -> opt input;
-    return res.redirect('http://localhost:4242/lobby', 301);
+      return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
+    return res.redirect(301, 'http://localhost:4242/login');
   }
 
   @ApiTags('login')
@@ -42,26 +49,45 @@ export class LoginController {
   @ApiHeader({ name: 'token' })
   @ApiBody({})
   @Post('otp')
-  validateOtp(@Body() body, @Headers() header, @Res() res: Response) {
-    const userId = this.loginService.getIdInJwt(header.token);
-    const userInfo = this.loginService.getUserInfo(userId);
-    const secret = userInfo.secret;
-    const token = authenticator.generate(secret);
-    // console.log(token);
-    // console.log(body.code);
+  validateOtp() {
+    // const userId = this.loginService.getIdInJwt(header.token);
+    // const userInfo = this.loginService.getUserInfo(userId);
+    // const secret = userInfo.secret;
+    // const token = authenticator.generate(secret);
+    // // console.log(token);
+    // // console.log(body.code);
 
-    if (token != body.code) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
+    // if (token != body.code) {
+    //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // }
 
     const payload: TokenPayloadDto = {
-      id: userId,
+      id: 12345,
       qr: true,
     };
 
-    res.header({
-      token: this.loginService.issueToken(payload),
-    });
-    return res.redirect('http://localhost:4242/lobby', 301);
+    const json = { token: this.loginService.issueToken(payload) };
+    console.log(json.token);
+    return json;
   }
+  // validateOtp(@Body() body, @Headers() header, @Res() res: Response) {
+  //   // const userId = this.loginService.getIdInJwt(header.token);
+  //   // const userInfo = this.loginService.getUserInfo(userId);
+  //   // const secret = userInfo.secret;
+  //   // const token = authenticator.generate(secret);
+  //   // // console.log(token);
+  //   // // console.log(body.code);
+
+  //   // if (token != body.code) {
+  //   //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+  //   // }
+
+  //   const payload: TokenPayloadDto = {
+  //     id: 12345,
+  //     qr: true,
+  //   };
+
+  //   console.log('return');
+  //   return { token: this.loginService.issueToken(payload) };
+  // }
 }

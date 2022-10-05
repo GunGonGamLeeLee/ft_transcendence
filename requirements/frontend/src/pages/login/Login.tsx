@@ -1,69 +1,42 @@
-import { useRecoilState } from 'recoil';
-import { Cookies } from 'react-cookie';
 import jwtDecode from 'jwt-decode';
 import { Navigate } from 'react-router-dom';
-import {
-  userDisplayNameState,
-  userProfileImgState,
-} from '../../atoms/userState';
 import Body from '../../components/Body';
-
-function LogginButton() {
-  return (
-    <>
-      <a href={`${import.meta.env.VITE_BACKEND_EP}/login/oauth`}>
-        <button>login</button>
-      </a>
-    </>
-  );
-}
-
-function OTP() {
-  return (
-    <>
-      <p>otp!!</p>
-      <form>
-        <input placeholder='otp' />
-        <button>submit</button>
-      </form>
-    </>
-  );
-}
-
-interface jwt_payload {
-  iat: number;
-  id: number;
-  qr: boolean;
-}
+import Otp from './Otp';
+import LogginButton from './LoginButton';
+import { JwtPayload } from './Types';
+import Cookies from 'js-cookie';
 
 export function Login() {
-  const [userDisplayName, setUserDisplayName] =
-    useRecoilState(userDisplayNameState);
-  const [userProfileImg, setUserProfileImg] =
-    useRecoilState(userProfileImgState);
+  // const [isLoggedIn, setLoginState] = useRecoilState(loginState); // needed?
 
-  const cookies = new Cookies();
-  const token = cookies.get('token');
-  console.log(token);
+  // if (isLoggedIn) {
+  //   return <Navigate to='/lobby' />;
+  // }
+  console.log('login');
+  const cookieToken = Cookies.get('token');
+  const localToken = localStorage.getItem('token');
+
+  const token = localToken || cookieToken;
+
   if (token) {
-    localStorage.setItem('token', token);
-  }
-  const localToken: string | null = localStorage.getItem('token');
-
-  if (localToken) {
+    if (!localToken && cookieToken) {
+      localStorage.setItem('token', cookieToken);
+      Cookies.remove('token');
+    }
     // if localToken exists
-    const jwt_decoded: jwt_payload = jwtDecode<jwt_payload>(localToken);
-    console.log(jwt_decoded.qr);
-    if (jwt_decoded.qr) {
+    const jwtDecoded = jwtDecode<JwtPayload>(token);
+
+    if (!jwtDecoded.qr) {
       // if need otp
       return (
         <Body>
-          <OTP />
+          <Otp />
         </Body>
       );
     } else {
       // if log-in done
       // To-Do : get ProfileImg & DisplayName
+      // setLoginState(true); // ..?
       return <Navigate to='/lobby' />;
     }
   } else {
