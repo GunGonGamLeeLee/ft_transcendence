@@ -1,5 +1,4 @@
-import { Controller, Get, Redirect, Response, Next, Header } from '@nestjs/common';
-import { Response as Res} from 'express'
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 function hello(): string {
@@ -9,4 +8,9 @@ function hello(): string {
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
 }

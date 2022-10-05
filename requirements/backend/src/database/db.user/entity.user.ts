@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'integer' })
   uid: number;
 
   @Column()
@@ -11,7 +11,7 @@ export class UserEntity {
   @Column()
   avatarPath: string;
 
-  @Column()
+  @Column({ type: 'integer' })
   rating: number;
 
   @Column({ default: false })
