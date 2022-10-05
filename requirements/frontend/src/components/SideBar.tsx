@@ -48,19 +48,22 @@ export default function SideBar() {
   };
 
   return (
-    <>
-      <div>
-        <h1 onClick={onLeftClick}>left</h1>
-        <div className={isLeft ? styles.revealContent : styles.hideContent}>
-          {array.map((chat, index) => (
-            <ChatLog chatInfo={chat} key={index} />
-          ))}
+    <div className={styles.sidebar}>
+      <div className={styles.sidebar__nav}>
+        <div>
+          <h1 onClick={onLeftClick}>left</h1>
+          <div className={isLeft ? styles.revealContent : styles.hideContent}>
+            {array.map((chat, index) => (
+              <ChatLog chatInfo={chat} key={index} />
+            ))}
+          </div>
+        </div>
+        <div>
+          <h1 onClick={onRightClick}>right</h1>
+          <h2>right content</h2>
         </div>
       </div>
-      <div>
-        <h1 onClick={onRightClick}>right</h1>
-        <h2>right content</h2>
-      </div>
-    </>
+      <ol></ol>
+    </div>
   );
 }

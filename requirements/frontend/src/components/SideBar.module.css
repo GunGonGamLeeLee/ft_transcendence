@@ -1,3 +1,15 @@
+.sidebar {
+  width: 320px;
+  height: 720px;
+  border: 1px solid black;
+}
+
+.sidebar__nav {
+  border: 1px solid black;
+  width: 320px;
+  height: 120px;
+}
+
 .hideContent {
   visibility: hidden;
 }
