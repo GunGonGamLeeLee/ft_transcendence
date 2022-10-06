@@ -43,7 +43,7 @@
   align-items: center;
   width: 900px;
   height: 530px;
-  padding: 0px 10px;
+  padding: 0px 10px 10px 10px;
   box-sizing: border-box;
   overflow-y: scroll;
   border-radius: 10px 0px 10px 10px;
@@ -71,14 +71,23 @@
 .channel__footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   width: 960px;
   height: 120px;
+  padding: 0px 30px;
+  box-sizing: border-box;
   background-color: bisque;
 }
 
 .channel__new {
-  width: 100px;
+  cursor: pointer;
+  width: 120px;
   height: 50px;
+  border: 1px solid green;
+  border-radius: 25px;
+  font-size: 20px;
+  font-weight: 600;
+  background-color: greenyellow;
 }
 
 .modal {
