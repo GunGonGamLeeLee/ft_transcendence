@@ -1,11 +1,5 @@
+import { UserDataType } from '../../atoms/userDataType';
 import styles from './UserProfile.module.css';
-
-interface UserInterface {
-  userName: string;
-  userImg: string;
-  userId: number;
-  status: number;
-}
 
 function ProfileButton({ text }: { text: string }) {
   return <button className={styles.profile__button}>{text}</button>;
@@ -15,7 +9,7 @@ export default function UserProfile({
   user,
   onClick,
 }: {
-  user: UserInterface;
+  user: UserDataType;
   onClick(): void;
 }) {
   return (
@@ -26,8 +20,8 @@ export default function UserProfile({
           <div className={styles.profile__redcross} onClick={onClick}></div>
         </div>
         <div className={styles.profile__display}>
-          <img src={user.userImg} className={styles.profile__img} />
-          <div className={styles.profile__name}>{user.userName}</div>
+          <img src={user.imgUri} className={styles.profile__img} />
+          <div className={styles.profile__name}>{user.displayName}</div>
         </div>
         <div className={styles.profile__stat}>매칭 기록이 없습니다.</div>
         <div className={styles.profile__buttons}>
