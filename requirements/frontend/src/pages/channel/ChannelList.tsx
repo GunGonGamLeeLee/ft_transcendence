@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ChannelLi from './ChannelLi';
+import ChannelLi from './components/ChannelLi';
 import styles from './ChannelList.module.css';
+import NewRoom from './components/NewRoom';
+import Filter from './components/Filter';
 
 interface ChannelInterface {
   roomId: number;
@@ -11,7 +13,7 @@ interface ChannelInterface {
   lock: boolean;
 }
 
-const array0: Array<ChannelInterface> = [
+const array: Array<ChannelInterface> = [
   {
     roomId: 1,
     title: '모든 채팅',
@@ -42,6 +44,8 @@ const array0: Array<ChannelInterface> = [
   },
 ];
 
+const array0: Array<ChannelInterface> = [...array, ...array, ...array];
+
 const array1: Array<ChannelInterface> = [
   {
     roomId: 1,
@@ -64,15 +68,25 @@ const array2: Array<ChannelInterface> = [
 
 export default function ChannelList() {
   const [filter, setFilter] = useState(0);
+  const [isOpen01, setIsOpen01] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
 
-  const onClick0 = () => {
+  const onClickFilter0 = () => {
     setFilter(0);
   };
-  const onClick1 = () => {
+  const onClickFilter1 = () => {
     setFilter(1);
   };
-  const onClick2 = () => {
+  const onClickFilter2 = () => {
     setFilter(2);
+  };
+
+  const onClickNew01 = () => {
+    setIsOpen01((prev) => !prev);
+  };
+
+  const onClickNew2 = () => {
+    setIsOpen2((prev) => !prev);
   };
 
   return (
@@ -80,9 +94,21 @@ export default function ChannelList() {
       <div className={styles.channel__header}>
         <Link to='/lobby'>뒤로가기!</Link>
         <div className={styles.channel__filters}>
-          <button onClick={onClick0}>모든 채팅방!</button>
-          <button onClick={onClick1}>현재 참여중인 채팅방!</button>
-          <button onClick={onClick2}>무수한 DM들</button>
+          <Filter
+            text='모든 채팅방'
+            filter={filter === 0}
+            onClick={onClickFilter0}
+          ></Filter>
+          <Filter
+            text='참여중인 채팅방'
+            filter={filter === 1}
+            onClick={onClickFilter1}
+          ></Filter>
+          <Filter
+            text='1대1 채팅방'
+            filter={filter === 2}
+            onClick={onClickFilter2}
+          ></Filter>
         </div>
       </div>
       <div className={styles.channel__main}>
@@ -115,20 +141,18 @@ export default function ChannelList() {
         </ol>
       </div>
       <div className={styles.channel__footer}>
-        <button
-          className={`${styles.channel__new} ${
-            filter == 0 || filter == 1 ? '' : styles.channel__inactive
-          }`}
-        >
+        {/* button */}
+        <button className={`${styles.channel__new}`} onClick={onClickNew01}>
           새 채팅방!
         </button>
-        <button
-          className={`${styles.channel__new} ${
-            filter == 2 ? '' : styles.channel__inactive
+        {/* modal */}
+        <div
+          className={`${styles.modal} ${
+            isOpen01 ? '' : styles.modal__inactive
           }`}
         >
-          새 DM!
-        </button>
+          <NewRoom onClick={onClickNew01} />
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './UserProfile.module.css';
 
 interface UserInterface {
