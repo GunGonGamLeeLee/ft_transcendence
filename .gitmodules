@@ -1,0 +1,3 @@
+[submodule "requirements/environment"]
+	path = requirements/environment
+	url = git@github:GunGonGamLeeLee/environment.git

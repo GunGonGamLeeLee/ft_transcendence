@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Headers, Res } from '@nestjs/common';
+import { Controller, Post, Get, Headers, Res, Query, Redirect } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LoginService } from './login.service';
@@ -9,23 +9,40 @@ export interface UserInfo {
   secret: string;
 }
 
+// FIXME fixed environment variables
+const redirectUri = 'http://localhost:4243/login/oauth/callback';
+// FIXME user env
+const apiUid = ' ';
+
 @Controller('login')
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}
 
   @ApiTags('login')
   @Get('oauth')
-  loginOauth(@Res() res: Response) {
-    const userInfo = this.loginService.loginOauth();
+  @Redirect(`https://api.intra.42.fr/oauth/authorize?client_id=${apiUid}&redirect_uri=${redirectUri}&response_type=code`, 301)
+  redirectLogin() {
+    return ;
+  }
+
+  @ApiTags('login')
+  @ApiHeader({ name: 'token' })
+  @Get('oauth/callback')
+  async oauthCallback(@Res() res: Response, @Query('code') query) {
+    const userId = await this.loginService.getIntraInfo(query);
+
     const payload: TokenPayloadDto = {
-      id: userInfo.id,
+      id: userId,
       qr: false, // FIXME !userInfo.twoStep;
     };
+    console.log(`userid: ${userId}`); //print
     res.cookie('token', this.loginService.issueToken(payload));
 
-    if (payload.qr == false)
-      return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
-    return res.redirect(301, 'http://localhost:4242/login');
+    // if (payload.qr == false)
+    //   return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
+    // return res.redirect(301, 'http://localhost:4242/login');
+    
+
   }
 
   @ApiTags('login')
@@ -35,6 +52,8 @@ export class LoginController {
     const id = this.loginService.getIdInJwt(header.token);
     return this.loginService.createQrCode(id);
   }
+
+  
 
   @ApiTags('login')
   @ApiHeader({ name: 'token' })
