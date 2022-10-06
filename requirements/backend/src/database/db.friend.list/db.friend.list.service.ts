@@ -12,6 +12,10 @@ export class DbFriendListService {
     private firendListRepo: Repository<FriendListEntity>,
   ) {}
 
+  async findAll() {
+    return await this.firendListRepo.find();
+  }
+
   async saveOne(
     friendRelation: RelationListDto,
     user: UserEntity,

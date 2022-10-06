@@ -10,6 +10,10 @@ export class DbUserService {
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
   ) {}
 
+  async findAll() {
+    return await this.userRepo.find();
+  }
+
   async findOneById(id: number): Promise<UserEntity> {
     return await this.userRepo.findOneBy({ uid: id });
   }
@@ -21,8 +25,7 @@ export class DbUserService {
         friendList: true,
       },
     });
-    return user;
-    // return user.friendList;
+    return user.friendList;
   }
 
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {

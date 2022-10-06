@@ -10,10 +10,11 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { apiUid, LoginService, redirectUri } from './login.service';
+import { optDto } from './otp.dto';
 import { TokenPayloadDto } from './token.payload.dto';
 
 export interface UserInfo {
@@ -69,9 +70,8 @@ export class LoginController {
 
   @ApiTags('login')
   @ApiHeader({ name: 'token' })
-  @ApiBody({})
   @Post('otp')
-  async validateOtp(@Headers() header, @Body() body) {
+  async validateOtp(@Headers() header, @Body() body: optDto) {
     console.log(header.token);
     const userId = this.loginService.getIdInJwt(header.token);
     const userInfo = await this.loginService.getUserInfo(userId);
