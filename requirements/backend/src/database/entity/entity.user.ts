@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { FriendListEntity } from './entity.friend.list';
 
 @Entity()
 export class UserEntity {
@@ -15,8 +16,11 @@ export class UserEntity {
   rating: number;
 
   @Column({ default: false })
-  isTwoStep: boolean;
+  twoFactor: boolean;
 
   @Column()
   qrSecret: string;
+
+  @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
+  friendList: FriendListEntity[];
 }
