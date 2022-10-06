@@ -20,7 +20,7 @@
 
 .channel__main {
   width: 960px;
-  height: 480px;
+  height: 540px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,8 +34,8 @@
   flex-direction: column;
   align-items: center;
   width: 900px;
-  height: 460px;
-  padding: 20px;
+  height: 520px;
+  padding: 0px 10px;
   box-sizing: border-box;
   overflow-y: auto;
   border-radius: 10px;
@@ -47,7 +47,14 @@
 }
 
 .channel__footer {
+  display: flex;
+  justify-content: flex-end;
   width: 960px;
-  height: 180px;
+  height: 120px;
   background-color: bisque;
+}
+
+.channel__new {
+  width: 100px;
+  height: 50px;
 }

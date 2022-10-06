@@ -41,7 +41,7 @@
 
 .sidebar__contentlist {
   width: 320px;
-  height: 480px;
+  height: 540px;
   overflow-y: scroll;
   background-color: var(--tab_active);
 }
