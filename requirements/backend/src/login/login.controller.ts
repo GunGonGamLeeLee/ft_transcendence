@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Headers,
-  Res,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Get, Headers, Res } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
-import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { LoginService } from './login.service';
 import { TokenPayloadDto } from './token.payload.dto';
@@ -32,7 +22,7 @@ export class LoginController {
       qr: false, // FIXME !userInfo.twoStep;
     };
     res.cookie('token', this.loginService.issueToken(payload));
-    console.log('adsf');
+
     if (payload.qr == false)
       return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
     return res.redirect(301, 'http://localhost:4242/login');

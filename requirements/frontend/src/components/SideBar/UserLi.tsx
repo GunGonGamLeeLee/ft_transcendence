@@ -9,13 +9,7 @@ interface UserInterface {
   status: number;
 }
 
-export default function UserLi({
-  user,
-  key,
-}: {
-  user: UserInterface;
-  key: number;
-}) {
+export default function UserLi({ user }: { user: UserInterface }) {
   const [isOpen, setIsOpen] = useState(false);
   const onClick = () => {
     setIsOpen((prev) => !prev);
@@ -39,7 +33,6 @@ export default function UserLi({
         className={`${styles.user} ${isOpen ? styles.user__active : ''}`}
         onClick={onClick}
       >
-        {key}
         <div className={styles.user_profile__div}>
           <img src={user.userImg} className={styles.user_profile__img} />
           <div className={styles.user_profile__username}>{user.userName}</div>
