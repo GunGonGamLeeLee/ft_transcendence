@@ -143,7 +143,7 @@ export default function ChannelList() {
       <div className={styles.channel__footer}>
         {/* button */}
         <button className={`${styles.channel__new}`} onClick={onClickNew01}>
-          새 채팅방!
+          새 채팅방
         </button>
         {/* modal */}
         <div
