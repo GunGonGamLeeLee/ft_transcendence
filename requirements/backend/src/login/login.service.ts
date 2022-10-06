@@ -6,13 +6,40 @@ import * as qrcode from 'qrcode';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 import { UserInfo } from './login.controller';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class LoginService {
-  loginOauth() {
-    return {
-      id: Math.random(),
-    };
+  constructor(private readonly httpService: HttpService) {}
+
+  async getIntraInfo(code: string) {
+    // FIXME fixed environment variables
+    const redirect_uri = 'http://localhost:4243/login/oauth/callback';
+        
+    // FIXME user env
+    const apiUid = ' ';
+    const apiSecret = ' ';
+
+    const getTokenUrl = 'https://api.intra.42.fr/oauth/token';
+    const params = new URLSearchParams();
+    params.set('grant_type', 'authorization_code');
+    params.set('client_id', apiUid);
+    params.set('client_secret', apiSecret);
+    params.set('code', code);
+    params.set('redirect_uri', redirect_uri);
+    
+    const response = await lastValueFrom(this.httpService.post(getTokenUrl, params));
+
+    const getUserUrl: string = 'https://api.intra.42.fr/v2/me';
+
+    const userInfo = await lastValueFrom(this.httpService.get(getUserUrl, {
+      headers: {
+        Authorization: `Bearer ${response.data.access_token}`
+      }
+    }));
+
+    return userInfo.data.id;
   }
 
   issueToken(payload: TokenPayloadDto) {
