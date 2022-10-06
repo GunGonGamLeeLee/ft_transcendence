@@ -32,6 +32,7 @@ export class LoginController {
       qr: false, // FIXME !userInfo.twoStep;
     };
     res.cookie('token', this.loginService.issueToken(payload));
+    console.log('adsf');
     if (payload.qr == false)
       return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
     return res.redirect(301, 'http://localhost:4242/login');
@@ -67,7 +68,6 @@ export class LoginController {
     };
 
     const json = { token: this.loginService.issueToken(payload) };
-    console.log(json.token);
     return json;
   }
   // validateOtp(@Body() body, @Headers() header, @Res() res: Response) {
