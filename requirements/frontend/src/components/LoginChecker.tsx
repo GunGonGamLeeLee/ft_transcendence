@@ -1,14 +1,10 @@
-import jwtDecode from 'jwt-decode';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { loginState } from '../atoms/loginState';
-import { JwtPayload } from '../pages/login/Types';
+import { useIsLoggedIn } from '../atoms/authState';
 
 export function LoginChecker() {
-  const isLoggedIn = useRecoilValue(loginState); // needed..?
-  const token = localStorage.getItem('token');
-  console.log('checker');
-  if (isLoggedIn || (token && jwtDecode<JwtPayload>(token).qr)) {
+  const isLoggedIn = useIsLoggedIn();
+
+  if (isLoggedIn) {
     return <Outlet />;
   }
 

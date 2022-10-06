@@ -1,42 +1,60 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { authState } from '../../atoms/authState';
 
-export default function Otp() {
-  const [isClicked, setIsClicked] = useState(false);
-  console.log('otp');
-  console.log(isClicked);
+export function Otp() {
+  const setAuthState = useSetRecoilState(authState);
 
-  const onSubmitClick = async () => {
-    const navigate = useNavigate();
-    console.log('top');
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/login/otp`,
-      {
-        method: 'POST',
-      },
-    );
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form === null) return;
 
-    console.log('done');
+    const formData = new FormData(form);
+    const pin = formData.get('pin');
 
-    setIsClicked(true);
+    if (pin === null) return;
+    if (typeof pin !== 'string') return;
 
-    // localStorage.setItem('test', 'ok');
-    // if (response.ok) {
-    //   response.json().then((json) => {
-    //     // localStorage.setItem('token', json.token);
-    //     console.log(json.token);
-    //     // navigate('http://localhost:4242/lobby');
-    //   });
-    // }
+    try {
+      const { token } = await requestOtpAuth({ pin });
+      setAuthState({ token });
+    } catch (err) {
+      return;
+    }
   };
 
   return (
     <>
       <p>otp!!</p>
-      <form>
-        <input placeholder='otp' />
-        <button onClick={onSubmitClick}>submit</button>
+      <form onSubmit={handleSubmit}>
+        <input name='pin' placeholder='otp' />
+        <button type='submit'>submit</button>
       </form>
     </>
   );
 }
+
+interface OtpPayload {
+  pin: string;
+}
+
+interface OtpResponse {
+  token: string;
+}
+
+const requestOtpAuth = async (payload: OtpPayload) => {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, {
+    method: 'Post',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error();
+  }
+
+  const data: OtpResponse = await response.json();
+  return data;
+};

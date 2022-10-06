@@ -5,10 +5,8 @@ import Body from '../../components/Body';
 export function Lobby() {
   return (
     <>
-      <Body>
-        <Menu />
-        <SideBar />
-      </Body>
+      <Menu />
+      <SideBar />
     </>
   );
 }
