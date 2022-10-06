@@ -25,13 +25,13 @@ export class DbUserService {
     // return user.friendList;
   }
 
-  async saveOne(userDto: UserDto): Promise<void> {
+  async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = new UserEntity();
     user.uid = userDto.uid;
     user.displayName = userDto.displayName;
     user.avatarPath = userDto.avatarPath;
     user.rating = userDto.rating;
-    user.twoFactor = userDto.twoFactor;
+    user.isRequiredTFA = userDto.isRequiredTFA;
     user.qrSecret = userDto.qrSecret;
     await this.userRepo.save(user);
   }

@@ -22,26 +22,26 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('user-save')
-  userSave() {
-    this.dbUserSerivce.saveOne({
-      uid: 1234,
-      displayName: 'asdfasdf',
-      avatarPath: '',
-      rating: 0,
-      twoFactor: false,
-      qrSecret: '',
-    });
-  }
+  // @Get('user-save')
+  // userSave() {
+  //   this.dbUserSerivce.saveOne({
+  //     uid: 1234,
+  //     displayName: 'asdfasdf',
+  //     avatarPath: '',
+  //     rating: 0,
+  //     isRequiredTFA: false,
+  //     qrSecret: '',
+  //   });
+  // }
 
-  @Get('friend-save')
-  async friendSave() {
-    const user = await this.dbUserSerivce.findOneById(1234);
-    this.dbFriendListSerivce.saveOne({ fuid: 1234, tuid: 1111 }, user);
-  }
+  // @Get('friend-save')
+  // async friendSave() {
+  //   const user = await this.dbUserSerivce.findOneById(1234);
+  //   this.dbFriendListSerivce.saveOne({ fuid: 1234, tuid: 1111 }, user);
+  // }
 
   @Get('friend-list')
   friends() {
-    return this.dbUserSerivce.findFriendList(1234);
+    return this.dbUserSerivce.findFriendList(99857);
   }
 }

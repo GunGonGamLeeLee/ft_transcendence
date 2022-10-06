@@ -3,6 +3,6 @@ export interface UserDto {
   displayName: string;
   avatarPath: string;
   rating: number;
-  twoFactor: boolean;
+  isRequiredTFA: boolean;
   qrSecret: string;
 }

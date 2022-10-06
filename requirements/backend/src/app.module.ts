@@ -5,8 +5,9 @@ import { LoginModule } from './login/login.module';
 import { DatabaseModule } from './database/database.module';
 import { UserEntity } from './database/entity/entity.user';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as dotenv from 'dotenv';
 import { FriendListEntity } from './database/entity/entity.friend.list';
+import { LoginModule } from './login/login.module';
+import * as dotenv from 'dotenv';
 
 dotenv.config({
   path: '/backend.env',

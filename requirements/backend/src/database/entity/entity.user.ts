@@ -16,7 +16,7 @@ export class UserEntity {
   rating: number;
 
   @Column({ default: false })
-  twoFactor: boolean;
+  isRequiredTFA: boolean;
 
   @Column()
   qrSecret: string;

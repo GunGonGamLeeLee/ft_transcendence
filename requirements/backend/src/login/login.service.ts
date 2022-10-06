@@ -6,35 +6,33 @@ import * as qrcode from 'qrcode';
 import { UserInfo } from './login.controller';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { DbUserService } from 'src/database/db.user/db.user.service';
+import { UserEntity } from 'src/database/entity/entity.user';
+import * as dotenv from 'dotenv';
 
-interface UserEntity {
-  uid: number;
-  displayName: string;
-  avatarPath: string;
-  rating: number;
-  isRequiredTFA: boolean;
-  qrSecret: string;
-}
+dotenv.config({
+  path: '/backend.env',
+});
+
+export const redirectUri = process.env.API_URI;
+export const apiUid = process.env.API_UID;
+const apiSecret = process.env.API_SECRET;
 
 @Injectable()
 export class LoginService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly dbUserService: DbUserService,
+  ) {}
 
   async getIntraInfo(code: string) {
-    // FIXME fixed environment variables
-    const redirect_uri = 'http://localhost:4243/login/oauth/callback';
-
-    // FIXME user env
-    const apiUid = ' ';
-    const apiSecret = ' ';
-
     const getTokenUrl = 'https://api.intra.42.fr/oauth/token';
     const params = new URLSearchParams();
     params.set('grant_type', 'authorization_code');
     params.set('client_id', apiUid);
     params.set('client_secret', apiSecret);
     params.set('code', code);
-    params.set('redirect_uri', redirect_uri);
+    params.set('redirect_uri', redirectUri);
 
     const response = await lastValueFrom(
       this.httpService.post(getTokenUrl, params),
@@ -82,8 +80,8 @@ export class LoginService {
     });
   }
 
-  createQrCode(id: number) {
-    const { secret } = this.getUserInfo(id);
+  async createQrCode(id: number) {
+    const { secret } = await this.getUserInfo(id);
     const otpauth = authenticator.keyuri(
       id.toString(),
       'transcendence',
@@ -95,24 +93,24 @@ export class LoginService {
   }
 
   // FIXME DB 조회
-  getUserInfo(id: number): UserInfo {
-    // TODO DB 조회 -> 일단 무조건 없다고 가정
-
-    // TODO DB 생성을 위한 객체 만들기
-    const newUser: UserEntity = {
-      uid: id,
-      displayName: Math.random().toString(36).substring(2, 11),
-      avatarPath: 'default/path',
-      rating: 42,
-      isRequiredTFA: false,
-      qrSecret: 'PYNWAQJJJ5LXISYS', // qrSecret: authenticator.generateSecret(),
-    };
-    console.log(newUser);
+  async getUserInfo(id: number): Promise<UserInfo> {
+    let user = await this.dbUserService.findOneById(id);
+    if (user == null) {
+      const newUser = new UserEntity();
+      newUser.uid = id;
+      newUser.displayName = Math.random().toString(36).substring(2, 11);
+      newUser.avatarPath = 'default/path';
+      newUser.rating = 42;
+      newUser.isRequiredTFA = false;
+      newUser.qrSecret = authenticator.generateSecret();
+      this.dbUserService.saveOne(newUser);
+      user = newUser;
+    }
 
     return {
       id,
-      secret: 'PYNWAQJJJ5LXISYS', // FIXME secret: newUser.qrSecret,
-      isRequiredTFA: false,
+      secret: user.qrSecret,
+      isRequiredTFA: user.isRequiredTFA,
     };
   }
 }
