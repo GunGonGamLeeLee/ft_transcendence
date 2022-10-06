@@ -10,13 +10,13 @@ interface ChannelInterface {
 
 export default function ChannelLi({ channel }: { channel: ChannelInterface }) {
   return (
-    <li className={styles.li}>
+    <li className={styles.li__li}>
       <div className={styles.li__id}>{channel.roomId}</div>
       <div className={`${styles.li__title}`}>{channel.title}</div>
       <div className={`${styles.li__owner}`}>{channel.owner}</div>
       <div className={`${styles.li__count}`}>{channel.userCount}명</div>
       <div className={`${styles.li__count}`}>
-        {channel.lock ? 'private' : 'public'}
+        {channel.lock ? 'lock' : 'unlock'}
       </div>
     </li>
   );

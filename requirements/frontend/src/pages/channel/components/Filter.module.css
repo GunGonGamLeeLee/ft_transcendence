@@ -1,0 +1,18 @@
+.filter {
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 600;
+  border: 0px solid yellow;
+  background-color: rgb(255, 255, 128);
+  border-radius: 10px 10px 0px 0px;
+}
+
+.filter:hover {
+  height: 60px;
+}
+
+.filter__inactive {
+  background-color: rgb(255, 255, 196);
+}

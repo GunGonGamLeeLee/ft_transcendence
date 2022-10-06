@@ -14,8 +14,16 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
+  padding: 0px 30px;
   box-sizing: border-box;
+  background-color: rgb(241, 243, 244);
+}
+
+.channel__filters {
+  display: flex;
+  align-items: flex-end;
+  width: 600px;
+  height: 60px;
 }
 
 .channel__main {
@@ -24,7 +32,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 30px;
+  padding: 0px 30px 10px 30px;
   box-sizing: border-box;
   background-color: rgb(241, 243, 244);
 }
@@ -34,12 +42,26 @@
   flex-direction: column;
   align-items: center;
   width: 900px;
-  height: 520px;
+  height: 530px;
   padding: 0px 10px;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: scroll;
+  border-radius: 10px 0px 10px 10px;
+  background-color: rgb(255, 255, 128);
+}
+
+.channel__list::-webkit-scrollbar {
+  width: 5px; /* 스크롤바의 너비 */
+}
+
+.channel__list::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: rgb(0, 0, 0); /* 스크롤바의 색상 */
   border-radius: 10px;
-  background-color: white;
+}
+
+.channel__list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0); /*스크롤바 뒷 배경 색상*/
 }
 
 .channel__inactive {
@@ -57,4 +79,20 @@
 .channel__new {
   width: 100px;
   height: 50px;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 1280px;
+  height: 720px;
+  /* background-color: rgba(0, 0, 0, 0.3); */
+}
+
+.modal__inactive {
+  display: none;
 }

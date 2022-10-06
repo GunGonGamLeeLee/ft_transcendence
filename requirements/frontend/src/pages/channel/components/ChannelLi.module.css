@@ -1,11 +1,13 @@
-.li {
+.li__li {
   display: flex;
   align-items: center;
   width: 850px;
   height: 60px;
   background-color: rgb(255, 229, 229);
-  border-radius: 10px;
+  border-radius: 30px;
   margin: 10px 0px;
+  padding: 15px 0px;
+  box-sizing: border-box;
 }
 
 .li__id {

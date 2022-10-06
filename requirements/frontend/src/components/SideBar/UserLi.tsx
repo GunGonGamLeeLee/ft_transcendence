@@ -41,9 +41,7 @@ export default function UserLi({ user }: { user: UserInterface }) {
         <div>{userStatus}</div>
       </li>
       <div
-        className={`${styles.modal} ${
-          isOpen ? styles.modal__avtive : styles.modal__inavtive
-        }`}
+        className={`${styles.modal} ${isOpen ? '' : styles.modal__inactive}`}
       >
         <UserProfile user={user} onClick={onClick} />
       </div>
