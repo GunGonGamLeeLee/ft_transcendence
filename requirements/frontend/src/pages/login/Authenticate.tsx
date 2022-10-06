@@ -5,7 +5,12 @@ import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { LoginButton } from './LoginButton';
 import { Otp } from './Otp';
-import { JwtPayload } from './types';
+
+export interface JwtPayload {
+  iat: number;
+  id: number;
+  qr: boolean;
+}
 
 export function Authenticate() {
   const setIsAuthorized = useSetRecoilState(authState);
