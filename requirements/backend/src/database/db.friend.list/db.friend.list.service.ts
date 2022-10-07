@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { FriendListEntity } from '../entity/entity.friend.list';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RelationListDto } from '../dto/relation.list.dto';
 import { UserEntity } from '../entity/entity.user';
+import { FriendListEntity } from '../entity/entity.friend.list';
 
 @Injectable()
 export class DbFriendListService {
@@ -25,5 +25,12 @@ export class DbFriendListService {
     rel.tuid = friendRelation.tuid;
     rel.user = user;
     await this.firendListRepo.save(rel);
+  }
+
+  async findOneByIdInFriendList(id: number) {
+    const user = await this.firendListRepo.findOne({
+      where: { fuid: id },
+    });
+    return user;
   }
 }

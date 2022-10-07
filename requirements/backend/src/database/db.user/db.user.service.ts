@@ -18,16 +18,6 @@ export class DbUserService {
     return await this.userRepo.findOneBy({ uid: id });
   }
 
-  async findFriendList(id: number) {
-    const user = await this.userRepo.findOne({
-      where: { uid: id },
-      relations: {
-        friendList: true,
-      },
-    });
-    return user.friendList;
-  }
-
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = new UserEntity();
     user.uid = userDto.uid;
