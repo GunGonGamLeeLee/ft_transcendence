@@ -1,14 +1,14 @@
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { LoginButton } from './LoginButton';
 import { Otp } from './Otp';
 import { JwtPayload } from './types';
 
 export function Authenticate() {
-  const [isAuthorized, setIsAuthorized] = useRecoilState(authState);
+  const setIsAuthorized = useSetRecoilState(authState);
   const { token, needMfa } = useParseCookieToken();
 
   React.useEffect(() => {
@@ -28,21 +28,29 @@ const useParseCookieToken = () => {
 
   React.useEffect(() => {
     const CookieToken = Cookies.get('token');
-    if (CookieToken === undefined) return;
+    if (CookieToken === undefined) {
+      if (token) {
+        setToken(null);
+        setNeedMfa(false);
+      }
+
+      return;
+    }
 
     setToken(CookieToken);
 
     try {
-      const { qr } = jwtDecode<JwtPayload>(CookieToken);
-      if (qr) {
-        setToken(CookieToken);
-      } else {
+      const { isRequiredTFA } = jwtDecode<JwtPayload>(CookieToken);
+
+      if (isRequiredTFA) {
         setNeedMfa(true);
+      } else {
+        setToken(CookieToken);
       }
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  });
 
   return { token, needMfa } as const;
 };
