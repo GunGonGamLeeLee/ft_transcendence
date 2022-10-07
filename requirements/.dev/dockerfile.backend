@@ -1,6 +1,7 @@
 FROM node:16.17.1-alpine3.15
 WORKDIR /app
 COPY ./.dev/entrypoint.backend.sh /
+COPY ./environment/backend.env /
 
 STOPSIGNAL SIGKILL
 EXPOSE 4243

@@ -1,0 +1,4 @@
+[submodule "requirements/environment"]
+	path = requirements/environment
+	url = https://github.com/GunGonGamLeeLee/environment.git
+	branch = main
