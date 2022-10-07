@@ -1,11 +1,11 @@
-import { UserDataType } from '../../atoms/userDataType';
+import { UserDataType } from '../../../atoms/userDataType';
 import styles from './UserProfile.module.css';
 
 function ProfileButton({ text }: { text: string }) {
   return <button className={styles.profile__button}>{text}</button>;
 }
 
-export default function UserProfile({
+export function UserProfile({
   user,
   onClick,
 }: {

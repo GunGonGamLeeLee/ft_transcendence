@@ -1,17 +1,12 @@
+import { useParams } from 'react-router-dom';
 import SideBar from '../../components/SideBar/SideBar';
-import { LoginChecker } from '../../components/LoginChecker';
-import Body from '../../components/Body';
-import ChannelList from './ChannelList';
+import ChannelLists from './ChannelLists';
 
 export function Channel() {
   return (
     <>
-      <LoginChecker>
-        <Body>
-          <ChannelList />
-          <SideBar />
-        </Body>
-      </LoginChecker>
+      <ChannelLists />
+      <SideBar />
     </>
   );
 }

@@ -2,7 +2,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { rankListState } from '../../atoms/rankListState';
 import { useInterval } from '../../hooks/useInterval';
-import UserLi from './UserLi';
+import { UserLi } from './Li/UserLi';
 
 export function RankList() {
   const { token } = useRecoilValue(authState);
@@ -15,7 +15,7 @@ export function RankList() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     const data = await response.json();

@@ -92,6 +92,7 @@
   justify-content: flex-start;
   width: 230px;
   height: 30px;
+  border-radius: 10px;
 }
 
 .new__inactive {

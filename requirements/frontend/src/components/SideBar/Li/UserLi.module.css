@@ -33,6 +33,19 @@
   margin-right: 5px;
 }
 
+.user__rank {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 5px;
+  font-size: 25px;
+  color: yellow;
+  /* background-color: black; */
+}
+
 .user_profile__username {
   font-size: 25px;
 }
