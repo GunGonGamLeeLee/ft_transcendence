@@ -10,7 +10,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { apiUid, LoginService, redirectUri } from './login.service';
@@ -54,6 +54,7 @@ export class LoginController {
       isRequiredTFA: userInfo.isRequiredTFA,
     };
     res.cookie('token', this.loginService.issueToken(payload));
+    res.header('Cache-Control', 'no-store');
 
     if (payload.isRequiredTFA)
       return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
@@ -72,7 +73,7 @@ export class LoginController {
   @ApiHeader({ name: 'token' })
   @Post('otp')
   async validateOtp(@Headers() header, @Body() body: optDto) {
-    console.log(header.token);
+    // console.log(header.token);
     const userId = this.loginService.getIdInJwt(header.token);
     const userInfo = await this.loginService.getUserInfo(userId);
     const secret = userInfo.secret;

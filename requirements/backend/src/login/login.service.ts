@@ -38,10 +38,6 @@ export class LoginService {
       this.httpService.post(getTokenUrl, params),
     );
 
-    const response = await lastValueFrom(
-      this.httpService.post(getTokenUrl, params),
-    );
-
     const getUserUrl = 'https://api.intra.42.fr/v2/me';
 
     const userInfo = await lastValueFrom(
