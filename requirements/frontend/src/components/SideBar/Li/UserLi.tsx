@@ -1,16 +1,16 @@
 import styles from './UserLi.module.css';
-import React, { useState } from 'react';
-import UserProfile from './UserProfile';
-import { UserDataType } from '../../atoms/userDataType';
+import * as React from 'react';
+import { UserProfile } from './UserProfile';
+import { UserDataType } from '../../../atoms/userDataType';
 
-export default function UserLi({
+export function UserLi({
   user,
   isRank,
 }: {
   user: UserDataType;
   isRank: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const onClick = () => {
     setIsOpen((prev) => !prev);
   };

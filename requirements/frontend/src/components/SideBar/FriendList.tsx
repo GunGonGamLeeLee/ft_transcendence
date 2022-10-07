@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { friendListState } from '../../atoms/friendListState';
-import UserLi from './UserLi';
+import { UserLi } from './Li/UserLi';
 
 export function FriendList() {
   const friendList = useRecoilValue(friendListState);
