@@ -19,8 +19,8 @@
 //     matchHistory: RelationListDto, //p1, p2를 RelationListDto를 쓰기위해 f, t
 //   ): Promise<void> {
 //     const his = new MatchHistoryEntity();
-//     his.player1uid = matchHistory.fuid;
-//     his.player2uid = matchHistory.tuid;
+//     his.player1uid = matchHistory.fromUid;
+//     his.player2uid = matchHistory.toUid;
 //     await this.matchHistoryRepo.save(his);
 //   }
 // }

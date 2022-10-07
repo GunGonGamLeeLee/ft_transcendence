@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-import { TokenPayloadDto } from './token.payload.dto';
 import { authenticator } from '@otplib/preset-default';
-import * as qrcode from 'qrcode';
-import { UserInfo } from './login.controller';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { DbUserService } from 'src/database/db.user/db.user.service';
+import * as qrcode from 'qrcode';
+import * as jwt from 'jsonwebtoken';
+import { TokenPayloadDto } from './token.payload.dto';
+import { UserInfo } from './login.controller';
 import { UserEntity } from 'src/database/entity/entity.user';
+import { DatabaseService } from 'src/database/database.service';
 import * as dotenv from 'dotenv';
+import { UserDto } from 'src/database/dto/user.dto';
 
 dotenv.config({
   path: '/backend.env',
@@ -23,7 +24,7 @@ const jwtSecret = process.env.JWT_SECRET;
 export class LoginService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly dbUserService: DbUserService,
+    private readonly databaseService: DatabaseService,
   ) {}
 
   async getIntraInfo(code: string) {
@@ -91,16 +92,17 @@ export class LoginService {
 
   // FIXME DB 조회
   async getUserInfo(id: number): Promise<UserInfo> {
-    let user = await this.dbUserService.findOneById(id);
+    let user: UserEntity | UserDto = await this.databaseService.findOneUser(id);
     if (user == null) {
-      const newUser = new UserEntity();
-      newUser.uid = id;
-      newUser.displayName = Math.random().toString(36).substring(2, 11);
-      newUser.avatarPath = 'default/path';
-      newUser.rating = 42;
-      newUser.isRequiredTFA = false;
-      newUser.qrSecret = authenticator.generateSecret();
-      this.dbUserService.saveOne(newUser);
+      const newUser: UserDto = {
+        uid: id,
+        displayName: Math.random().toString(36).substring(2, 11),
+        avatarPath: 'default/path',
+        rating: 42,
+        isRequiredTFA: false,
+        qrSecret: authenticator.generateSecret(),
+      };
+      this.databaseService.saveOneUser(newUser);
       user = newUser;
     }
 

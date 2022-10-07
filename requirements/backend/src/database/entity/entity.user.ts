@@ -1,7 +1,15 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { FriendListEntity } from './entity.friend.list';
 import { BlockListEntity } from './entity.block.list';
+import { UserInChannelEntity } from './entity.user.in.channel';
 // import { MatchHistoryEntity } from './entity.matchhistory.list';
+
+export enum UserStatus {
+  OFFLINE,
+  ONLINE,
+  INGAME,
+  INCHANNEL,
+}
 
 @Entity()
 export class UserEntity {
@@ -23,11 +31,17 @@ export class UserEntity {
   @Column()
   qrSecret: string;
 
+  @Column()
+  userStatus: UserStatus;
+
   @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
   friendList: FriendListEntity[];
 
   @OneToMany(() => BlockListEntity, (blockList) => blockList.user)
   blockList: BlockListEntity[];
+
+  @OneToMany(() => UserInChannelEntity, (inChannelList) => inChannelList.user)
+  inChannelList: UserInChannelEntity[];
 
   // @OneToMany(() => MatchHistoryEntity, (matchHistory) => matchHistory.user)
   // matchHistory: MatchHistoryEntity[];

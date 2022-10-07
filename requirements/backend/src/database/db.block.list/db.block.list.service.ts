@@ -21,15 +21,41 @@ export class DbBlockListService {
     user: UserEntity,
   ): Promise<void> {
     const rel = new BlockListEntity();
-    rel.fuid = blockRelation.fuid;
-    rel.tuid = blockRelation.tuid;
+    rel.fromUid = blockRelation.fromUid;
+    rel.toUid = blockRelation.toUid;
     rel.user = user;
     await this.blockListRepo.save(rel);
   }
 
-  async findOneByIdInBlockList(id: number) {
-    const user = await this.blockListRepo.findOne({
-      where: { fuid: id },
+  async deleteOne(fromUid: number, toUid: number) {
+    await this.blockListRepo.delete({
+      fromUid,
+      toUid,
+    });
+  }
+
+  async findListOfUser(uid: number) {
+    const user = await this.blockListRepo.find({
+      where: { fromUid: uid },
+    });
+    return user;
+  }
+
+  async findListOfUserWithInfo(uid: number) {
+    const user = await this.blockListRepo.find({
+      select: {
+        index: true,
+        user: {
+          uid: true,
+          displayName: true,
+          avatarPath: true,
+          userStatus: true,
+        },
+      },
+      relations: {
+        user: true,
+      },
+      where: { fromUid: uid },
     });
     return user;
   }
