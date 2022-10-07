@@ -56,25 +56,23 @@ export class LoginController {
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
 
-    if (payload.isRequiredTFA)
-      return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
-    return res.redirect(301, 'http://localhost:4242/lobby');
+    return res.redirect(301, 'http://localhost:4242/login');
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'token' })
+  @ApiHeader({ name: 'authorization' })
   @Get('qr')
   sendQrCode(@Headers() header) {
-    const id = this.loginService.getIdInJwt(header.token);
+    console.log(header);
+    const id = this.loginService.getIdInJwt(header.authorization);
     return this.loginService.createQrCode(id);
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'token' })
+  @ApiHeader({ name: 'authorization' })
   @Post('otp')
   async validateOtp(@Headers() header, @Body() body: optDto) {
-    // console.log(header.token);
-    const userId = this.loginService.getIdInJwt(header.token);
+    const userId = this.loginService.getIdInJwt(header.authorization);
     const userInfo = await this.loginService.getUserInfo(userId);
     const secret = userInfo.secret;
     const token = authenticator.generate(secret);
@@ -83,7 +81,7 @@ export class LoginController {
     // console.log(token);
     // console.log(body.code);
 
-    if (token != body.code) {
+    if (token !== body.pin) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 
