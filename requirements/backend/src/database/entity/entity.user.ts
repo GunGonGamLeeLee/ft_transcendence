@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { FriendListEntity } from './entity.friend.list';
+import { BlockListEntity } from './entity.block.list';
+// import { MatchHistoryEntity } from './entity.matchhistory.list';
 
 @Entity()
 export class UserEntity {
@@ -23,4 +25,10 @@ export class UserEntity {
 
   @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
   friendList: FriendListEntity[];
+
+  @OneToMany(() => BlockListEntity, (blockList) => blockList.user)
+  blockList: BlockListEntity[];
+
+  // @OneToMany(() => MatchHistoryEntity, (matchHistory) => matchHistory.user)
+  // matchHistory: MatchHistoryEntity[];
 }

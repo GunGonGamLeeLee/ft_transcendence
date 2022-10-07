@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoginModule } from './login/login.module';
 import { DatabaseModule } from './database/database.module';
 import { UserEntity } from './database/entity/entity.user';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { FriendListEntity } from './database/entity/entity.friend.list';
+import { BlockListEntity } from './database/entity/entity.block.list';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
@@ -19,7 +20,7 @@ const dbOptions: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [UserEntity, FriendListEntity],
+  entities: [UserEntity, FriendListEntity, BlockListEntity],
   synchronize: true,
 };
 
