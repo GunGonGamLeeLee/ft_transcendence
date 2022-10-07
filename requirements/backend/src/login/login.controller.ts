@@ -9,10 +9,12 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { apiUid, LoginService, redirectUri } from './login.service';
 import { optDto } from './otp.dto';
 import { TokenPayloadDto } from './token.payload.dto';
@@ -60,19 +62,22 @@ export class LoginController {
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'authorization' })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
   @Get('qr')
   sendQrCode(@Headers() header) {
-    console.log(header);
-    const id = this.loginService.getIdInJwt(header.authorization);
+    const jwtString = header.authorization.split('Bearer ')[1];
+    const id = this.loginService.getIdInJwt(jwtString);
     return this.loginService.createQrCode(id);
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'authorization' })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
   @Post('otp')
   async validateOtp(@Headers() header, @Body() body: optDto) {
-    const userId = this.loginService.getIdInJwt(header.authorization);
+    const jwtString = header.authorization.split('Bearer ')[1];
+    const userId = this.loginService.getIdInJwt(jwtString);
     const userInfo = await this.loginService.getUserInfo(userId);
     const secret = userInfo.secret;
     const token = authenticator.generate(secret);

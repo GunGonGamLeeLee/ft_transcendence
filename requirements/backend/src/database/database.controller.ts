@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { DbFriendListService } from './db.friend.list/db.friend.list.service';
 import { DbUserService } from './db.user/db.user.service';
 import { UserDto } from './dto/user.dto';
@@ -19,9 +28,10 @@ export class DatabaseController {
   }
 
   @ApiTags('database')
+  @ApiHeader({ name: 'Authorization' })
   @ApiOperation({ summary: '유저 추가해보기' })
   @Post('add-user')
-  async addUser(@Body() body: UserDto) {
+  async addUser(@Req() req, @Body() body: UserDto) {
     return await this.dbUserSerivce.saveOne({
       ...body,
     });

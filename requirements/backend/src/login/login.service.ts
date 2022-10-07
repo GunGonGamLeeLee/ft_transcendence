@@ -17,6 +17,7 @@ dotenv.config({
 export const redirectUri = process.env.API_URI;
 export const apiUid = process.env.API_UID;
 const apiSecret = process.env.API_SECRET;
+const jwtSecret = process.env.JWT_SECRET;
 
 @Injectable()
 export class LoginService {
@@ -52,14 +53,14 @@ export class LoginService {
   }
 
   issueToken(payload: TokenPayloadDto) {
-    return jwt.sign(payload, '나중에 고침');
+    return jwt.sign(payload, jwtSecret);
   }
 
   validateQrCode() {
     const payload = {
       qr: true,
     };
-    return jwt.sign(payload, '나중에 고침');
+    return jwt.sign(payload, jwtSecret);
   }
 
   getIdInJwt(token: string): number {
