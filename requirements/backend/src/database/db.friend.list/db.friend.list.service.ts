@@ -16,21 +16,47 @@ export class DbFriendListService {
     return await this.firendListRepo.find();
   }
 
+  async findListOfUser(uid: number) {
+    const user = await this.firendListRepo.find({
+      where: { fromUid: uid },
+    });
+    return user;
+  }
+
+  async findListOfUserWithInfo(uid: number) {
+    const user = await this.firendListRepo.find({
+      select: {
+        index: true,
+        user: {
+          uid: true,
+          displayName: true,
+          avatarPath: true,
+          userStatus: true,
+        },
+      },
+      relations: {
+        user: true,
+      },
+      where: { fromUid: uid },
+    });
+    return user;
+  }
+
   async saveOne(
     friendRelation: RelationListDto,
     user: UserEntity,
   ): Promise<void> {
     const rel = new FriendListEntity();
-    rel.fuid = friendRelation.fuid;
-    rel.tuid = friendRelation.tuid;
+    rel.fromUid = friendRelation.fromUid;
+    rel.toUid = friendRelation.toUid;
     rel.user = user;
     await this.firendListRepo.save(rel);
   }
 
-  async findOneByIdInFriendList(id: number) {
-    const user = await this.firendListRepo.findOne({
-      where: { fuid: id },
+  async deleteOne(fromUid: number, toUid: number) {
+    await this.firendListRepo.delete({
+      fromUid,
+      toUid,
     });
-    return user;
   }
 }
