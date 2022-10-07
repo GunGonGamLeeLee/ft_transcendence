@@ -13,6 +13,7 @@ services:
       - net
     ports:
       - 4243:4243
+    # tty: true
 
   frontend:
     container_name: frontend
@@ -40,8 +41,9 @@ services:
     ports:
       - 4245:4245
     environment:
-      POSTGRES_PASSWORD: "1234" # 나중에 수정!
-    tty: true
+      POSTGRES_PASSWORD: "1234" # FIXME 나중에 수정!
+      PGPORT: 4245
+      PGDATA: '/database'
 
 networks:
   net:

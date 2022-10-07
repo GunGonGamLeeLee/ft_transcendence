@@ -1,5 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+# FIXME env
 
-pg_ctl initdb -D /database
-postgres -D /database -p 4245
+psql --port 4245 << eof
+CREATE DATABASE "Transcendence";
 
+ALTER USER postgres WITH PASSWORD '1234';
+GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;
+eof
