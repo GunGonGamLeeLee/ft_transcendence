@@ -53,7 +53,7 @@ const requestOtpAuth = async (payload: OtpPayload) => {
     method: 'Post',
     headers: {
       'content-type': 'application/json',
-      Authorization: `${cookieToken}`,
+      Authorization: `Bearer ${cookieToken}`,
     },
     body: JSON.stringify(payload),
   });
