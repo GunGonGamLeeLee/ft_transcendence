@@ -10,12 +10,12 @@ export const friendListState = atom<UserDataType[]>({
       const { token } = get(authState);
       if (token === null) throw new Error();
 
-      return useRequestFriendList(token);
+      return requestFriendList(token);
     },
   }),
 });
 
-const useRequestFriendList = async (token: string): Promise<UserDataType[]> => {
+const requestFriendList = async (token: string): Promise<UserDataType[]> => {
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_EP}/users/friend`,
     {
