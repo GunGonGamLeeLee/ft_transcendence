@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilValue } from 'recoil';
+import { atom, selector } from 'recoil';
 import { authState } from './authState';
 import { UserDataType } from './userDataType';
 
@@ -7,7 +7,7 @@ export const userProfileState = atom<UserDataType>({
   default: selector({
     key: 'userProfile/default',
     get: ({ get }) => {
-      const { token } = useRecoilValue(authState);
+      const { token } = get(authState);
       if (token === null) throw new Error();
 
       return useRequestUserProfile(token);
