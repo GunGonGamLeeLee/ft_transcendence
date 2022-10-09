@@ -13,7 +13,7 @@ export function ChatUserList() {
       if (token === null) throw new Error();
 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_EP}/channel?id=${roomId}/users`,
+        `${import.meta.env.VITE_BACKEND_EP}/channel/users?roomId=${roomId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

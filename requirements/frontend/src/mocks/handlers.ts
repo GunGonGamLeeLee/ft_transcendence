@@ -79,8 +79,10 @@ export const handlers = [
   }),
 
   rest.get(
-    `${import.meta.env.VITE_BACKEND_EP}/channel?idz/users`,
+    `${import.meta.env.VITE_BACKEND_EP}/channel/users`,
     (req, res, ctx) => {
+      const param = req.url.searchParams;
+      const id = param.get('roomId');
       return res(
         ctx.status(200),
         ctx.json([
