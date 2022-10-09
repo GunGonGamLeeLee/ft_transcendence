@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { UserDataType } from '../../atoms/userDataType';
-import styles from './Li/UserLi.module.css';
-import { UserProfile } from './Li/UserProfile';
+import { UserDataType } from '../../../atoms/userDataType';
+import styles from '../../../components/SideBar/Li/UserLi.module.css';
+import { UserProfile } from '../../../components/SideBar/Li/UserProfile';
 
 type roleType = 'owner' | 'op' | 'admin'; // todo
 

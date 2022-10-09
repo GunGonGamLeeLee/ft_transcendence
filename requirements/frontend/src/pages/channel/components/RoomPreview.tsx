@@ -1,11 +1,25 @@
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RoomType } from '../ChannelLobby';
+import { useSetRecoilState } from 'recoil';
+import { currRoomState } from '../../../atoms/currRoomState';
+import { RoomType } from '../../../atoms/currRoomState';
 import styles from './RoomPreview.module.css';
 
 export function RoomPreview({ room }: { room: RoomType }) {
-  const navigate = useNavigate();
-  const onClick = () => {
-    navigate(room.roomId.toString());
+  const setCurrRoom = useSetRecoilState(currRoomState);
+  const navigator = useNavigate();
+
+  const onClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault();
+
+    setCurrRoom(room);
+
+    if (room.lock) {
+      navigator('/channel/roomChecker');
+      return;
+    }
+
+    navigator('/channel/room');
   };
 
   return (

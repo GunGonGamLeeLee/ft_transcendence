@@ -4,7 +4,7 @@ import { MyProfile } from './MyProfile';
 import { RankList } from './RankList';
 import styles from './SideBar.module.css';
 
-export default function SideBar() {
+export function SideBar() {
   const [isLeft, setIsLeft] = React.useState(true);
 
   const onLeftClick = () => {

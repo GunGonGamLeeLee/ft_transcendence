@@ -4,18 +4,11 @@ import { authState } from '../../atoms/authState';
 import { Link } from 'react-router-dom';
 import { FilterButton } from './components/FilterButton';
 import { filterState } from '../../atoms/filterState';
+import { RoomList } from './components/RoomList';
+import { RoomType } from '../../atoms/currRoomState';
+import NewRoom from './components/NewRoom';
 import styles from './ChannelLobby.module.css';
 import pagestyles from '../pages.module.css';
-import { RoomList } from './components/RoomList';
-import NewRoom from './components/NewRoom';
-
-export interface RoomType {
-  roomId: number;
-  title: string;
-  owner: string;
-  userCount: number;
-  lock: boolean;
-}
 
 export function ChannelLobby() {
   const [isOpen01, setIsOpen01] = React.useState(false); // need?

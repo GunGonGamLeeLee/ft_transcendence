@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { MyProfile } from './MyProfile';
-import styles from './SideBar.module.css';
-import { FriendList } from './FriendList';
+import { MyProfile } from '../../../components/SideBar/MyProfile';
+import { FriendList } from '../../../components/SideBar/FriendList';
 import { ChatUserList } from './ChatUserList';
+import styles from '../../../components/SideBar/SideBar.module.css';
 
 export default function ChatSideBar() {
   const [isLeft, setIsLeft] = React.useState(true);
