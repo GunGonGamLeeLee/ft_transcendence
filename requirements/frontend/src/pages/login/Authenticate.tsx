@@ -7,9 +7,8 @@ import { LoginButton } from './LoginButton';
 import { Otp } from './Otp';
 
 export interface JwtPayload {
-  iat: number;
   id: number;
-  qr: boolean;
+  isRequiredTFA: boolean;
 }
 
 export function Authenticate() {
@@ -42,18 +41,15 @@ const useParseCookieToken = () => {
       return;
     }
 
+    Cookies.remove('token');
     setToken(CookieToken);
 
-    try {
-      const { isRequiredTFA } = jwtDecode<JwtPayload>(CookieToken);
+    const { isRequiredTFA } = jwtDecode<JwtPayload>(CookieToken);
 
-      if (isRequiredTFA) {
-        setNeedMfa(true);
-      } else {
-        setToken(CookieToken);
-      }
-    } catch (err) {
-      console.log(err);
+    if (isRequiredTFA) {
+      setNeedMfa(true);
+    } else {
+      setToken(CookieToken);
     }
   });
 
