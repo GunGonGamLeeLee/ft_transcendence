@@ -22,8 +22,10 @@ const requestFriendList = async (token: string): Promise<UserDataType[]> => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
+
+  if (!response.ok) throw new Error();
 
   const data = await response.json();
   return data;

@@ -1,15 +1,15 @@
-import styles from './FriendLi.module.css';
 import * as React from 'react';
-import { UserProfile } from './UserProfile';
-import { UserDataType } from '../../../atoms/userDataType';
+import { UserDataType } from '../../atoms/userDataType';
+import styles from './Li/UserLi.module.css';
+import { UserProfile } from './Li/UserProfile';
 
-export default function RankUserLi({
-  user,
-  rank,
-}: {
-  user: UserDataType;
-  rank: number;
-}) {
+type roleType = 'owner' | 'op' | 'admin'; // todo
+
+export interface ChatUserType extends UserDataType {
+  role: roleType;
+}
+
+export function ChatUser({ user }: { user: ChatUserType }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const onClick = () => {
     setIsOpen((prev) => !prev);
@@ -22,11 +22,12 @@ export default function RankUserLi({
         onClick={onClick}
       >
         <div className={styles.user_profile__div}>
-          <div className={styles.user__rank}>{rank + 1}</div>
+          <img src={user.imgUri} className={styles.user_profile__img} />
           <div className={styles.user_profile__username}>
             {user.displayName}
           </div>
         </div>
+        <div>{user.role}</div>
       </li>
       <div
         className={`${styles.modal} ${isOpen ? '' : styles.modal__inactive}`}
