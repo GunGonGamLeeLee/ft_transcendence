@@ -10,7 +10,7 @@ export const handlers = [
         imgUri:
           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
         rating: 2048,
-      })
+      }),
     );
   }),
 
@@ -26,6 +26,7 @@ export const handlers = [
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
             rating: 2048,
+            status: 'online',
           },
           {
             id: 2,
@@ -33,6 +34,7 @@ export const handlers = [
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
             rating: 1024,
+            status: 'offline',
           },
           {
             id: 3,
@@ -40,10 +42,11 @@ export const handlers = [
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
             rating: 4096,
+            status: 'gaming',
           },
-        ])
+        ]),
       );
-    }
+    },
   ),
 
   rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
@@ -71,7 +74,42 @@ export const handlers = [
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
           rating: 1024,
         },
-      ])
+      ]),
     );
   }),
+
+  rest.get(
+    `${import.meta.env.VITE_BACKEND_EP}/channel?idz/users`,
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json([
+          {
+            id: 2,
+            displayName: 'jeongble',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 4096,
+            role: 'admin',
+          },
+          {
+            id: 3,
+            displayName: 'yeju',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 2048,
+            role: 'op',
+          },
+          {
+            id: 1,
+            displayName: 'jaham',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 1111,
+            role: 'owner',
+          },
+        ]),
+      );
+    },
+  ),
 ];
