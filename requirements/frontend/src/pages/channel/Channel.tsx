@@ -1,11 +1,10 @@
-import { useParams } from 'react-router-dom';
 import SideBar from '../../components/SideBar/SideBar';
-import ChannelLists from './ChannelLists';
+import { ChannelLobby } from './ChannelLobby';
 
 export function Channel() {
   return (
     <>
-      <ChannelLists />
+      <ChannelLobby />
       <SideBar />
     </>
   );

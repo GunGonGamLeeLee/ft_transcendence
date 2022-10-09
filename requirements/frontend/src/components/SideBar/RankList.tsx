@@ -25,7 +25,7 @@ export function RankList() {
 
     const data = await response.json();
     setRankList(data);
-  }, 600000);
+  }, 30000);
 
   return (
     <>
