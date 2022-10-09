@@ -27,7 +27,10 @@ export default function ChannelList({
       {channelList === undefined ? (
         <div>loading</div>
       ) : (
-        channelList.map((channel, index) => <ChannelLi channel={channel} />)
+        channelList.map((channel, index) => (
+          // <ChannelLi channel={channel} key={channel.roomId} /> todo
+          <ChannelLi channel={channel} key={index} />
+        ))
       )}
     </ol>
   );
