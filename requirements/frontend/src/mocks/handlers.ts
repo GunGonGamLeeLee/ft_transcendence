@@ -114,4 +114,70 @@ export const handlers = [
       );
     },
   ),
+
+  rest.get(
+    `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          all: [
+            {
+              roomId: 1,
+              title: '모든 채팅',
+              owner: 'jeongble',
+              userCount: 10,
+              lock: true,
+            },
+            {
+              roomId: 201,
+              title: '자함을 국회로!!!!!!!',
+              owner: 'jaham',
+              userCount: 99,
+              lock: false,
+            },
+            {
+              roomId: 200,
+              title: 'cjeon의 Haskell 강의',
+              owner: 'cjeon',
+              userCount: 10,
+              lock: false,
+            },
+            {
+              roomId: 404,
+              title: 'ljeongin의 minishell은 언제 끝날 것인가',
+              owner: 'rjeongin',
+              userCount: 44,
+              lock: true,
+            },
+          ],
+          joined: [
+            {
+              roomId: 200,
+              title: 'cjeon의 Haskell 강의',
+              owner: 'cjeon',
+              userCount: 10,
+              lock: false,
+            },
+            {
+              roomId: 404,
+              title: 'ljeongin의 minishell은 언제 끝날 것인가',
+              owner: 'rjeongin',
+              userCount: 44,
+              lock: true,
+            },
+          ],
+          dm: [
+            {
+              roomId: 200,
+              title: 'cjeon의 Haskell 강의',
+              owner: 'cjeon',
+              userCount: 10,
+              lock: false,
+            },
+          ],
+        }),
+      );
+    },
+  ),
 ];
