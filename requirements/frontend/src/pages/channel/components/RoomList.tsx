@@ -1,4 +1,4 @@
-import { RoomType } from '../ChannelLobby';
+import { RoomType } from '../../../atoms/currRoomState';
 import { RoomPreview } from './RoomPreview';
 import styles from '../ChannelLobby.module.css';
 

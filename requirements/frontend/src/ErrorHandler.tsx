@@ -9,7 +9,7 @@ export function ErrorHandler() {
 
   React.useEffect(() => {
     resetAuth();
-    navigator('/');
+    navigator('/', { replace: true });
   }, []);
 
   return <h1>Error!</h1>;

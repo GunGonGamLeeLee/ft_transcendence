@@ -124,7 +124,7 @@ export const handlers = [
           all: [
             {
               roomId: 1,
-              title: '모든 채팅',
+              title: 'example chat room title',
               owner: 'jeongble',
               userCount: 10,
               lock: true,
@@ -178,6 +178,12 @@ export const handlers = [
           ],
         }),
       );
+    },
+  ),
+  rest.get(
+    `${import.meta.env.VITE_BACKEND_EP}/channel/auth`,
+    (req, res, ctx) => {
+      return res(ctx.status(200));
     },
   ),
 ];
