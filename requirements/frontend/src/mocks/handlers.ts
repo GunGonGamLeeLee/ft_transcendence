@@ -21,11 +21,11 @@ export const handlers = [
         ctx.status(200),
         ctx.json([
           {
-            id: 1,
+            id: 99945,
             displayName: 'jaham',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 2048,
+            rating: 4612,
             status: 'online',
           },
           {
@@ -68,7 +68,7 @@ export const handlers = [
           rating: 2048,
         },
         {
-          id: 1,
+          id: 99945,
           displayName: 'jaham',
           imgUri:
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -103,7 +103,7 @@ export const handlers = [
             role: 'op',
           },
           {
-            id: 1,
+            id: 99945,
             displayName: 'jaham',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',

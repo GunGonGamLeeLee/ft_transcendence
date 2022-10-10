@@ -21,7 +21,7 @@ export function FriendList() {
 function Friend({ user }: { user: UserDataType }) {
   const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
-    setState(user.id);
+    setState(user);
   };
 
   return (
