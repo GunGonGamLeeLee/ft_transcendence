@@ -4,7 +4,7 @@ import { friendListState } from '../../atoms/friendListState';
 import { UserDataType } from '../../atoms/userDataType';
 import styles from './Li/UserLi.module.css';
 import { useSetRecoilState } from 'recoil';
-import { userProfileModalState } from '../../atoms/userProfileModalState';
+import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 
 export function FriendList() {
   const friendList = useRecoilValue(friendListState);

@@ -1,13 +1,14 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { UserDataType } from '../../atoms/userDataType';
-import { userProfileModalState } from '../../atoms/userProfileModalState';
+import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 import styles from './UserProfileModal.module.css';
+import modalstyles from './Modal.module.css';
 
 function ProfileButton({ text }: { text: string }) {
   return <button className={styles.profile__button}>{text}</button>;
 }
 
-export function UserProfile({ id }: { id: number }) {
+function UserProfile({ id }: { id: number }) {
   const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
     setState(undefined);
@@ -16,7 +17,7 @@ export function UserProfile({ id }: { id: number }) {
   // fetch and set user
   return (
     <>
-      <div className={styles.modal}>
+      <div className={modalstyles.modal}>
         <div className={styles.profile__blank} onClick={onClick}></div>
         <div className={styles.profile}>
           <div className={styles.profile__header}>
@@ -39,6 +40,20 @@ export function UserProfile({ id }: { id: number }) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+export function UserProfileModal() {
+  const userProfileModal = useRecoilValue(userProfileModalState);
+
+  return (
+    <>
+      {userProfileModal === undefined ? (
+        <></>
+      ) : (
+        <UserProfile id={userProfileModal} />
+      )}
     </>
   );
 }

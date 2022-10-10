@@ -2,7 +2,7 @@ import { UserDataType } from '../../../atoms/userDataType';
 import styles from './FriendLi.module.css';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { userProfileModalState } from '../../../atoms/userProfileModalState';
+import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
 
 export default function RankUserLi({
   user,

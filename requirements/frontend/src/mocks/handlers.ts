@@ -10,7 +10,7 @@ export const handlers = [
         imgUri:
           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
         rating: 2048,
-      }),
+      })
     );
   }),
 
@@ -44,9 +44,9 @@ export const handlers = [
             rating: 4096,
             status: 'gaming',
           },
-        ]),
+        ])
       );
-    },
+    }
   ),
 
   rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
@@ -74,7 +74,7 @@ export const handlers = [
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
           rating: 1024,
         },
-      ]),
+      ])
     );
   }),
 
@@ -92,7 +92,7 @@ export const handlers = [
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
             rating: 4096,
-            role: 'admin',
+            role: 'owner',
           },
           {
             id: 3,
@@ -108,11 +108,11 @@ export const handlers = [
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
             rating: 1111,
-            role: 'owner',
+            role: 'user',
           },
-        ]),
+        ])
       );
-    },
+    }
   ),
 
   rest.get(
@@ -176,14 +176,14 @@ export const handlers = [
               lock: false,
             },
           ],
-        }),
+        })
       );
-    },
+    }
   ),
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/channel/auth`,
     (req, res, ctx) => {
       return res(ctx.status(200));
-    },
+    }
   ),
 ];
