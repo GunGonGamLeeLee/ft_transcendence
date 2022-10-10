@@ -4,8 +4,9 @@ import { authState } from '../../atoms/authState';
 import { rankListState } from '../../atoms/rankListState';
 import { useInterval } from '../../hooks/useInterval';
 import { UserDataType } from '../../atoms/userDataType';
-import { UserProfile } from './Li/UserProfile';
 import styles from './Li/UserLi.module.css';
+import { useSetRecoilState } from 'recoil';
+import { userProfileModalState } from '../../atoms/userProfileModalState';
 
 export function RankList() {
   const { token } = useRecoilValue(authState);
@@ -18,7 +19,7 @@ export function RankList() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) throw new Error();
@@ -37,18 +38,14 @@ export function RankList() {
 }
 
 function Rank({ user, index }: { user: UserDataType; index: number }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
-    setIsOpen((prev) => !prev);
+    setState(user.id);
   };
 
   return (
     <>
-      <li
-        className={`${styles.user} ${isOpen ? styles.user__active : ''}`}
-        onClick={onClick}
-      >
+      <li className={styles.user} onClick={onClick}>
         <div className={styles.user_profile__div}>
           <div className={styles.user__rank}>{index + 1}</div>
           <div className={styles.user_profile__username}>
@@ -57,11 +54,6 @@ function Rank({ user, index }: { user: UserDataType; index: number }) {
         </div>
         <div>{user.rating}</div>
       </li>
-      <div
-        className={`${styles.modal} ${isOpen ? '' : styles.modal__inactive}`}
-      >
-        <UserProfile user={user} onClick={onClick} />
-      </div>
     </>
   );
 }
