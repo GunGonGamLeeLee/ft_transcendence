@@ -9,8 +9,10 @@ export function RoomChecker() {
   const currRoom = useRecoilValue(currRoomState);
   const navigator = useNavigate();
 
-  if (token === null) throw new Error();
-  if (currRoom === null) throw new Error();
+  React.useEffect(() => {
+    if (token === null) throw new Error();
+    if (currRoom === null) navigator('/channel', { replace: true });
+  }, [token, currRoom]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -22,6 +24,8 @@ export function RoomChecker() {
 
     if (password === null) return;
     if (typeof password !== 'string') return;
+
+    if (currRoom === null) throw new Error();
 
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_EP}/channel/auth?roomId=${
