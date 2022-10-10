@@ -23,14 +23,6 @@
   justify-content: flex-end;
 }
 
-.profile__redcross {
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-  background-color: red;
-  border-radius: 50%;
-}
-
 .profile__display {
   display: flex;
   flex-direction: row;

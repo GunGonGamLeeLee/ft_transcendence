@@ -9,6 +9,7 @@ import {
 import styles from './NewRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { RoomType } from '../../atoms/currRoomState';
+import { RedCross } from '../buttons/RedCross';
 
 export function NewRoomModal() {
   const NewRoomModal = useRecoilValue(newRoomModalState);
@@ -58,7 +59,7 @@ function NewRoom() {
   const requestCreateRoom = async (
     roomName: string,
     mode: string,
-    password: string | null,
+    password: string | null
   ) => {
     const room = {
       title: roomName,
@@ -96,7 +97,7 @@ function NewRoom() {
         <div className={styles.new}>
           <div className={styles.new__header}>
             <span className={styles.new__headertitle}>새 채팅방</span>
-            <div className={styles.new__redcross} onClick={onClick}></div>
+            <RedCross onClick={onClick} />
           </div>
           <form onSubmit={handleSubmit}>
             <div className={styles.new__options}>

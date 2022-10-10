@@ -1,0 +1,7 @@
+.redcross {
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+}

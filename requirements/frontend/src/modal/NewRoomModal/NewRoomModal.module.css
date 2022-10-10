@@ -29,14 +29,6 @@
   color: rgb(50, 50, 50);
 }
 
-.new__redcross {
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-  background-color: red;
-  border-radius: 50%;
-}
-
 .new__options {
   width: 330px;
   height: 170px;

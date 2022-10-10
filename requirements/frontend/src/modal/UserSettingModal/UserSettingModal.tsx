@@ -4,6 +4,7 @@ import { userSettingModalState } from '../../atoms/modals/userSettingModalState'
 import styles from './UserSettingModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { userProfileState } from '../../atoms/userProfileState';
+import { RedCross } from '../buttons/RedCross';
 
 export default function UserSetting() {
   const setUserSettingModal = useSetRecoilState(userSettingModalState);
@@ -40,7 +41,7 @@ export default function UserSetting() {
         <div className={styles.setting}>
           <div className={styles.setting__header}>
             <span className={styles.setting__headertitle}>프로필 수정</span>
-            <div className={styles.setting__redcross} onClick={onClick}></div>
+            <RedCross onClick={onClick} />
           </div>
           <div className={styles.setting__img}>
             <img src={previewImg} className={styles.setting__preview} />
