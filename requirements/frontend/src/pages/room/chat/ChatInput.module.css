@@ -1,0 +1,16 @@
+.chat__form {
+  width: 900px;
+}
+
+.chat__input {
+  width: 750px;
+  height: 50px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.chat__submit {
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+}

@@ -40,7 +40,7 @@ export function RankList() {
 function Rank({ user, index }: { user: UserDataType; index: number }) {
   const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
-    setState(user.id);
+    setState(user);
   };
 
   return (

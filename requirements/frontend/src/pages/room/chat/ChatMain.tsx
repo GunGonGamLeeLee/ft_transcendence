@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import styles from './ChatMain.module.css';
 import pagestyles from '../../pages.module.css';
 import { Chat } from './Chat';
+import { ChatInput } from './ChatInput';
 
 export function CharMain() {
   return (
@@ -13,7 +14,9 @@ export function CharMain() {
         <div className={pagestyles.page__main}>
           <Chat />
         </div>
-        <div className={pagestyles.page__footer}></div>
+        <div className={pagestyles.page__footer}>
+          <ChatInput />
+        </div>
       </div>
     </>
   );
