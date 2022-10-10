@@ -50,7 +50,7 @@ export class DbFriendListService {
     try {
       await this.firendListRepo.save(rel);
     } catch (err) {
-      throw new HttpException('already friend!', HttpStatus.FORBIDDEN); // FIXME 왜 에러 코드로 응답이 안 갈까?
+      throw new HttpException('already friend!', HttpStatus.FORBIDDEN);
     }
   }
 

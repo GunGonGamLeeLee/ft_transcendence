@@ -114,7 +114,7 @@ export class DatabaseService {
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
     if (user == null || myUid == friendUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
-    this.dbFriendListService.saveOne(
+    await this.dbFriendListService.saveOne(
       { fromUid: myUid, toUid: friendUid },
       user,
     );
@@ -126,7 +126,10 @@ export class DatabaseService {
     const user: UserEntity = await this.dbUserService.findOne(blockUid);
     if (user == null || myUid == blockUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
-    this.dbBlockListService.saveOne({ fromUid: myUid, toUid: blockUid }, user);
+    await this.dbBlockListService.saveOne(
+      { fromUid: myUid, toUid: blockUid },
+      user,
+    );
   }
 
   async addChannel(channelDto: ChannelDto) {
@@ -137,7 +140,16 @@ export class DatabaseService {
         HttpStatus.FORBIDDEN,
       );
     const user = await this.dbUserService.findOne(channelDto.chOwnerId);
-    return await this.dbChannelService.saveOne(channelDto, user);
+    const channel = await this.dbChannelService.saveOne(channelDto, user);
+    const userInChannelDto: UserInChannelDto = {
+      uid: channelDto.chOwnerId,
+      chid: channel.chid,
+      userRole: UserRoleInChannel.OWNER,
+      isMute: false,
+      isBan: false,
+    };
+    this.dbUserInChannelService.saveOne(userInChannelDto, user, channel);
+    return channel;
   }
 
   async addUerInChannel(userInChannelDto: UserInChannelDto) {
@@ -170,7 +182,7 @@ export class DatabaseService {
         HttpStatus.PAYLOAD_TOO_LARGE,
       );
     if (fromUser.uid === toUser.uid)
-      throw new HttpException('이상한 요청입니다.', HttpStatus.FORBIDDEN); // FIXME 메시지 고치자..
+      throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
     this.dbDmLogsService.saveOne(dmLog, fromUser, toUser);
   }
 
@@ -291,21 +303,11 @@ export class DatabaseService {
     return this.dbUserInChannelService.changeRole(targetUid, chid, role);
   }
 
-  async deleteUser(uid: number) {
-    // TODO 관련 목록 정리
-    await this.dbBlockListService.deleteAll(uid);
-    await this.dbFriendListService.deleteAll(uid);
-    await this.dbUserInChannelService.deleteAllOfUser(uid);
-    // this.dbDmLogsService.deleteAllOfUser(uid);
-    // this.matchHistoryService.deleteAllOfUser(uid);
-    return await this.dbUserService.deleteOne(uid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나?
-  }
-
   async deleteChannel(uid: number, chid: number) {
     await this.checkPermissionInChannel(uid, chid, 'you can`t delete channel.');
     // TODO 관련 목록 정리
     await this.dbUserInChannelService.deleteAllOfChannel(chid);
-    return await this.dbChannelService.deleteOne(chid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나?
+    return await this.dbChannelService.deleteOne(chid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나? -> ㅇㅇ
   }
 
   async deleteFriendOfUser(myUid: number, friendUid: number) {
@@ -326,7 +328,9 @@ export class DatabaseService {
 
   async deleteUserInChannel(uid: number, chid: number) {
     const channel = await this.dbChannelService.findOne(chid);
-    if (channel.chOwnerId == uid) this.deleteChannel(uid, chid);
+    if (channel == null)
+      throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);
+    if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
     return await this.dbUserInChannelService.deleteOne(uid, chid);
   }
 
@@ -336,7 +340,8 @@ export class DatabaseService {
     msg: string,
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
-    if (uic.userRole == UserRoleInChannel.USER || uic == null)
+    if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
+    if (uic.userRole == UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
 }

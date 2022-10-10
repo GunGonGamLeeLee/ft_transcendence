@@ -3,8 +3,8 @@ import {
   Column,
   OneToMany,
   PrimaryGeneratedColumn,
-  OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { UserEntity } from './entity.user';
 import { UserInChannelEntity } from './entity.user.in.channel';
@@ -17,7 +17,7 @@ export class ChannelEntity {
   @Column()
   chName: string;
 
-  @Column()
+  @Column({ unique: false })
   chOwnerId: number;
 
   @Column({ default: true })
@@ -29,7 +29,7 @@ export class ChannelEntity {
   @Column()
   password: string;
 
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.uid)
   @JoinColumn({
     name: 'chOwnerId',
     referencedColumnName: 'uid',
