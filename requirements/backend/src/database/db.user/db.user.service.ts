@@ -1,8 +1,10 @@
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from '../dto/user.dto';
 import { UserEntity, UserStatus } from '../entity/entity.user';
+
 
 @Injectable()
 export class DbUserService {
@@ -13,6 +15,7 @@ export class DbUserService {
   async findAll() {
     return await this.userRepo.find();
   }
+
 
   async findOne(uid: number): Promise<UserEntity> {
     return await this.userRepo.findOneBy({ uid });
@@ -67,5 +70,6 @@ export class DbUserService {
 
   async deleteOne(uid: number) {
     return await this.userRepo.delete({ uid });
+
   }
 }

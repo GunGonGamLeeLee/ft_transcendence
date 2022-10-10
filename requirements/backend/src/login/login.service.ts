@@ -11,6 +11,8 @@ import { DatabaseService } from 'src/database/database.service';
 import * as dotenv from 'dotenv';
 import { UserDto } from 'src/database/dto/user.dto';
 
+
+
 dotenv.config({
   path: '/backend.env',
 });
@@ -24,7 +26,9 @@ const jwtSecret = process.env.JWT_SECRET;
 export class LoginService {
   constructor(
     private readonly httpService: HttpService,
+
     private readonly databaseService: DatabaseService,
+
   ) {}
 
   async getIntraInfo(code: string) {
@@ -90,6 +94,7 @@ export class LoginService {
     return res;
   }
 
+
   async getUserInfo(id: number): Promise<UserInfo> {
     let user: UserEntity | UserDto = await this.databaseService.findOneUser(id);
     if (user == null) {
@@ -102,6 +107,7 @@ export class LoginService {
         qrSecret: authenticator.generateSecret(),
       };
       this.databaseService.saveOneUser(newUser);
+
       user = newUser;
     }
 

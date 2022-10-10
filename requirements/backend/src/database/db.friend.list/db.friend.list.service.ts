@@ -1,9 +1,11 @@
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RelationListDto } from '../dto/relation.list.dto';
 import { UserEntity } from '../entity/entity.user';
 import { FriendListEntity } from '../entity/entity.friend.list';
+
 
 @Injectable()
 export class DbFriendListService {
@@ -46,6 +48,7 @@ export class DbFriendListService {
     friendRelation: RelationListDto,
     user: UserEntity,
   ): Promise<void> {
+
     const rel = this.firendListRepo.create({ ...friendRelation, user });
     try {
       await this.firendListRepo.save(rel);
@@ -63,5 +66,6 @@ export class DbFriendListService {
 
   async deleteAll(uid: number) {
     return await this.firendListRepo.delete({ fromUid: uid });
+
   }
 }

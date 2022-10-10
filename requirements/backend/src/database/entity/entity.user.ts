@@ -1,3 +1,4 @@
+
 import { Entity, Column, PrimaryColumn, OneToMany, Unique } from 'typeorm';
 import { FriendListEntity } from './entity.friend.list';
 import { BlockListEntity } from './entity.block.list';
@@ -14,6 +15,7 @@ export enum UserStatus {
 
 @Entity()
 @Unique(['displayName'])
+
 export class UserEntity {
   @PrimaryColumn({ type: 'integer' })
   uid: number;

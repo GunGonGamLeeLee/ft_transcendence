@@ -12,6 +12,7 @@ import { ChannelEntity } from './database/entity/entity.channel';
 import { UserInChannelEntity } from './database/entity/entity.user.in.channel';
 import { DmLogEntity } from './database/entity/entity.dm.log';
 
+
 dotenv.config({
   path: '/backend.env',
 });
