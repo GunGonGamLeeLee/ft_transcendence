@@ -19,7 +19,7 @@ export default function NewRoom() {
   return (
     <>
       <div className={modalstyles.modal}>
-        <div className={styles.new__blank} onClick={onClick}></div>
+        <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.new}>
           <div className={styles.new__header}>
             <span className={styles.new__headertitle}>새 채팅방</span>
