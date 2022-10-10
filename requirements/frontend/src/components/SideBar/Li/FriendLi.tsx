@@ -1,17 +1,14 @@
-import * as React from 'react';
+import styles from './FriendLi.module.css';
 import { UserDataType } from '../../../atoms/userDataType';
-import styles from '../../../components/SideBar/Li/UserLi.module.css';
+import React, { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { userProfileModalState } from '../../../atoms/userProfileModalState';
 
-type roleType = 'owner' | 'op' | 'admin'; // todo
-
-export interface ChatUserType extends UserDataType {
-  role: roleType;
-}
-
-export function ChatUser({ user }: { user: ChatUserType }) {
-  const [isOpen, setIsOpen] = React.useState(false);
+export default function FriendLi({ user }: { user: UserDataType }) {
+  const setState = useSetRecoilState(userProfileModalState);
+  const [isOpen, setIsOpen] = useState(false);
   const onClick = () => {
-    setIsOpen((prev) => !prev);
+    setState(user.id);
   };
 
   return (
@@ -26,7 +23,8 @@ export function ChatUser({ user }: { user: ChatUserType }) {
             {user.displayName}
           </div>
         </div>
-        <div>{user.role}</div>
+        {/* {user.userId}  */}
+        <div>{user.status}</div>
       </li>
     </>
   );

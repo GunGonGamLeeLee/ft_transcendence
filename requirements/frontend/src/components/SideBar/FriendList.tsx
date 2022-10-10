@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useRecoilValue } from 'recoil';
 import { friendListState } from '../../atoms/friendListState';
 import { UserDataType } from '../../atoms/userDataType';
-import { UserProfile } from './Li/UserProfile';
 import styles from './Li/UserLi.module.css';
+import { useSetRecoilState } from 'recoil';
+import { userProfileModalState } from '../../atoms/userProfileModalState';
 
 export function FriendList() {
   const friendList = useRecoilValue(friendListState);
@@ -18,18 +19,14 @@ export function FriendList() {
 }
 
 function Friend({ user }: { user: UserDataType }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
-    setIsOpen((prev) => !prev);
+    setState(user.id);
   };
 
   return (
     <>
-      <li
-        className={`${styles.user} ${isOpen ? styles.user__active : ''}`}
-        onClick={onClick}
-      >
+      <li className={styles.user} onClick={onClick}>
         <div className={styles.user_profile__div}>
           <img src={user.imgUri} className={styles.user_profile__img} />
           <div className={styles.user_profile__username}>
@@ -38,11 +35,6 @@ function Friend({ user }: { user: UserDataType }) {
         </div>
         <div>{user.status}</div>
       </li>
-      <div
-        className={`${styles.modal} ${isOpen ? '' : styles.modal__inactive}`}
-      >
-        <UserProfile user={user} onClick={onClick} />
-      </div>
     </>
   );
 }
