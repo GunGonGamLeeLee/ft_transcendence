@@ -15,8 +15,8 @@ export function RoomList({
         isActive ? '' : styles.channel__inactive
       }`}
     >
-      {roomList.map((room) => {
-        return <RoomPreview room={room} key={room.roomId} />;
+      {roomList.map((room, index) => {
+        return <RoomPreview room={room} key={index} />;
       })}
     </ol>
   );
