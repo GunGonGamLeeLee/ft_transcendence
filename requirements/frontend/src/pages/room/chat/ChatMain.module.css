@@ -1,8 +1,4 @@
-.channel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 960px;
-  height: 720px;
+.chatmain__setting {
+  width: 20px;
+  height: 20px;
 }

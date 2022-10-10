@@ -10,7 +10,7 @@ export const handlers = [
         imgUri:
           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
         rating: 2048,
-      }),
+      })
     );
   }),
 
@@ -28,9 +28,9 @@ export const handlers = [
             rating: 1024,
             status: 'offline',
           },
-        ]),
+        ])
       );
-    },
+    }
   ),
 
   rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
@@ -61,7 +61,7 @@ export const handlers = [
           rating: 1024,
           status: 'online',
         },
-      ]),
+      ])
     );
   }),
 
@@ -97,9 +97,9 @@ export const handlers = [
             rating: 1111,
             role: 'user',
           },
-        ]),
+        ])
       );
-    },
+    }
   ),
 
   rest.get(
@@ -112,66 +112,80 @@ export const handlers = [
             {
               roomId: 1,
               title: 'example chat room title',
-              owner: 'jeongble',
+              ownerId: 99945,
+              ownerName: 'jeongble',
               userCount: 10,
               lock: true,
+              private: false,
             },
             {
               roomId: 201,
               title: '자함을 국회로!!!!!!!',
-              owner: 'jaham',
+              ownerId: 99945,
+              ownerName: 'jaham',
               userCount: 99,
               lock: false,
+              private: true,
             },
             {
               roomId: 200,
               title: 'cjeon의 Haskell 강의',
-              owner: 'cjeon',
+              ownerId: 99,
+              ownerName: 'cjeon',
               userCount: 10,
               lock: false,
+              private: false,
             },
             {
               roomId: 404,
               title: 'ljeongin의 minishell은 언제 끝날 것인가',
-              owner: 'rjeongin',
+              ownerId: 77,
+              ownerName: 'rjeongin',
               userCount: 44,
               lock: true,
+              private: false,
             },
           ],
           joined: [
             {
               roomId: 200,
               title: 'cjeon의 Haskell 강의',
-              owner: 'cjeon',
+              ownerId: 0,
+              ownerName: 'cjeon',
               userCount: 10,
               lock: false,
+              private: false,
             },
             {
               roomId: 404,
               title: 'ljeongin의 minishell은 언제 끝날 것인가',
-              owner: 'rjeongin',
+              ownerId: 99,
+              ownerName: 'rjeongin',
               userCount: 44,
               lock: true,
+              private: false,
             },
           ],
           dm: [
             {
               roomId: 200,
               title: 'cjeon의 Haskell 강의',
-              owner: 'cjeon',
+              ownerId: 9,
+              ownerName: 'cjeon',
               userCount: 10,
               lock: false,
+              private: false,
             },
           ],
-        }),
+        })
       );
-    },
+    }
   ),
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/channel/auth`,
     (req, res, ctx) => {
       return res(ctx.status(200));
-    },
+    }
   ),
   rest.post(
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
@@ -180,7 +194,7 @@ export const handlers = [
         console.log(`[MSW] request follow, id: ${res.id}`);
       });
       return res(ctx.status(201));
-    },
+    }
   ),
   rest.delete(
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
@@ -189,7 +203,7 @@ export const handlers = [
         console.log(`[MSW] request unfollow, id: ${res.id}`);
       });
       return res(ctx.status(200));
-    },
+    }
   ),
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/users/blocklist`,
@@ -205,9 +219,9 @@ export const handlers = [
             rating: 2048,
             status: 'online',
           },
-        ]),
+        ])
       );
-    },
+    }
   ),
   rest.post(
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
@@ -216,7 +230,7 @@ export const handlers = [
         console.log(`[MSW] request block, id: ${res.id}`);
       });
       return res(ctx.status(201));
-    },
+    }
   ),
   rest.delete(
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
@@ -225,13 +239,13 @@ export const handlers = [
         console.log(`[MSW] request unblock, id: ${res.id}`);
       });
       return res(ctx.status(200));
-    },
+    }
   ),
   rest.post(`${import.meta.env.VITE_BACKEND_EP}/channel`, (req, res, ctx) => {
     req.json().then((data) => {
       const { title, mode, password } = data;
       console.log(
-        `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`,
+        `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`
       );
     });
 
@@ -240,10 +254,11 @@ export const handlers = [
       ctx.json({
         roomId: 10,
         title: 'title',
-        owner: 'jaham',
+        ownerId: 99945,
+        ownerName: 'jaham',
         userCount: 1,
         lock: false,
-      }),
+      })
     );
   }),
 ];
