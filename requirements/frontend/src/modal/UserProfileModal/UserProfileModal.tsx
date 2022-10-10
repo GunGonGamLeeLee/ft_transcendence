@@ -11,6 +11,7 @@ import { Block } from '../buttons/Block';
 import styles from './UserProfileModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { Unblock } from '../buttons/Unblock';
+import { RedCross } from '../buttons/RedCross';
 
 export function UserProfileModal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -50,7 +51,7 @@ function UserProfile({ user }: { user: UserDataType }) {
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
           <div className={styles.profile__header}>
-            <div className={styles.profile__redcross} onClick={onClick}></div>
+            <RedCross onClick={onClick} />
           </div>
           <div className={styles.profile__display}>
             <img src={user.imgUri} className={styles.profile__img} />
