@@ -1,22 +1,29 @@
 .myprofile {
-  cursor: pointer;
   display: flex;
-  align-items: center;
-  width: 320;
+  flex-direction: row;
+  width: 320px;
   height: 120px;
-  padding: 10px;
-  box-sizing: border-box;
   background-color: rgb(199, 171, 254);
 }
 
+.myprofile__profile {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 260px;
+  height: 120px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .myprofile__img {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
 }
 
 .myprofile__text {
-  width: 200px;
+  width: 150px;
   height: 80px;
   display: flex;
   flex-direction: column;
@@ -30,4 +37,18 @@
 
 .myprofile__rating {
   font-size: 20px;
+}
+
+.myprofile__icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 60px;
+}
+
+.myprofile__icon {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
 }

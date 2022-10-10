@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { userProfileModalState } from '../atoms/modals/userProfileModalState';
 import { NewRoomModal } from './NewRoomModal/NewRoomModal';
 import { UserProfileModal } from './UserProfileModal/UserProfileModal';
+import { UserSettingModal } from './UserSettingModal/UserSettingModal';
 
 export function Modal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -14,6 +15,7 @@ export function Modal() {
         <UserProfileModal />
       </React.Suspense>
       <NewRoomModal />
+      <UserSettingModal />
       <Outlet />
     </>
   );

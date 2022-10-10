@@ -47,7 +47,7 @@ function UserProfile({ user }: { user: UserDataType }) {
   return (
     <>
       <div className={modalstyles.modal}>
-        <div className={styles.profile__blank} onClick={onClick}></div>
+        <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
           <div className={styles.profile__header}>
             <div className={styles.profile__redcross} onClick={onClick}></div>
