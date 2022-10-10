@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { rankListState } from '../../atoms/rankListState';
 import { useInterval } from '../../hooks/useInterval';
 import { UserDataType } from '../../atoms/userDataType';
-import styles from './Li/UserLi.module.css';
+import styles from './UserLi.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 
@@ -19,7 +18,7 @@ export function RankList() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     if (!response.ok) throw new Error();

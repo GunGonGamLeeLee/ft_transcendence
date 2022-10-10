@@ -1,8 +1,7 @@
-import * as React from 'react';
 import { useRecoilValue } from 'recoil';
 import { friendListState } from '../../atoms/friendListState';
 import { UserDataType } from '../../atoms/userDataType';
-import styles from './Li/UserLi.module.css';
+import styles from './UserLi.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 
