@@ -261,20 +261,20 @@ export class DatabaseController {
 
   @ApiTags('database/User')
   @ApiOperation({ summary: '2단계 인증 여부 바꾸기' })
-  @ApiHeader({ name: 'isRequiredTFA' })
+  @ApiHeader({ name: 'is_required_tfa' })
   @ApiHeader({ name: 'uid' })
   @Put('update-user-isRequiredTFA')
   async updateIsRequiredTFAOfUser(@Headers() header) {
     return await this.databaseService.updateUserIsRequiredTFA(
       header.uid,
-      header.isRequiredTFA == 'true',
+      header.is_required_tfa === 'true',
     );
   }
 
   @ApiTags('database/User')
   @ApiOperation({ summary: '유저 상태 바꾸기' })
   @ApiHeader({
-    name: 'userStatus',
+    name: 'user_status',
     description: '오프라인: 0, 온라인: 1, 인채널: 2, 인게임: 3',
   })
   @ApiHeader({ name: 'uid' })
@@ -282,13 +282,13 @@ export class DatabaseController {
   async updateUserStatusOfUser(@Headers() header) {
     return await this.databaseService.updateUserStatus(
       header.uid,
-      header.userStatus,
+      header.user_status,
     );
   }
 
   @ApiTags('database/Channel')
   @ApiOperation({ summary: '채널 이름 바꾸기' })
-  @ApiHeader({ name: 'chName' })
+  @ApiHeader({ name: 'ch_name' })
   @ApiHeader({ name: 'chid' })
   @ApiHeader({ name: 'uid' })
   @Put('update-ch-name')
@@ -296,7 +296,7 @@ export class DatabaseController {
     return await this.databaseService.updateChName(
       header.uid,
       header.chid,
-      header.chName,
+      header.ch_name,
     );
   }
 
@@ -310,7 +310,7 @@ export class DatabaseController {
     return await this.databaseService.updateChDisplay(
       header.uid,
       header.chid,
-      header.display,
+      header.display === 'true',
     );
   }
 
@@ -416,13 +416,6 @@ export class DatabaseController {
   }
 
   //NOTE - DELETE
-  @ApiTags('database/User')
-  @ApiOperation({ summary: '유저 지우기' })
-  @ApiHeader({ name: 'uid' })
-  @Delete('delete-user')
-  async deleteUser(@Headers() header) {
-    return await this.databaseService.deleteUser(header.uid);
-  }
 
   @ApiTags('database/Channel')
   @ApiOperation({ summary: '채널 지우기' })

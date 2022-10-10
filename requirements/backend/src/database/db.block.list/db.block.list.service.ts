@@ -50,7 +50,7 @@ export class DbBlockListService {
     try {
       await this.blockListRepo.save(rel);
     } catch (err) {
-      throw new HttpException('already blocked!', HttpStatus.FORBIDDEN); // FIXME 왜 에러 코드로 응답이 안 갈까?
+      throw new HttpException('already blocked!', HttpStatus.FORBIDDEN);
     }
   }
 

@@ -9,6 +9,5 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [HttpModule, DatabaseModule, AuthModule],
   providers: [LoginService],
   controllers: [LoginController],
-  providers: [LoginService],
 })
 export class LoginModule {}
