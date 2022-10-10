@@ -57,7 +57,7 @@ export function RoomChecker() {
     <>
       <p>Room Password</p>
       <form onSubmit={handleSubmit}>
-        <input name='password' />
+        <input name='password' type='password' />
         <button type='submit'>submit</button>
       </form>
       <button onClick={handleCancelClick}>cancel</button>
