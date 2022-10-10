@@ -167,21 +167,37 @@ export class DatabaseService {
     await this.dbUserService.saveOne(userDto);
   }
 
-  async updateNameOfUser(uid: number, displayName: string) {
+  async updateUserName(uid: number, displayName: string) {
     return this.dbUserService.updateName(uid, displayName);
   }
-  async updateAvatarOfUser(uid: number, avatarPath: string) {
+  async updateUserAvatar(uid: number, avatarPath: string) {
     return this.dbUserService.updateAvatarPath(uid, avatarPath);
   }
-  async updateRatingOfUser(uid: number, rating: number) {
+  async updateUserRating(uid: number, rating: number) {
     return this.dbUserService.updateRating(uid, rating);
   }
-  async updateIsRequiredTFAOfUser(uid: number, isRequiredTFA: boolean) {
+  async updateUserIsRequiredTFA(uid: number, isRequiredTFA: boolean) {
     return this.dbUserService.updateIsRequiredTFA(uid, isRequiredTFA);
   }
 
-  async updateUserStatusOfUser(uid: number, userStatus: UserStatus) {
+  async updateUserStatus(uid: number, userStatus: UserStatus) {
     return this.dbUserService.updateUserStatus(uid, userStatus);
+  }
+
+  async updateChName(chid: number, chName: string) {
+    return this.dbChannelService.updateChName(chid, chName);
+  }
+
+  async updateChDisplay(chid: number, display: boolean) {
+    return this.dbChannelService.updateDisplay(chid, display);
+  }
+
+  async updateChRemovePassword(chid: number) {
+    return this.dbChannelService.removePassword(chid);
+  }
+
+  async updateChSetPassword(chid: number, password: string) {
+    return this.dbChannelService.setPassword(chid, password);
   }
 
   async banUserInChannel(uid: number, chid: number) {
@@ -210,7 +226,13 @@ export class DatabaseService {
   }
 
   async deleteUser(uid: number) {
+    // TODO 관련 목록 정리
     await this.dbUserService.deleteOne(uid);
+  }
+
+  async deleteChannel(chid: number) {
+    // TODO 관련 목록 정리
+    await this.dbChannelService.deleteOne(chid);
   }
 
   async deleteFriendOfUser(myUid: number, friendUid: number) {

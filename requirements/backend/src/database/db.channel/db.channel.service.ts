@@ -38,6 +38,28 @@ export class DbChannelService {
     return await this.channelRepo.save(ch);
   }
 
+  async updateChName(chid: number, chName: string) {
+    return await this.channelRepo.update({ chid }, { chName });
+  }
+
+  async updateDisplay(chid: number, display: boolean) {
+    return await this.channelRepo.update({ chid }, { display });
+  }
+
+  async setPassword(chid: number, password: string) {
+    return await this.channelRepo.update(
+      { chid },
+      { isLocked: true, password },
+    );
+  }
+
+  async removePassword(chid: number) {
+    return await this.channelRepo.update(
+      { chid },
+      { isLocked: false, password: '' },
+    );
+  }
+
   async deleteOne(chid: number) {
     await this.channelRepo.delete({ chid });
   }

@@ -109,7 +109,6 @@ export class DatabaseController {
   @ApiHeader({ name: 'chid' })
   @Get('list-user-in-channel')
   async listUserInChannel(@Headers() header) {
-    // TODO type
     return await this.databaseService.listUserInChannel(header.chid);
   }
 
@@ -118,7 +117,6 @@ export class DatabaseController {
   @ApiHeader({ name: 'chid' })
   @Get('list-user-in-channel-with-user-info')
   async listUserInChannelWithUserInco(@Headers() header) {
-    // TODO type
     return await this.databaseService.listUserInChannelWithUserInfo(
       header.chid,
     );
@@ -129,7 +127,6 @@ export class DatabaseController {
   @ApiHeader({ name: 'chid' })
   @Get('list-mute-user-in-channel-with-user-info')
   async listMuteUserInChannelWithUserInco(@Headers() header) {
-    // TODO type
     return await this.databaseService.listMuteUserInChannelWithUserInfo(
       header.chid,
     );
@@ -139,7 +136,6 @@ export class DatabaseController {
   @ApiHeader({ name: 'chid' })
   @Get('list-ban-user-in-channel-with-user-info')
   async listBanUserInChannelWithUserInco(@Headers() header) {
-    // TODO type
     return await this.databaseService.listBanUserInChannelWithUserInfo(
       header.chid,
     );
@@ -195,30 +191,27 @@ export class DatabaseController {
   @ApiOperation({ summary: '표시 이름 바꾸기' })
   @ApiHeader({ name: 'name' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-name-of-User')
+  @Put('update-user-name')
   async updateNameOfUser(@Headers() header) {
-    return await this.databaseService.updateNameOfUser(header.uid, header.name);
+    return await this.databaseService.updateUserName(header.uid, header.name);
   }
 
   @ApiTags('database/User')
   @ApiOperation({ summary: '아바타 바꾸기' })
   @ApiHeader({ name: 'path' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-avatar-of-User')
+  @Put('update-user-avatar')
   async updateAvatarOfUser(@Headers() header) {
-    return await this.databaseService.updateAvatarOfUser(
-      header.uid,
-      header.path,
-    );
+    return await this.databaseService.updateUserAvatar(header.uid, header.path);
   }
 
   @ApiTags('database/User')
   @ApiOperation({ summary: '랭크 점수 바꾸기' })
   @ApiHeader({ name: 'rating' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-rating-of-User')
+  @Put('update-user-rating')
   async updateRatingOfUser(@Headers() header) {
-    return await this.databaseService.updateRatingOfUser(
+    return await this.databaseService.updateUserRating(
       header.uid,
       header.rating,
     );
@@ -228,9 +221,9 @@ export class DatabaseController {
   @ApiOperation({ summary: '2단계 인증 여부 바꾸기' })
   @ApiHeader({ name: 'isRequiredTFA' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-isRequiredTFA-of-User')
+  @Put('update-user-isRequiredTFA')
   async updateIsRequiredTFAOfUser(@Headers() header) {
-    return await this.databaseService.updateIsRequiredTFAOfUser(
+    return await this.databaseService.updateUserIsRequiredTFA(
       header.uid,
       header.isRequiredTFA == 'true',
     );
@@ -240,12 +233,53 @@ export class DatabaseController {
   @ApiOperation({ summary: '유저 상태 바꾸기' })
   @ApiHeader({ name: 'userStatus' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-name-of-User')
+  @Put('update-user-status')
   async updateUserStatusOfUser(@Headers() header) {
-    return await this.databaseService.updateUserStatusOfUser(
+    return await this.databaseService.updateUserStatus(
       header.uid,
       header.userStatus,
     );
+  }
+
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '채널 이름 바꾸기' })
+  @ApiHeader({ name: 'chName' })
+  @ApiHeader({ name: 'chid' })
+  @Put('update-ch-name')
+  async updateChName(@Headers() header) {
+    return await this.databaseService.updateChName(header.chid, header.chName);
+  }
+
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '채널 공개 여부 바꾸기' })
+  @ApiHeader({ name: 'display' })
+  @ApiHeader({ name: 'chid' })
+  @Put('update-ch-display')
+  async updateChDisplay(@Headers() header) {
+    return await this.databaseService.updateChDisplay(
+      header.chid,
+      header.display,
+    );
+  }
+
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '채널 비밀번호 설정하기' })
+  @ApiHeader({ name: 'password' })
+  @ApiHeader({ name: 'chid' })
+  @Put('update-ch-set-password')
+  async updateChSetPassword(@Headers() header) {
+    return await this.databaseService.updateChSetPassword(
+      header.chid,
+      header.password,
+    );
+  }
+
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '채널 비밀번호 삭제하기' })
+  @ApiHeader({ name: 'chid' })
+  @Put('update-ch-remove-password')
+  async updateChRemovePassword(@Headers() header) {
+    return await this.databaseService.updateChRemovePassword(header.chid);
   }
 
   @ApiTags('database/UserInChannel')
@@ -316,6 +350,14 @@ export class DatabaseController {
   @Delete('delete-user')
   async deleteUser(@Headers() header) {
     return await this.databaseService.deleteUser(header.uid);
+  }
+
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '채널 지우기' })
+  @ApiHeader({ name: 'chid' })
+  @Delete('delete-channel')
+  async deleteChannel(@Headers() header) {
+    return await this.databaseService.deleteChannel(header.chid);
   }
 
   @ApiTags('database/FriendList')
