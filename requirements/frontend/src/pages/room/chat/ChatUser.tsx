@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { UserDataType } from '../../../atoms/userDataType';
-import styles from '../../../components/SideBar/Li/UserLi.module.css';
+import styles from '../../../components/SideBar/UserLi.module.css';
 
 type roleType = 'owner' | 'op' | 'user'; // todo
 
