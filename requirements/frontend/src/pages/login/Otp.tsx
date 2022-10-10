@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 
@@ -19,6 +20,8 @@ export function Otp() {
       const { token } = await requestOtpAuth({ pin });
       setAuthState({ token });
     } catch (err) {
+      Cookies.remove('token');
+      setAuthState({ token: null });
       return;
     }
   };
@@ -43,10 +46,14 @@ interface OtpResponse {
 }
 
 const requestOtpAuth = async (payload: OtpPayload) => {
+  const cookieToken = Cookies.get('token');
+  if (cookieToken === undefined) throw new Error();
+
   const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, {
     method: 'Post',
     headers: {
       'content-type': 'application/json',
+      Authorization: `Bearer ${cookieToken}`,
     },
     body: JSON.stringify(payload),
   });

@@ -9,10 +9,12 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { apiUid, LoginService, redirectUri } from './login.service';
 import { optDto } from './otp.dto';
 import { TokenPayloadDto } from './token.payload.dto';
@@ -56,25 +58,26 @@ export class LoginController {
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
 
-    if (payload.isRequiredTFA)
-      return res.redirect(301, 'http://localhost:4242/login'); // qr code (x) -> opt input;
-    return res.redirect(301, 'http://localhost:4242/lobby');
+    return res.redirect(301, 'http://localhost:4242/login');
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'token' })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
   @Get('qr')
   sendQrCode(@Headers() header) {
-    const id = this.loginService.getIdInJwt(header.token);
+    const jwtString = header.authorization.split('Bearer ')[1];
+    const id = this.loginService.getIdInJwt(jwtString);
     return this.loginService.createQrCode(id);
   }
 
   @ApiTags('login')
-  @ApiHeader({ name: 'token' })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
   @Post('otp')
   async validateOtp(@Headers() header, @Body() body: optDto) {
-    // console.log(header.token);
-    const userId = this.loginService.getIdInJwt(header.token);
+    const jwtString = header.authorization.split('Bearer ')[1];
+    const userId = this.loginService.getIdInJwt(jwtString);
     const userInfo = await this.loginService.getUserInfo(userId);
     const secret = userInfo.secret;
     const token = authenticator.generate(secret);
@@ -83,7 +86,7 @@ export class LoginController {
     // console.log(token);
     // console.log(body.code);
 
-    if (token != body.code) {
+    if (token !== body.pin) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 

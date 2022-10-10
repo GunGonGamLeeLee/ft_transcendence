@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserInChannelDto } from '../dto/user.in.channel.dto';
@@ -94,42 +94,24 @@ export class DbUserInChannelService {
     });
   }
 
-  async findBanListOfChannel(chid: number) {
-    return await this.userInChannelRepo.find({
-      select: {
-        uid: true,
-        user: {
-          uid: true,
-          displayName: true,
-          avatarPath: true,
-        },
-      },
-      relations: { user: true },
-      where: {
-        chid,
-        isBan: true,
-      },
-    });
-  }
-
   async saveOne(
     userInChannel: UserInChannelDto | UserInChannelEntity,
     user: UserEntity,
     channel: ChannelEntity,
   ) {
-    const uic = new UserInChannelEntity();
-    uic.chid = userInChannel.chid;
-    uic.uid = userInChannel.uid;
-    uic.userRole = userInChannel.userRole;
-    uic.isMute = userInChannel.isMute;
-    uic.isBan = userInChannel.isBan;
-    uic.user = user;
-    uic.channel = channel;
-    return await this.userInChannelRepo.save(uic);
-  }
-
-  async deleteOne(uid: number, chid: number) {
-    await this.userInChannelRepo.delete({ uid, chid });
+    const uic = this.userInChannelRepo.create({
+      ...userInChannel,
+      user,
+      channel,
+    });
+    try {
+      return await this.userInChannelRepo.save(uic);
+    } catch (err) {
+      throw new HttpException(
+        '채널에 들어갈 수 없습니다.',
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 
   async muteOne(uid: number, chid: number) {
@@ -156,5 +138,17 @@ export class DbUserInChannelService {
       { uid, chid },
       { userRole: role },
     );
+  }
+
+  async deleteOne(uid: number, chid: number) {
+    return await this.userInChannelRepo.delete({ uid, chid });
+  }
+
+  async deleteAllOfUser(uid: number) {
+    return await this.userInChannelRepo.delete({ uid });
+  }
+
+  async deleteAllOfChannel(chid: number) {
+    return await this.userInChannelRepo.delete({ chid });
   }
 }

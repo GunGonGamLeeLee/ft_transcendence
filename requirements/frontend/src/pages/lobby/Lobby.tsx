@@ -1,6 +1,6 @@
-import SideBar from '../../components/SideBar/SideBar';
+import { SideBar } from '../../components/SideBar/SideBar';
+import { Modal } from '../../modal/Modal';
 import Menu from './Menu';
-import Body from '../../components/Body';
 
 export function Lobby() {
   return (

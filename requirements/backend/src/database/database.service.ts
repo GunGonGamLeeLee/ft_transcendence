@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DbBlockListService } from './db.block.list/db.block.list.service';
 import { DbChannelService } from './db.channel/db.channel.service';
 import { DbDmLogService } from './db.dm.log/db.dm.log.service';
@@ -12,6 +12,9 @@ import { UserInChannelDto } from './dto/user.in.channel.dto';
 import { ChannelEntity } from './entity/entity.channel';
 import { UserEntity, UserStatus } from './entity/entity.user';
 import { UserRoleInChannel } from './entity/entity.user.in.channel';
+
+const MAX_CHANNEL_COUNT = 10; // ANCHOR 여기 있는게 맞나..?
+const MAX_DM_SIZE = 200;
 
 @Injectable()
 export class DatabaseService {
@@ -95,16 +98,10 @@ export class DatabaseService {
     );
   }
 
-  async listDmOfUser(uid: number) {
-    return await this.dbDmLogsService.findDmLogsOfUser(uid);
-  }
-
-  async listDmOfUserWithUserInfo(uid: number) {
-    return await this.dbDmLogsService.findDmLogsOfUserWithUserInfo(uid);
-  }
-
-  async getBanListofChannel(chid: number) {
-    return await this.dbUserInChannelService.findBanListOfChannel(chid);
+  async listDmOfUser(user1: number, user2: number) {
+    if (user1 == user2)
+      throw new HttpException('잘못된 요청입니다.', HttpStatus.BAD_REQUEST);
+    return await this.dbDmLogsService.findDmLogsOfUser(user1, user2);
   }
 
   async addUser(userDto: UserDto) {
@@ -112,25 +109,35 @@ export class DatabaseService {
   }
 
   async addFriend(myUid: number, friendUid: number) {
-    // TODO 차단 삭제
+    // TODO transaction
+    await this.dbBlockListService.deleteOne(myUid, friendUid);
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
+    if (user == null || myUid == friendUid)
+      throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
     this.dbFriendListService.saveOne(
-      { fromUid: +myUid, toUid: +friendUid },
+      { fromUid: myUid, toUid: friendUid },
       user,
     );
   }
 
   async addBlock(myUid: number, blockUid: number) {
-    // TODO 친구 삭제
+    // TODO transaction
+    await this.dbFriendListService.deleteOne(myUid, blockUid);
     const user: UserEntity = await this.dbUserService.findOne(blockUid);
-    this.dbBlockListService.saveOne(
-      { fromUid: +myUid, toUid: +blockUid },
-      user,
-    );
+    if (user == null || myUid == blockUid)
+      throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
+    this.dbBlockListService.saveOne({ fromUid: myUid, toUid: blockUid }, user);
   }
 
   async addChannel(channelDto: ChannelDto) {
-    return await this.dbChannelService.saveOne(channelDto);
+    const count = await this.dbChannelService.countByUid(channelDto.chOwnerId);
+    if (count >= MAX_CHANNEL_COUNT)
+      throw new HttpException(
+        'you have too many channels',
+        HttpStatus.FORBIDDEN,
+      );
+    const user = await this.dbUserService.findOne(channelDto.chOwnerId);
+    return await this.dbChannelService.saveOne(channelDto, user);
   }
 
   async addUerInChannel(userInChannelDto: UserInChannelDto) {
@@ -152,6 +159,18 @@ export class DatabaseService {
       dmLog.fromUid,
     );
     const toUser: UserEntity = await this.dbUserService.findOne(dmLog.toUid);
+    if (fromUser == null || toUser == null)
+      throw new HttpException(
+        '존재하지 않는 유저입니다.',
+        HttpStatus.NOT_FOUND,
+      );
+    if (dmLog.content.length > MAX_DM_SIZE)
+      throw new HttpException(
+        '메시지의 내용이 너무 많습니다.',
+        HttpStatus.PAYLOAD_TOO_LARGE,
+      );
+    if (fromUser.uid === toUser.uid)
+      throw new HttpException('이상한 요청입니다.', HttpStatus.FORBIDDEN); // FIXME 메시지 고치자..
     this.dbDmLogsService.saveOne(dmLog, fromUser, toUser);
   }
 
@@ -163,67 +182,161 @@ export class DatabaseService {
     return await this.dbChannelService.findOne(chid);
   }
 
-  async saveOneUser(userDto: UserDto | UserEntity): Promise<void> {
+  async saveOneUser(userDto: UserDto): Promise<void> {
     await this.dbUserService.saveOne(userDto);
   }
 
-  async updateNameOfUser(uid: number, displayName: string) {
+  async updateUserName(uid: number, displayName: string) {
     return this.dbUserService.updateName(uid, displayName);
   }
-  async updateAvatarOfUser(uid: number, avatarPath: string) {
+  async updateUserAvatar(uid: number, avatarPath: string) {
     return this.dbUserService.updateAvatarPath(uid, avatarPath);
   }
-  async updateRatingOfUser(uid: number, rating: number) {
+  async updateUserRating(uid: number, rating: number) {
     return this.dbUserService.updateRating(uid, rating);
   }
-  async updateIsRequiredTFAOfUser(uid: number, isRequiredTFA: boolean) {
+  async updateUserIsRequiredTFA(uid: number, isRequiredTFA: boolean) {
     return this.dbUserService.updateIsRequiredTFA(uid, isRequiredTFA);
   }
 
-  async updateUserStatusOfUser(uid: number, userStatus: UserStatus) {
+  async updateUserStatus(uid: number, userStatus: UserStatus) {
     return this.dbUserService.updateUserStatus(uid, userStatus);
   }
 
-  async banUserInChannel(uid: number, chid: number) {
-    return this.dbUserInChannelService.banOne(uid, chid);
+  async updateChName(uid: number, chid: number, chName: string) {
+    await this.checkPermissionInChannel(
+      uid,
+      chid,
+      'you can`t edit channel name.',
+    );
+    return this.dbChannelService.updateChName(chid, chName);
   }
 
-  async muteUserInChannel(uid: number, chid: number) {
-    return this.dbUserInChannelService.muteOne(uid, chid);
+  async updateChDisplay(uid: number, chid: number, display: boolean) {
+    await this.checkPermissionInChannel(
+      uid,
+      chid,
+      'you can`t edit channel display state.',
+    );
+    return this.dbChannelService.updateDisplay(chid, display);
   }
 
-  async unbanUserInChannel(uid: number, chid: number) {
-    return this.dbUserInChannelService.unbanOne(uid, chid);
+  async updateChRemovePassword(uid: number, chid: number) {
+    await this.checkPermissionInChannel(
+      uid,
+      chid,
+      'you can`t remove channel password.',
+    );
+    return this.dbChannelService.removePassword(chid);
   }
 
-  async unmuteUserInChannel(uid: number, chid: number) {
-    return this.dbUserInChannelService.unmuteOne(uid, chid);
+  async updateChSetPassword(uid: number, chid: number, password: string) {
+    await this.checkPermissionInChannel(
+      uid,
+      chid,
+      'you can`t set channel password.',
+    );
+    return this.dbChannelService.setPassword(chid, password);
+  }
+
+  async banUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.checkPermissionInChannel(
+      myUid,
+      chid,
+      'you can`t ban user in channel.',
+    );
+    return this.dbUserInChannelService.banOne(targetUid, chid);
+  }
+
+  async muteUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.checkPermissionInChannel(
+      myUid,
+      chid,
+      'you can`t mute user in channel.',
+    );
+    return this.dbUserInChannelService.muteOne(targetUid, chid);
+  }
+
+  async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.checkPermissionInChannel(
+      myUid,
+      chid,
+      'you can`t unban user in channel.',
+    );
+    return this.dbUserInChannelService.unbanOne(targetUid, chid);
+  }
+
+  async unmuteUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.checkPermissionInChannel(
+      myUid,
+      chid,
+      'you can`t unmute user in channel.',
+    );
+    return this.dbUserInChannelService.unmuteOne(targetUid, chid);
   }
 
   async changeUserRoleInChannel(
-    uid: number,
+    myUid: number,
+    targetUid: number,
     chid: number,
     role: UserRoleInChannel,
   ) {
-    // TODO 유저 역할: 채널 주인으로 바꿀 수 있어야하나? 안되야 맞는 듯
-    return this.dbUserInChannelService.changeRole(uid, chid, role);
+    await this.checkPermissionInChannel(
+      myUid,
+      chid,
+      'you can`t change userRole in channel.',
+    );
+    if (role == UserRoleInChannel.OWNER)
+      throw new HttpException('permission denied', HttpStatus.FORBIDDEN);
+    return this.dbUserInChannelService.changeRole(targetUid, chid, role);
   }
 
   async deleteUser(uid: number) {
-    await this.dbUserService.deleteOne(uid);
+    // TODO 관련 목록 정리
+    await this.dbBlockListService.deleteAll(uid);
+    await this.dbFriendListService.deleteAll(uid);
+    await this.dbUserInChannelService.deleteAllOfUser(uid);
+    // this.dbDmLogsService.deleteAllOfUser(uid);
+    // this.matchHistoryService.deleteAllOfUser(uid);
+    return await this.dbUserService.deleteOne(uid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나?
+  }
+
+  async deleteChannel(uid: number, chid: number) {
+    await this.checkPermissionInChannel(uid, chid, 'you can`t delete channel.');
+    // TODO 관련 목록 정리
+    await this.dbUserInChannelService.deleteAllOfChannel(chid);
+    return await this.dbChannelService.deleteOne(chid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나?
   }
 
   async deleteFriendOfUser(myUid: number, friendUid: number) {
     await this.dbFriendListService.deleteOne(myUid, friendUid);
   }
 
+  async deleteFriendAll(uid: number) {
+    return await this.dbFriendListService.deleteAll(uid);
+  }
+
   async deleteBlockOfUser(myUid: number, blockUid: number) {
-    await this.dbBlockListService.deleteOne(myUid, blockUid);
+    return await this.dbBlockListService.deleteOne(myUid, blockUid);
+  }
+
+  async deleteBlockAll(uid: number) {
+    return await this.dbBlockListService.deleteAll(uid);
   }
 
   async deleteUserInChannel(uid: number, chid: number) {
     const channel = await this.dbChannelService.findOne(chid);
-    if (channel.chOwnerId == uid) this.dbChannelService.deleteOne(chid);
-    await this.dbUserInChannelService.deleteOne(uid, chid);
+    if (channel.chOwnerId == uid) this.deleteChannel(uid, chid);
+    return await this.dbUserInChannelService.deleteOne(uid, chid);
+  }
+
+  private async checkPermissionInChannel(
+    myUid: number,
+    chid: number,
+    msg: string,
+  ) {
+    const uic = await this.dbUserInChannelService.findOne(myUid, chid);
+    if (uic.userRole == UserRoleInChannel.USER || uic == null)
+      throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
 }

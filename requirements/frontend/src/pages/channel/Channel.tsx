@@ -1,17 +1,15 @@
-import SideBar from '../../components/SideBar/SideBar';
-import { LoginChecker } from '../../components/LoginChecker';
-import Body from '../../components/Body';
-import ChannelList from './ChannelList';
+import * as React from 'react';
+import { SideBar } from '../../components/SideBar/SideBar';
+import { Modal } from '../../modal/Modal';
+import { ChannelLobby } from './ChannelLobby';
 
 export function Channel() {
   return (
     <>
-      <LoginChecker>
-        <Body>
-          <ChannelList />
-          <SideBar />
-        </Body>
-      </LoginChecker>
+      <React.Suspense fallback={<h1>Loading</h1>}>
+        <ChannelLobby />
+      </React.Suspense>
+      <SideBar />
     </>
   );
 }

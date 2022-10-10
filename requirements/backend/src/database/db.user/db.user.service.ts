@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from '../dto/user.dto';
@@ -30,25 +30,27 @@ export class DbUserService {
   }
 
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
-    const user = new UserEntity();
-    user.uid = userDto.uid;
-    user.displayName = userDto.displayName;
-    user.avatarPath = userDto.avatarPath;
-    user.rating = userDto.rating;
-    user.isRequiredTFA = userDto.isRequiredTFA;
-    user.qrSecret = userDto.qrSecret;
-    user.userStatus = UserStatus.OFFLINE;
-    await this.userRepo.save(user);
+    const user = this.userRepo.create({
+      ...userDto,
+      userStatus: UserStatus.OFFLINE,
+    });
+    try {
+      await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
+    } catch (err) {
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
+    }
   }
 
   async updateName(uid: number, displayName: string) {
-    const user = this.userRepo.findOneBy({ displayName });
-    if (user != null) throw new HttpException('already existed name', 403);
-    await this.userRepo.update({ uid }, { displayName });
+    try {
+      await this.userRepo.update({ uid }, { displayName });
+    } catch (err) {
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN); // TODO 없는 유저? -> 현재는 무시됨.
+    }
   }
 
   async updateAvatarPath(uid: number, avatarPath: string) {
-    await this.userRepo.update({ uid }, { avatarPath });
+    await this.userRepo.update({ uid }, { avatarPath }); // TODO 없는 유저? -> 현재는 무시됨.
   }
 
   async updateRating(uid: number, rating: number) {
@@ -64,6 +66,6 @@ export class DbUserService {
   }
 
   async deleteOne(uid: number) {
-    await this.userRepo.delete({ uid });
+    return await this.userRepo.delete({ uid });
   }
 }
