@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { FriendListEntity } from './entity.friend.list';
 import { BlockListEntity } from './entity.block.list';
 import { UserInChannelEntity } from './entity.user.in.channel';
+import { DmLogEntity } from './entity.dm.log';
 // import { MatchHistoryEntity } from './entity.matchhistory.list';
 
 export enum UserStatus {
@@ -43,6 +44,11 @@ export class UserEntity {
   @OneToMany(() => UserInChannelEntity, (inChannelList) => inChannelList.user)
   inChannelList: UserInChannelEntity[];
 
+  // @OneToMany(() => DmLogEntity, (dmList) => dmList.fromUser)
+  // dmList: DmLogEntity[];
+  
+  // @OneToMany(() => DmLogEntity, (dmList) => dmList.toUser)
+  // dmList: DmLogEntity[];
   // @OneToMany(() => MatchHistoryEntity, (matchHistory) => matchHistory.user)
   // matchHistory: MatchHistoryEntity[];
 }

@@ -2,8 +2,7 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import { UserEntity } from './entity.user';
 
@@ -12,19 +11,22 @@ export class DmLogEntity {
   @PrimaryGeneratedColumn({ type: 'integer' })
   index: number;
 
-  @Column({ type: 'integer' })
-  fromUid: number;
+  //TODO - include uid?
+  // @Column({ type: 'integer' })
+  // fromUid: number;
 
-  @Column({ type: 'integer' })
-  toUid: number;
+  // @Column({ type: 'integer' })
+  // toUid: number;
 
-  @Column({ type: 'bigint' })
-  time: number;
+  @Column({ type: 'timestamptz' })
+  time: Date;
 
   @Column()
   content: string;
 
-  @ManyToMany(() => UserEntity)
-  @JoinTable()
-  users: UserEntity[];
+  @ManyToOne(() => UserEntity, (user) => user.uid)
+  fromUser: UserEntity
+
+  @ManyToOne(() => UserEntity, (user) => user.uid)
+  toUser: UserEntity
 }

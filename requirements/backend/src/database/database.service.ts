@@ -95,13 +95,13 @@ export class DatabaseService {
     );
   }
 
-  async listDmOfUser(uid: number) {
-    return await this.dbDmLogsService.findDmLogsOfUser(uid);
+  async listDmOfUser(user1: number, user2: number) {
+    return await this.dbDmLogsService.findDmLogsOfUser(user1, user2);
   }
 
-  async listDmOfUserWithUserInfo(uid: number) {
-    return await this.dbDmLogsService.findDmLogsOfUserWithUserInfo(uid);
-  }
+  // async listDmOfUserWithUserInfo(uid: number) {
+  //   return await this.dbDmLogsService.findDmLogsOfUserWithUserInfo(uid);
+  // }
 
   async getBanListofChannel(chid: number) {
     return await this.dbUserInChannelService.findBanListOfChannel(chid);

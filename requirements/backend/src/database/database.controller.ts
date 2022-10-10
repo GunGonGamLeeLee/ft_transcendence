@@ -10,6 +10,7 @@ import {
 import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DatabaseService } from './database.service';
 import { ChannelDto } from './dto/channel.dto';
+import { DmLogDto } from './dto/dm.log.dto';
 import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
 
@@ -19,9 +20,18 @@ import { UserInChannelDto } from './dto/user.in.channel.dto';
 export class DatabaseController {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  //NOTE - GET
+  @ApiTags('database/User')
+  @ApiOperation({ summary: '특정 유저 정보 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('show-user')
+  async showUserById(@Headers() header) {
+    return await this.databaseService.findOneUser(header.uid);
+  }
+
   @ApiTags('database/User')
   @ApiOperation({ summary: '전체 유저 목록 보기' })
-  @Get('show-user-table')
+  @Get('show-user-list')
   async listAllUser() {
     return await this.databaseService.listAllUser();
   }
@@ -141,6 +151,24 @@ export class DatabaseController {
     );
   }
 
+  @ApiTags('database/Dm')
+  @ApiOperation({ summary: 'DM로그 전체 보기' })
+  // @ApiHeader({ })
+  @Get('list-dm')
+ async listAllDmLogs() {
+   return await this.databaseService.listAllDmLogs();
+ }
+
+  @ApiTags('database/Dm')
+  @ApiOperation({ summary: 'user1과 user2가 주고받은 dm 보기' })
+  @ApiHeader({ name: 'user1' })
+  @ApiHeader({ name: 'user2' })
+  @Get('list-dm-of-user')
+  async listDmOfUser(@Headers() headers) {
+    return await this.databaseService.listDmOfUser(headers.user1, headers.user2);
+  }
+
+  //NOTE - POST
   @ApiTags('database/User')
   @ApiOperation({ summary: '유저 추가하기' })
   @Post('add-user')
@@ -151,7 +179,7 @@ export class DatabaseController {
   @ApiTags('database/FriendList')
   @ApiOperation({ summary: '유저의 친구 추가하기' })
   @ApiHeader({ name: 'friend_uid' })
-  @ApiHeader({ name: 'my_uid' })
+  @ApiHeader({ name: 'my_uid' }) 
   @Post('add-friend')
   async addFriend(@Headers() header) {
     return await this.databaseService.addFriend(
@@ -187,6 +215,14 @@ export class DatabaseController {
     return await this.databaseService.addUerInChannel(body);
   }
 
+  @ApiTags('database/Dm')
+  @ApiOperation({ summary: 'Dm 로그 추가하기' })
+  @Post('add-dm')
+  async addDmLog(@Body() body: DmLogDto) {
+    return await this.databaseService.addDmLog(body);
+  }
+
+  //NOTE - PUT
   @ApiTags('database/User')
   @ApiOperation({ summary: '표시 이름 바꾸기' })
   @ApiHeader({ name: 'name' })
@@ -344,6 +380,7 @@ export class DatabaseController {
     );
   }
 
+  //NOTE - DELETE
   @ApiTags('database/User')
   @ApiOperation({ summary: '유저 지우기' })
   @ApiHeader({ name: 'uid' })
