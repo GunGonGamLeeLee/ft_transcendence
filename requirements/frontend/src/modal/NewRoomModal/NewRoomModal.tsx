@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { newRoomModalState } from '../../atoms/modals/newRoomModalState';
 import styles from './NewRoomModal.module.css';
-import modalstyles from './Modal.module.css';
+import modalstyles from '../Modal.module.css';
 
 export default function NewRoom() {
   const setNewRoomModal = useSetRecoilState(newRoomModalState);
