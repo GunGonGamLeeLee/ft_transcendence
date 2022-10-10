@@ -2,7 +2,7 @@ import styles from './FriendLi.module.css';
 import { UserDataType } from '../../../atoms/userDataType';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { userProfileModalState } from '../../../atoms/userProfileModalState';
+import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
 
 export default function FriendLi({ user }: { user: UserDataType }) {
   const setState = useSetRecoilState(userProfileModalState);

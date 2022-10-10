@@ -5,7 +5,6 @@ import Menu from './Menu';
 export function Lobby() {
   return (
     <>
-      <Modal />
       <Menu />
       <SideBar />
     </>

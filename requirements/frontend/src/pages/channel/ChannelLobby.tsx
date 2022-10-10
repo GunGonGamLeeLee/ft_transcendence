@@ -1,27 +1,26 @@
 import * as React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { Link } from 'react-router-dom';
 import { FilterButton } from './components/FilterButton';
 import { filterState } from '../../atoms/filterState';
 import { RoomList } from './components/RoomList';
 import { RoomType } from '../../atoms/currRoomState';
-import NewRoom from './components/NewRoom';
 import styles from './ChannelLobby.module.css';
 import pagestyles from '../pages.module.css';
+import { newRoomModalState } from '../../atoms/modals/newRoomModalState';
 
 export function ChannelLobby() {
-  const [isOpen01, setIsOpen01] = React.useState(false); // need?
-
   const [allRoomList, setAllRoomList] = React.useState<RoomType[]>([]);
   const [joinedRoomList, setJoinedRoomList] = React.useState<RoomType[]>([]);
   const [dmRoomList, setDmRoomList] = React.useState<RoomType[]>([]);
   const { token } = useRecoilValue(authState);
   const [isRefresh, setIsRefresh] = React.useState<boolean>(true);
   const filter = useRecoilValue(filterState);
+  const setNewRoomModal = useSetRecoilState(newRoomModalState);
 
-  const onClickNew01 = () => {
-    setIsOpen01((prev) => !prev);
+  const onClickNew = () => {
+    setNewRoomModal(true);
   };
 
   const handleRefreshClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,7 +35,7 @@ export function ChannelLobby() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) throw new Error();
@@ -86,18 +85,9 @@ export function ChannelLobby() {
           <RoomList roomList={dmRoomList} isActive={filter === 'dm'} />
         </div>
         <div className={pagestyles.page__footer}>
-          {/* button */}
-          <button className={`${styles.channel__new}`} onClick={onClickNew01}>
+          <button className={`${styles.channel__new}`} onClick={onClickNew}>
             새 채팅방
           </button>
-          {/* modal */}
-          <div
-            className={`${styles.modal} ${
-              isOpen01 ? '' : styles.modal__inactive
-            }`}
-          >
-            <NewRoom onClick={onClickNew01} />
-          </div>
         </div>
       </div>
     </>
