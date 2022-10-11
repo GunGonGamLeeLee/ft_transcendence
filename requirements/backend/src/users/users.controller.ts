@@ -17,8 +17,8 @@ import { UsersService } from './users.service';
 // TODO 파이프 적용하기.
 // TODO 유저 랭킹 api
 
-@UseGuards(AuthGuard)
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -60,7 +60,7 @@ export class UsersController {
   async follow(@Req() req, @Body() body: UidDto) {
     const payload: TokenPayloadDto = (req as any).jwtPayload;
     const uid: number = payload.id;
-    return await this.usersService.follow(uid, body.id);
+    return await this.usersService.follow(uid, body.uid);
   }
 
   @ApiTags('uesrs')
@@ -70,7 +70,7 @@ export class UsersController {
   async unfollow(@Req() req, @Body() body: UidDto) {
     const payload: TokenPayloadDto = (req as any).jwtPayload;
     const uid: number = payload.id;
-    return await this.usersService.unfollow(uid, body.id);
+    return await this.usersService.unfollow(uid, body.uid);
   }
 
   @ApiTags('uesrs')
@@ -80,7 +80,7 @@ export class UsersController {
   async block(@Req() req, @Body() body: UidDto) {
     const payload: TokenPayloadDto = (req as any).jwtPayload;
     const uid: number = payload.id;
-    return await this.usersService.block(uid, body.id);
+    return await this.usersService.block(uid, body.uid);
   }
 
   @ApiTags('uesrs')
@@ -90,6 +90,6 @@ export class UsersController {
   async unblock(@Req() req, @Body() body: UidDto) {
     const payload: TokenPayloadDto = (req as any).jwtPayload;
     const uid: number = payload.id;
-    return await this.usersService.unblock(uid, body.id);
+    return await this.usersService.unblock(uid, body.uid);
   }
 }

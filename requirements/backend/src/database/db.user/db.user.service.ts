@@ -26,6 +26,7 @@ export class DbUserService {
         imgUri: true,
         rating: true,
         status: true,
+        mfaNeed: true,
       },
       where: { uid },
     });

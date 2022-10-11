@@ -54,7 +54,6 @@ export class LoginController {
   @Get('oauth/callback')
   async codeCallback(@Res() res: Response, @Query('code') query) {
     const userId = await this.loginService.getIntraInfo(query);
-    console.log(`userid: ${userId}`); // ANCHOR print
 
     const userInfo = await this.loginService.getUserInfo(userId);
     const payload: TokenPayloadDto = {

@@ -99,7 +99,7 @@ export class DatabaseService {
   }
 
   async listDmOfUser(user1: number, user2: number) {
-    if (user1 == user2)
+    if (user1 === user2)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.BAD_REQUEST);
     return await this.dbDmLogsService.findDmLogsOfUser(user1, user2);
   }
@@ -111,7 +111,7 @@ export class DatabaseService {
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
-    if (user == null || myUid == friendUid)
+    if (user == null || myUid === friendUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
     await this.dbFriendListService.saveOne(
       { fromUid: myUid, toUid: friendUid },
@@ -122,7 +122,7 @@ export class DatabaseService {
   async addBlock(myUid: number, blockUid: number) {
     // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(blockUid);
-    if (user == null || myUid == blockUid)
+    if (user == null || myUid === blockUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
     await this.dbBlockListService.saveOne(
       { fromUid: myUid, toUid: blockUid },

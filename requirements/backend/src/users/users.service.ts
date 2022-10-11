@@ -9,7 +9,7 @@ export class UsersService {
 
   async me(uid: number) {
     const user = await this.database.findOneUserProfile(uid);
-    console.log(user);
+
     const profile: ProfileType = {
       ...user,
     };

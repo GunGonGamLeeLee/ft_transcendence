@@ -1,38 +1,38 @@
 import { rest } from 'msw';
 
 export const handlers = [
-  rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        uid: 99945,
-        displayName: 'jaham',
-        imgUri:
-          'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-        rating: 2048,
-        mfaNeed: false,
-      }),
-    );
-  }),
+  // rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
+  //   return res(
+  //     ctx.status(200),
+  //     ctx.json({
+  //       uid: 99945,
+  //       displayName: 'jaham',
+  //       imgUri:
+  //         'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //       rating: 2048,
+  //       mfaNeed: false,
+  //     }),
+  //   );
+  // }),
 
-  rest.get(
-    `${import.meta.env.VITE_BACKEND_EP}/users/friend`,
-    (req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json([
-          {
-            uid: 2,
-            displayName: 'jeongble',
-            imgUri:
-              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 1024,
-            status: 'offline',
-          },
-        ]),
-      );
-    },
-  ),
+  // rest.get(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/friend`,
+  //   (req, res, ctx) => {
+  //     return res(
+  //       ctx.status(200),
+  //       ctx.json([
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //       ]),
+  //     );
+  //   },
+  // ),
 
   rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
     return res(
@@ -66,48 +66,48 @@ export const handlers = [
     );
   }),
 
-  rest.get(
-    `${import.meta.env.VITE_BACKEND_EP}/channel/users`,
-    (req, res, ctx) => {
-      const param = req.url.searchParams;
-      const id = param.get('roomId');
-      return res(
-        ctx.status(200),
-        ctx.json([
-          {
-            uid: 99945,
-            displayName: 'jaham',
-            imgUri:
-              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 1111,
-            role: 'owner',
-            banned: false,
-            muted: false,
-          },
-          {
-            uid: 2,
-            displayName: 'jeongble',
-            imgUri:
-              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 4096,
-            role: 'admin',
-            banned: false,
-            muted: false,
-          },
-          {
-            uid: 3,
-            displayName: 'yeju',
-            imgUri:
-              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 2048,
-            role: 'user',
-            banned: false,
-            muted: false,
-          },
-        ]),
-      );
-    },
-  ),
+  // rest.get(
+  //   `${import.meta.env.VITE_BACKEND_EP}/channel/users`,
+  //   (req, res, ctx) => {
+  //     const param = req.url.searchParams;
+  //     const id = param.get('roomId');
+  //     return res(
+  //       ctx.status(200),
+  //       ctx.json([
+  //         {
+  //           uid: 99945,
+  //           displayName: 'jaham',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1111,
+  //           role: 'owner',
+  //           banned: false,
+  //           muted: false,
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 4096,
+  //           role: 'admin',
+  //           banned: false,
+  //           muted: false,
+  //         },
+  //         {
+  //           uid: 3,
+  //           displayName: 'yeju',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 2048,
+  //           role: 'user',
+  //           banned: false,
+  //           muted: false,
+  //         },
+  //       ]),
+  //     );
+  //   },
+  // ),
 
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,
@@ -194,60 +194,60 @@ export const handlers = [
       return res(ctx.status(200));
     },
   ),
-  rest.post(
-    `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
-    (req, res, ctx) => {
-      req.json().then((res) => {
-        console.log(`[MSW] request follow, uid: ${res.uid}`);
-      });
-      return res(ctx.status(201));
-    },
-  ),
-  rest.delete(
-    `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
-    (req, res, ctx) => {
-      req.json().then((res) => {
-        console.log(`[MSW] request unfollow, uid: ${res.uid}`);
-      });
-      return res(ctx.status(200));
-    },
-  ),
-  rest.get(
-    `${import.meta.env.VITE_BACKEND_EP}/users/blocklist`,
-    (req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json([
-          {
-            uid: 1093,
-            displayName: 'blockedUser',
-            imgUri:
-              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-            rating: 2048,
-            status: 'online',
-          },
-        ]),
-      );
-    },
-  ),
-  rest.post(
-    `${import.meta.env.VITE_BACKEND_EP}/users/block`,
-    (req, res, ctx) => {
-      req.json().then((res) => {
-        console.log(`[MSW] request block, uid: ${res.uid}`);
-      });
-      return res(ctx.status(201));
-    },
-  ),
-  rest.delete(
-    `${import.meta.env.VITE_BACKEND_EP}/users/block`,
-    (req, res, ctx) => {
-      req.json().then((res) => {
-        console.log(`[MSW] request unblock, id: ${res.uid}`);
-      });
-      return res(ctx.status(200));
-    },
-  ),
+  // rest.post(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
+  //   (req, res, ctx) => {
+  //     req.json().then((res) => {
+  //       console.log(`[MSW] request follow, uid: ${res.uid}`);
+  //     });
+  //     return res(ctx.status(201));
+  //   },
+  // ),
+  // rest.delete(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
+  //   (req, res, ctx) => {
+  //     req.json().then((res) => {
+  //       console.log(`[MSW] request unfollow, uid: ${res.uid}`);
+  //     });
+  //     return res(ctx.status(200));
+  //   },
+  // ),
+  // rest.get(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/blocklist`,
+  //   (req, res, ctx) => {
+  //     return res(
+  //       ctx.status(200),
+  //       ctx.json([
+  //         {
+  //           uid: 1093,
+  //           displayName: 'blockedUser',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 2048,
+  //           status: 'online',
+  //         },
+  //       ]),
+  //     );
+  //   },
+  // ),
+  // rest.post(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/block`,
+  //   (req, res, ctx) => {
+  //     req.json().then((res) => {
+  //       console.log(`[MSW] request block, uid: ${res.uid}`);
+  //     });
+  //     return res(ctx.status(201));
+  //   },
+  // ),
+  // rest.delete(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/block`,
+  //   (req, res, ctx) => {
+  //     req.json().then((res) => {
+  //       console.log(`[MSW] request unblock, id: ${res.uid}`);
+  //     });
+  //     return res(ctx.status(200));
+  //   },
+  // ),
   rest.post(`${import.meta.env.VITE_BACKEND_EP}/channel`, (req, res, ctx) => {
     req.json().then((data) => {
       const { title, mode, password } = data;
