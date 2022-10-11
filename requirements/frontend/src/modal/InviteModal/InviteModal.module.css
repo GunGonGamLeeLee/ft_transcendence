@@ -1,0 +1,46 @@
+.invite {
+  z-index: 50;
+  width: 350px;
+  /* height: 450px; */
+  background-color: rgb(250, 250, 250);
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.invite__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 330px;
+  height: 20px;
+  background-color: rgb(241, 243, 244);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.invite__headertitle {
+  display: flex;
+  justify-content: center;
+  /* width: 100px; */
+  font-size: 15px;
+  color: rgb(50, 50, 50);
+}
+
+.invite__main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.invite__footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.invite__button {
+  width: 150px;
+  height: 30px;
+  border-radius: 10px;
+}

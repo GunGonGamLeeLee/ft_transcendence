@@ -14,6 +14,7 @@ import {
 } from '../../atoms/roomListState';
 import styles from './ChannelLobby.module.css';
 import pagestyles from '../pages.module.css';
+import { BackButton } from '../../components/BackButton';
 
 export function ChannelLobby() {
   const [allRoomList, setAllRoomList] = useRecoilState(allRoomListState);
@@ -65,7 +66,7 @@ export function ChannelLobby() {
     <>
       <div className={styles.page}>
         <div className={pagestyles.page__header}>
-          <Link to='/lobby'>뒤로가기!</Link>
+          <BackButton to='/lobby' />
           <button onClick={handleRefreshClick}>refresh</button>
           <div className={styles.channel__filters}>
             <FilterButton

@@ -36,16 +36,20 @@ export function MyProfile() {
         </div>
       </div>
       <div className={styles.myprofile__icons}>
-        <img
-          src='/settings.png'
-          className={styles.myprofile__icon}
-          onClick={openSetting}
-        />
-        <img
-          src='/log-out.png'
-          className={styles.myprofile__icon}
-          onClick={logout}
-        />
+        <abbr title='프로필 설정'>
+          <img
+            src='/settings.png'
+            className={styles.myprofile__icon}
+            onClick={openSetting}
+          />
+        </abbr>
+        <abbr title='로그아웃'>
+          <img
+            src='/log-out.png'
+            className={styles.myprofile__icon}
+            onClick={logout}
+          />
+        </abbr>
       </div>
     </div>
   );
