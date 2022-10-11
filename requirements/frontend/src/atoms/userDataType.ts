@@ -1,4 +1,8 @@
-type Status = 'online' | 'chatting' | 'gaming' | 'offline';
+const enum Status {
+  OFFLINE,
+  ONLINE,
+  GAMING,
+}
 
 export interface UserDataType {
   uid: number;

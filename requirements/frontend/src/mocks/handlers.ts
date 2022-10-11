@@ -269,7 +269,7 @@ export const handlers = [
     );
   }),
   rest.post(
-    `${import.meta.env.VITE_BACKEND_EP}/users/profile/namecheck`,
+    `${import.meta.env.VITE_BACKEND_EP}/users/namecheck`,
     (req, res, ctx) => {
       req.json().then((res) => {
         console.log(`[MSW] request namecheck, name: ${res.displayName}`);
