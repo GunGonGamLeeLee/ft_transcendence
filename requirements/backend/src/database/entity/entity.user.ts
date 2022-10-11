@@ -3,7 +3,7 @@ import { FriendListEntity } from './entity.friend.list';
 import { BlockListEntity } from './entity.block.list';
 import { UserInChannelEntity } from './entity.user.in.channel';
 // import { DmLogEntity } from './entity.dm.log';
-// import { MatchHistoryEntity } from './entity.matchhistory.list';
+import { MatchHistoryEntity } from './entity.matchhistory.list';
 
 export enum UserStatus {
   OFFLINE,
@@ -46,6 +46,10 @@ export class UserEntity {
 
   // @OneToMany(() => DmLogEntity, (dmList) => dmList.fromUser)
   // dmList: DmLogEntity[];
-  // @OneToMany(() => MatchHistoryEntity, (matchHistory) => matchHistory.user)
-  // matchHistory: MatchHistoryEntity[];
+
+  @OneToMany(() => MatchHistoryEntity, (winnerList) => winnerList.winner)
+  winnerList: MatchHistoryEntity[];
+
+  @OneToMany(() => MatchHistoryEntity, (loserList) => loserList.loser)
+  loserList: MatchHistoryEntity[];
 }

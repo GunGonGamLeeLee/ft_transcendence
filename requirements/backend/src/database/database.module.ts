@@ -7,6 +7,7 @@ import { DatabaseService } from './database.service';
 import { DbChannelModule } from './db.channel/db.channel.module';
 import { DbUserInChannelModule } from './db.user.in.channel/db.user.in.channel.module';
 import { DbDmLogModule } from './db.dm.log/db.dm.log.module';
+import { DbMatchHistoryModule } from './db.match.history/db.match.history.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DbDmLogModule } from './db.dm.log/db.dm.log.module';
     DbChannelModule,
     DbUserInChannelModule,
     DbDmLogModule,
+    DbMatchHistoryModule,
   ],
   controllers: [DatabaseController],
   providers: [DatabaseService],

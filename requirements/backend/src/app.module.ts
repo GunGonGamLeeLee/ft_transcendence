@@ -12,6 +12,7 @@ import { ChannelEntity } from './database/entity/entity.channel';
 import { UserInChannelEntity } from './database/entity/entity.user.in.channel';
 import { DmLogEntity } from './database/entity/entity.dm.log';
 import { UsersModule } from './users/users.module';
+import { MatchHistoryEntity } from './database/entity/entity.matchhistory.list';
 
 dotenv.config({
   path: '/backend.env',
@@ -31,6 +32,7 @@ const dbOptions: TypeOrmModuleOptions = {
     ChannelEntity,
     UserInChannelEntity,
     DmLogEntity,
+    MatchHistoryEntity,
   ],
   synchronize: true,
 };
