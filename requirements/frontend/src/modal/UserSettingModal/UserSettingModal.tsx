@@ -1,17 +1,31 @@
-import React, { ChangeEvent, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import * as React from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userSettingModalState } from '../../atoms/modals/userSettingModalState';
 import styles from './UserSettingModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { userProfileState } from '../../atoms/userProfileState';
 import { RedCross } from '../buttons/RedCross';
+import { authState } from '../../atoms/authState';
 
-export default function UserSetting() {
+export function UserSettingModal() {
+  const userSetting = useRecoilValue(userSettingModalState);
+
+  return userSetting === false ? null : <UserSetting />;
+}
+
+function UserSetting() {
   const setUserSettingModal = useSetRecoilState(userSettingModalState);
-  const userProfile = useRecoilValue(userProfileState);
-  const [previewImg, setPreviewImg] = useState<string>(userProfile.imgUri);
-  const [displayName, setDisplayName] = useState<string>('');
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  const [previewImg, setPreviewImg] = React.useState<string>(
+    userProfile.imgUri,
+  );
+  const [displayName, setDisplayName] = React.useState<string>('');
+  const [isChecked, setIsChecked] = React.useState<boolean>(false);
+  const [dupCheckStatus, setDupCheckStatus] = React.useState<string>('');
+  const [qrcode, setQrcode] = React.useState<string>('');
+  const [qrCheckStatus, setQrCheckStatus] = React.useState<string>('');
+  const [qrPin, setQrPin] = React.useState<string>('');
+  const { token } = useRecoilValue(authState);
 
   const onClick = () => {
     setUserSettingModal(false);
@@ -28,11 +42,133 @@ export default function UserSetting() {
 
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayName(event.target.value);
+    setDupCheckStatus('');
   };
 
   const onChangeChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
   };
+
+  const handleDupCheckClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
+
+    if (displayName.length < 3) {
+      setDupCheckStatus('이름의 길이는 세글자 이상이어야 합니다');
+      return;
+    }
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_EP}/users/profile/namecheck`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ displayName }),
+      },
+    );
+
+    if (response.status === 201) {
+      setDupCheckStatus('중복확인완료');
+      return;
+    }
+
+    setDupCheckStatus('중복된 이름입니다');
+    setDisplayName('');
+  };
+
+  const onSubmitClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (displayName.length > 0 && dupCheckStatus !== '중복확인완료') {
+      setDupCheckStatus('중복확인 해주세요!');
+      return;
+    }
+
+    if (!userProfile.mfaNeed && isChecked && qrCheckStatus !== 'qr확인완료') {
+      setQrCheckStatus('qr 인증 해주세요!');
+      return;
+    }
+
+    const newInfo = {
+      imgUri: previewImg,
+      displayName: displayName,
+      isRequiredMfa: isChecked === true,
+    };
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_EP}/users/me`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newInfo),
+      },
+    );
+
+    if (response.status === 201) {
+      const newUserProfile = await response.json();
+      setUserProfile(newUserProfile);
+    } else {
+      alert('User profile set failed');
+    }
+
+    setUserSettingModal(false);
+  };
+
+  const requestQr = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_EP}/login/qr`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const data = await response.text();
+    setQrcode(data);
+  };
+
+  const handlePinCheckClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_EP}/login/otp`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ pin: qrPin }),
+      },
+    );
+
+    if (response.status === 201) {
+      setQrCheckStatus('qr확인완료');
+      return;
+    }
+
+    setQrCheckStatus('pin이 잘못됨');
+    setQrPin('');
+  };
+
+  const handleQrPinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    setQrPin(e.target.value);
+  };
+
+  React.useEffect(() => {
+    if (isChecked) requestQr();
+  }, [isChecked]);
 
   return (
     <>
@@ -50,16 +186,22 @@ export default function UserSetting() {
           <div className={styles.setting__displayname}>
             <input
               type='text'
-              placeholder='displayname'
+              placeholder={userProfile.displayName}
               value={displayName}
+              maxLength={20}
               onChange={onChangeName}
               className={styles.setting__displayname_input}
             />
-            <button className={styles.setting__displayname_button}>
+            <button
+              className={styles.setting__displayname_button}
+              onClick={handleDupCheckClick}
+            >
               중복확인
             </button>
           </div>
-          <div className={styles.setting__displayname_warning}>중복 ㅋ</div>
+          <div className={styles.setting__displayname_warning}>
+            {dupCheckStatus}
+          </div>
           <div className={styles.setting__2FA}>
             <div>2차인증</div>
             <input
@@ -69,17 +211,39 @@ export default function UserSetting() {
               className={styles.setting__2FA_checkbox}
             />
           </div>
+          {isChecked ? (
+            <>
+              <img src={qrcode} className={styles.setting__qrcode} />
+              <div className={styles.setting__displayname}>
+                <div className={styles.setting__displayname_warning}>
+                  {qrCheckStatus}
+                </div>
+                <input
+                  value={qrPin}
+                  type='password'
+                  placeholder='pin'
+                  maxLength={6}
+                  className={styles.setting__displayname_input}
+                  onChange={handleQrPinChange}
+                  disabled={qrCheckStatus === 'qr확인완료'}
+                />
+                <button
+                  className={styles.setting__displayname_button}
+                  onClick={handlePinCheckClick}
+                  disabled={qrCheckStatus === 'qr확인완료'}
+                >
+                  핀 확인
+                </button>
+              </div>
+            </>
+          ) : null}
           <div className={styles.setting__buttons}>
-            <button className={styles.setting__apply}>적용하기</button>
+            <button className={styles.setting__apply} onClick={onSubmitClick}>
+              적용하기
+            </button>
           </div>
         </div>
       </div>
     </>
   );
-}
-
-export function UserSettingModal() {
-  const userSetting = useRecoilValue(userSettingModalState);
-
-  return <>{userSetting === false ? <></> : <UserSetting />}</>;
 }

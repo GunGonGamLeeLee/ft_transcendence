@@ -13,11 +13,12 @@
   flex-direction: column;
   z-index: 50;
   width: 350px;
-  height: 400px;
+  /* height: 400px; */
   background-color: rgb(250, 250, 250);
   border-radius: 5px;
   padding: 10px;
   box-sizing: border-box;
+  align-items: center;
 }
 
 .setting__header {
@@ -94,6 +95,11 @@
   display: flex;
   width: 40px;
   height: 40px;
+}
+
+.setting__qrcode {
+  width: 200px;
+  height: 200px;
 }
 
 /* .setting__buttons {
