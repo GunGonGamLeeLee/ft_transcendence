@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { authState } from '../../../atoms/authState';
+import { ChatUserType } from '../../../atoms/chatUserType';
+import { currRoleState } from '../../../atoms/currRoleState';
 import { currRoomState } from '../../../atoms/currRoomState';
-import { ChatUser, ChatUserType } from './ChatUser';
+import { userProfileState } from '../../../atoms/userProfileState';
+import { ChatUser } from './ChatUser';
 
 export function ChatUserList() {
   const [chatUserList, setChatUserList] = React.useState<ChatUserType[]>([]);
   const { token } = useRecoilValue(authState);
   const currRoom = useRecoilValue(currRoomState);
+  const [currRole, setCurrRole] = useRecoilState(currRoleState);
+  const userProfile = useRecoilValue(userProfileState);
 
   if (currRoom === null) return null;
   const roomId = currRoom.roomId;
@@ -22,13 +27,19 @@ export function ChatUserList() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       if (!response.ok) throw new Error();
 
       const data: ChatUserType[] = await response.json();
       setChatUserList(data);
+      const myrole = data.find((curr) => curr.id === userProfile.id);
+      if (myrole) {
+        setCurrRole(myrole.role);
+      } else {
+        throw new Error();
+      }
     };
 
     requestChatUserList(roomId);

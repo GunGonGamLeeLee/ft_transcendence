@@ -39,7 +39,7 @@ export default function SetRoom() {
           <div className={modalstyles.modal__blank} onClick={onClick}></div>
           <div className={styles.set}>
             <div className={styles.set__header}>
-              <span className={styles.set__headertitle}>새 채팅방</span>
+              <span className={styles.set__headertitle}>설정</span>
               <RedCross onClick={onClick} />
             </div>
             <div className={styles.set__options}>
