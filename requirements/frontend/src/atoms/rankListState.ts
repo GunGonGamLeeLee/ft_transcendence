@@ -20,7 +20,7 @@ const requestRankList = async (token: string): Promise<UserDataType[]> => {
     `${import.meta.env.VITE_BACKEND_EP}/users/rank`,
     {
       headers: {
-        Authorizatioin: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );

@@ -34,37 +34,37 @@ export const handlers = [
   //   },
   // ),
 
-  rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json([
-        {
-          uid: 2,
-          displayName: 'jeongble',
-          imgUri:
-            'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-          rating: 4096,
-          status: 'offline',
-        },
-        {
-          uid: 3,
-          displayName: 'yeju',
-          imgUri:
-            'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-          rating: 2048,
-          status: 'online',
-        },
-        {
-          uid: 99945,
-          displayName: 'jaham',
-          imgUri:
-            'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-          rating: 1024,
-          status: 'online',
-        },
-      ]),
-    );
-  }),
+  // rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
+  //   return res(
+  //     ctx.status(200),
+  //     ctx.json([
+  //       {
+  //         uid: 2,
+  //         displayName: 'jeongble',
+  //         imgUri:
+  //           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //         rating: 4096,
+  //         status: 'offline',
+  //       },
+  //       {
+  //         uid: 3,
+  //         displayName: 'yeju',
+  //         imgUri:
+  //           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //         rating: 2048,
+  //         status: 'online',
+  //       },
+  //       {
+  //         uid: 99945,
+  //         displayName: 'jaham',
+  //         imgUri:
+  //           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //         rating: 1024,
+  //         status: 'online',
+  //       },
+  //     ]),
+  //   );
+  // }),
 
   // rest.get(
   //   `${import.meta.env.VITE_BACKEND_EP}/channel/users`,

@@ -1,6 +1,6 @@
+import * as React from 'react';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
-import * as React from 'react';
 import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { LoginButton } from './LoginButton';
@@ -12,7 +12,7 @@ export interface JwtPayload {
 }
 
 export function Authenticate() {
-  const setIsAuthorized = useSetRecoilState(authState);
+  const setAuthState = useSetRecoilState(authState);
   const [token, setToken] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -23,9 +23,13 @@ export function Authenticate() {
     }
 
     const mfaNeed = jwtDecode<JwtPayload>(cookieToken).isRequiredTFA;
-    if (!mfaNeed) setIsAuthorized({ token: cookieToken });
+    if (!mfaNeed) {
+      setAuthState({ token: cookieToken });
+      return;
+    }
+
     setToken(cookieToken);
-  }, []);
+  }, [setAuthState]);
 
   if (token !== null) return <Otp />;
   return <LoginButton />;

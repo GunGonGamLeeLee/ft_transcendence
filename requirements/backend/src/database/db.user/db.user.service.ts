@@ -32,6 +32,26 @@ export class DbUserService {
     });
   }
 
+  async findUserRankList() {
+    return await this.userRepo.find({
+      select: {
+        uid: true,
+        displayName: true,
+        imgUri: true,
+        rating: true,
+        status: true,
+        mfaNeed: true,
+      },
+      order: {
+        rating: {
+          direction: 'desc',
+        },
+      },
+      skip: 0,
+      take: 10,
+    });
+  }
+
   async findOneWithLists(uid: number): Promise<UserEntity> {
     return await this.userRepo.findOne({
       relations: {
