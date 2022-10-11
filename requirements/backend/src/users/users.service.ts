@@ -18,7 +18,8 @@ export class UsersService {
   }
 
   async updateme(uid: number, body: UserDto) {
-    await this.database.updateUserName(uid, body.displayName);
+    if (body.displayName !== '')
+      await this.database.updateUserName(uid, body.displayName);
     await this.database.updateUserAvatar(uid, body.imgUri);
     await this.database.updateUserIsRequiredTFA(uid, body.mfaNeed);
     return await this.database.findOneUser(uid);

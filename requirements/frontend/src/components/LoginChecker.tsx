@@ -1,10 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useIsLoggedIn } from '../atoms/authState';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../atoms/authState';
 
 export function LoginChecker() {
-  const isLoggedIn = useIsLoggedIn();
+  const { token } = useRecoilValue(authState);
 
-  if (isLoggedIn) {
+  if (token !== null) {
     return <Outlet />;
   }
 

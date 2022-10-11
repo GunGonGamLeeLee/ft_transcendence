@@ -13,45 +13,20 @@ export interface JwtPayload {
 
 export function Authenticate() {
   const setIsAuthorized = useSetRecoilState(authState);
-  const { token, needMfa } = useParseCookieToken();
+  const [token, setToken] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (token === null) return;
-    if (needMfa === true) return;
+    const cookieToken = Cookies.get('token');
+    if (cookieToken === undefined) {
+      setToken(null);
+      return;
+    }
 
-    setIsAuthorized({ token });
-  }, [token, needMfa, setIsAuthorized]);
+    const mfaNeed = jwtDecode<JwtPayload>(cookieToken).isRequiredTFA;
+    if (!mfaNeed) setIsAuthorized({ token: cookieToken });
+    setToken(cookieToken);
+  }, []);
 
   if (token !== null) return <Otp />;
   return <LoginButton />;
 }
-
-const useParseCookieToken = () => {
-  const [token, setToken] = React.useState<string | null>(null);
-  const [needMfa, setNeedMfa] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    const CookieToken = Cookies.get('token');
-    if (CookieToken === undefined) {
-      if (token) {
-        setToken(null);
-        setNeedMfa(false);
-      }
-
-      return;
-    }
-
-    Cookies.remove('token');
-    setToken(CookieToken);
-
-    const { isRequiredTFA } = jwtDecode<JwtPayload>(CookieToken);
-
-    if (isRequiredTFA) {
-      setNeedMfa(true);
-    } else {
-      setToken(CookieToken);
-    }
-  });
-
-  return { token, needMfa } as const;
-};

@@ -1,4 +1,4 @@
-import { atom, useRecoilValue, AtomEffect } from 'recoil';
+import { atom, AtomEffect } from 'recoil';
 
 interface State {
   token: string | null;
@@ -11,7 +11,7 @@ const localStorageEffect: AtomEffect<State> = ({ setSelf, onSet }) => {
   }
 
   onSet((newValue, _, isReset) => {
-    if (isReset) {
+    if (isReset || newValue.token === null) {
       localStorage.removeItem('auth');
     } else {
       localStorage.setItem('auth', JSON.stringify(newValue));
@@ -24,9 +24,3 @@ export const authState = atom<State>({
   default: { token: null },
   effects: [localStorageEffect],
 });
-
-export const useIsLoggedIn = () => {
-  const { token } = useRecoilValue(authState);
-
-  return token !== null;
-};
