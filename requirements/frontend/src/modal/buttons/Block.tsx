@@ -26,7 +26,7 @@ export function Block() {
       },
     );
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       setBlockedList([...blockedList, user]);
       return;
     }

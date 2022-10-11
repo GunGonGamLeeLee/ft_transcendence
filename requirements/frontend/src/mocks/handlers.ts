@@ -215,7 +215,7 @@ export const handlers = [
       req.json().then((res) => {
         console.log(`[MSW] request block, id: ${res.id}`);
       });
-      return res(ctx.status(200));
+      return res(ctx.status(201));
     },
   ),
   rest.delete(
