@@ -1,11 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import { useIsLoggedIn } from '../../atoms/authState';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../atoms/authState';
 import { Authenticate } from './Authenticate';
 
 export function Login() {
-  const isLoggedIn = useIsLoggedIn();
+  const { token } = useRecoilValue(authState);
 
-  if (isLoggedIn) {
+  if (token !== null) {
     return <Navigate to='/lobby' />;
   }
 

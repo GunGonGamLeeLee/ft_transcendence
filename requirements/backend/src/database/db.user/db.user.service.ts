@@ -56,6 +56,12 @@ export class DbUserService {
     }
   }
 
+  async nameCheck(displayName: string) {
+    //TODO - 이게맞나?
+    const users: UserEntity[] = await this.findAll();
+    return users.find((curr) => curr.displayName === displayName) === undefined;
+  }
+
   async updateName(uid: number, displayName: string) {
     try {
       await this.userRepo.update({ uid }, { displayName });

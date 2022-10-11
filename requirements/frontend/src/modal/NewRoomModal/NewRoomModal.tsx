@@ -55,15 +55,13 @@ function NewRoom() {
       ? 'protected'
       : 'public';
 
-    console.log(typeof roomTitle, typeof mode, typeof roomPassword);
-
     await requestCreateRoom(roomTitle, mode, roomPassword);
   };
 
   const requestCreateRoom = async (
     roomName: string,
     mode: string,
-    password: string
+    password: string,
   ) => {
     const room = {
       title: roomName,
@@ -82,7 +80,6 @@ function NewRoom() {
 
     if (response.status === 201) {
       const data: RoomType = await response.json();
-      console.log(data);
 
       setAllRoomList([...allRoomList, data]);
       setJoinedRoomList([...joinedRoomList, data]);

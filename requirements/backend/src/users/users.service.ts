@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
+import { UserDto } from 'src/database/dto/user.dto';
 import { ProfileType } from './dto/profile.type.dto';
 import { UserDataType } from './dto/user.data.type.dto';
 
@@ -14,6 +15,14 @@ export class UsersService {
       ...user,
     };
     return profile;
+  }
+
+  async updateme(uid: number, body: UserDto) {
+    if (body.displayName !== '')
+      await this.database.updateUserName(uid, body.displayName);
+    await this.database.updateUserAvatar(uid, body.imgUri);
+    await this.database.updateUserIsRequiredTFA(uid, body.mfaNeed);
+    return await this.database.findOneUser(uid);
   }
 
   async friend(uid: number) {
@@ -48,5 +57,9 @@ export class UsersService {
 
   async unblock(myUid: number, blockUid: number) {
     return await this.database.deleteBlockOfUser(myUid, blockUid);
+  }
+
+  async namecheck(displayName: string) {
+    return await this.database.nameCheck(displayName);
   }
 }

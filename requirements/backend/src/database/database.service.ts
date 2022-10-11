@@ -200,6 +200,10 @@ export class DatabaseService {
     await this.dbUserService.saveOne(userDto);
   }
 
+  async nameCheck(displayName: string) {
+    return await this.dbUserService.nameCheck(displayName);
+  }
+
   async updateUserName(uid: number, displayName: string) {
     return this.dbUserService.updateName(uid, displayName);
   }

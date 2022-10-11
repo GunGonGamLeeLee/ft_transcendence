@@ -268,36 +268,36 @@ export const handlers = [
       }),
     );
   }),
-  rest.post(
-    `${import.meta.env.VITE_BACKEND_EP}/users/namecheck`,
-    (req, res, ctx) => {
-      req.json().then((res) => {
-        console.log(`[MSW] request namecheck, name: ${res.displayName}`);
-      });
+  // rest.post(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/namecheck`,
+  //   (req, res, ctx) => {
+  //     req.json().then((res) => {
+  //       console.log(`[MSW] request namecheck, name: ${res.displayName}`);
+  //     });
 
-      return res(ctx.status(201));
-    },
-  ),
-  rest.post(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
-    req.json().then((res) => {
-      console.log(
-        `[MSW] request change profile, name: ${res.displayName} img: ${res.imgUri} mfa: ${res.isRequiredMfa}`,
-      );
-    });
+  //     return res(ctx.status(201));
+  //   },
+  // ),
+  // rest.post(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
+  //   req.json().then((res) => {
+  //     console.log(
+  //       `[MSW] request change profile, name: ${res.displayName} img: ${res.imgUri} mfa: ${res.isRequiredMfa}`,
+  //     );
+  //   });
 
-    return res(
-      ctx.status(201),
-      ctx.json({
-        uid: 99945,
-        displayName: 'newName',
-        imgUri: 'https://avatars.githubusercontent.com/u/76723089?s=80&v=4',
-        rating: 2048,
-        status: 'online',
-      }),
-    );
-  }),
-  rest.post(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, (req, res, ctx) => {
-    console.log(`[MSW] request otp auth`);
-    return res(ctx.status(201));
-  }),
+  //   return res(
+  //     ctx.status(201),
+  //     ctx.json({
+  //       uid: 99945,
+  //       displayName: 'newName',
+  //       imgUri: 'https://avatars.githubusercontent.com/u/76723089?s=80&v=4',
+  //       rating: 2048,
+  //       status: 'online',
+  //     }),
+  //   );
+  // }),
+  // rest.post(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, (req, res, ctx) => {
+  //   console.log(`[MSW] request otp auth`);
+  //   return res(ctx.status(201));
+  // }),
 ];

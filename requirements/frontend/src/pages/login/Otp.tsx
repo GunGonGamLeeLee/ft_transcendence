@@ -1,9 +1,13 @@
-import Cookies from 'js-cookie';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
+import Cookies from 'js-cookie';
 
 export function Otp() {
   const setAuthState = useSetRecoilState(authState);
+  const navigator = useNavigate();
+  const [count, setCount] = React.useState<number>(0);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -20,9 +24,12 @@ export function Otp() {
       const { token } = await requestOtpAuth({ pin });
       setAuthState({ token });
     } catch (err) {
-      Cookies.remove('token');
-      setAuthState({ token: null });
-      return;
+      setCount(count + 1);
+
+      if (count === 5) {
+        navigator('/', { replace: true });
+        return;
+      }
     }
   };
 
@@ -33,6 +40,7 @@ export function Otp() {
         <input name='pin' type='password' placeholder='otp' maxLength={20} />
         <button type='submit'>submit</button>
       </form>
+      {count ? <h1>2차 인증에 실패하였습니다!</h1> : null}
     </>
   );
 }
@@ -48,6 +56,8 @@ interface OtpResponse {
 const requestOtpAuth = async (payload: OtpPayload) => {
   const cookieToken = Cookies.get('token');
   if (cookieToken === undefined) throw new Error();
+
+  Cookies.remove('token');
 
   const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, {
     method: 'Post',
