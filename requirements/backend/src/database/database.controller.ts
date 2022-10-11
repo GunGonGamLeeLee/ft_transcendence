@@ -43,18 +43,27 @@ export class DatabaseController {
   async listAllUser() {
     return await this.databaseService.listAllUser();
   }
+  @ApiTags('database/User')
+  @ApiOperation({ summary: '유저 랭킹 목록 보기' })
+  @Get('show-user-list-rank')
+  async listUserRank() {
+    return await this.databaseService.listUserRank();
+  }
+
   @ApiTags('database/FriendList')
   @ApiOperation({ summary: '전체 친구 목록 보기' })
   @Get('show-friend-list-table')
   async listAllFriend() {
     return await this.databaseService.listAllFriend();
   }
+
   @ApiTags('database/BlockList')
   @ApiOperation({ summary: '전체 차단 목록 보기' })
   @Get('show-block-list-table')
   async listAllBlock() {
     return await this.databaseService.listAllBlock();
   }
+
   @ApiTags('database/Channel')
   @ApiOperation({ summary: '전체 채널 목록 보기' })
   @Get('show-channel-table')

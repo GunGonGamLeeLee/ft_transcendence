@@ -104,6 +104,10 @@ export class DatabaseService {
     return await this.dbDmLogsService.findDmLogsOfUser(user1, user2);
   }
 
+  async listUserRank() {
+    return await this.dbUserService.findUserRankList();
+  }
+
   async addUser(userDto: UserDto) {
     return await this.dbUserService.saveOne(userDto);
   }

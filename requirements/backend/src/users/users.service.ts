@@ -10,7 +10,6 @@ export class UsersService {
 
   async me(uid: number) {
     const user = await this.database.findOneUserProfile(uid);
-
     const profile: ProfileType = {
       ...user,
     };
@@ -41,6 +40,11 @@ export class UsersService {
       blocks.push(b.user);
     }
     return blocks;
+  }
+
+  async rank() {
+    const rankListInDb = await this.database.listUserRank();
+    return rankListInDb;
   }
 
   async follow(myUid: number, frinedUid: number) {

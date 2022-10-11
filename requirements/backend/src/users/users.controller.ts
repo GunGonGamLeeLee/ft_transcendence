@@ -6,7 +6,6 @@ import {
   Body,
   Post,
   Delete,
-  Res,
   HttpException,
 } from '@nestjs/common';
 import {
@@ -16,16 +15,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Uid } from './decorator/uid.decorator';
+import { MyUid } from './decorator/uid.decorator';
 import { UidDto } from './dto/uid.dto';
 import { UsersService } from './users.service';
 import { UserDto } from 'src/database/dto/user.dto';
-import { Response } from 'express';
-import { JoinColumn } from 'typeorm';
-
-// TODO 데코레이터 적용하기.
-// TODO 파이프 적용하기.
-// TODO 유저 랭킹 api
+import { TokenPayloadDto } from 'src/login/token.payload.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard)
@@ -40,7 +34,7 @@ export class UsersController {
   @ApiResponse({ status: 401, description: '쿠키 인증 실패' })
   @ApiResponse({ status: 404, description: '존재하지 않는 유저' })
   @Get('me')
-  async me(@Uid() uid) {
+  async me(@MyUid() uid: number) {
     return await this.usersService.me(uid);
   }
 
@@ -77,7 +71,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '내 친구 목록 가져오기' })
   @Get('friend')
-  async friend(@Uid() uid) {
+  async friend(@MyUid() uid: number) {
     return await this.usersService.friend(uid);
   }
 
@@ -85,15 +79,23 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '내 차단 목록 가져오기' })
   @Get('blocklist')
-  async blocklist(@Uid() uid) {
+  async blocklist(@MyUid() uid: number) {
     return await this.usersService.blocklist(uid);
+  }
+
+  @ApiTags('uesrs')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: '랭킹 목록 가져오기' })
+  @Get('rank')
+  async rank() {
+    return await this.usersService.rank();
   }
 
   @ApiTags('uesrs')
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '친구 추가(팔로우)' })
   @Post('follow')
-  async follow(@Uid() uid, @Body() body: UidDto) {
+  async follow(@MyUid() uid: number, @Body() body: UidDto) {
     return await this.usersService.follow(uid, body.uid);
   }
 
@@ -101,7 +103,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '친구 삭제(언팔로우)' })
   @Delete('follow')
-  async unfollow(@Uid() uid, @Body() body: UidDto) {
+  async unfollow(@MyUid() uid: number, @Body() body: UidDto) {
     return await this.usersService.unfollow(uid, body.uid);
   }
 
@@ -109,7 +111,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '차단 하기' })
   @Post('block')
-  async block(@Uid() uid, @Body() body: UidDto) {
+  async block(@MyUid() uid: number, @Body() body: UidDto) {
     return await this.usersService.block(uid, body.uid);
   }
 
@@ -117,7 +119,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '차단 해제' })
   @Delete('block')
-  async unblock(@Uid() uid, @Body() body: UidDto) {
+  async unblock(@MyUid() uid: number, @Body() body: UidDto) {
     return await this.usersService.unblock(uid, body.uid);
   }
 }
