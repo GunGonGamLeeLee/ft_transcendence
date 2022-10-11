@@ -19,6 +19,7 @@ export function FriendList() {
 
 function Friend({ user }: { user: UserDataType }) {
   const setUserProfile = useSetRecoilState(userProfileModalState);
+
   const onClick = () => {
     setUserProfile(user);
   };

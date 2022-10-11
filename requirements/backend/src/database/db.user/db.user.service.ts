@@ -18,6 +18,20 @@ export class DbUserService {
     return await this.userRepo.findOneBy({ uid });
   }
 
+  async findOneProfile(uid: number): Promise<UserEntity> {
+    return await this.userRepo.findOne({
+      select: {
+        uid: true,
+        displayName: true,
+        imgUri: true,
+        rating: true,
+        status: true,
+        mfaNeed: true,
+      },
+      where: { uid },
+    });
+  }
+
   async findOneWithLists(uid: number): Promise<UserEntity> {
     return await this.userRepo.findOne({
       relations: {
@@ -32,7 +46,8 @@ export class DbUserService {
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = this.userRepo.create({
       ...userDto,
-      userStatus: UserStatus.OFFLINE,
+      imgUri: 'http://backend/users/img/default_img',
+      status: UserStatus.OFFLINE,
     });
     try {
       await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
@@ -49,20 +64,20 @@ export class DbUserService {
     }
   }
 
-  async updateAvatarPath(uid: number, avatarPath: string) {
-    await this.userRepo.update({ uid }, { avatarPath }); // TODO 없는 유저? -> 현재는 무시됨.
+  async updateimgUri(uid: number, imgUri: string) {
+    await this.userRepo.update({ uid }, { imgUri }); // TODO 없는 유저? -> 현재는 무시됨.
   }
 
   async updateRating(uid: number, rating: number) {
     await this.userRepo.update({ uid }, { rating });
   }
 
-  async updateIsRequiredTFA(uid: number, isRequiredTFA: boolean) {
-    await this.userRepo.update({ uid }, { isRequiredTFA });
+  async updateIsRequiredTFA(uid: number, mfaNeed: boolean) {
+    await this.userRepo.update({ uid }, { mfaNeed });
   }
 
-  async updateUserStatus(uid: number, userStatus: UserStatus) {
-    await this.userRepo.update({ uid }, { userStatus });
+  async updateUserStatus(uid: number, status: UserStatus) {
+    await this.userRepo.update({ uid }, { status });
   }
 
   async deleteOne(uid: number) {

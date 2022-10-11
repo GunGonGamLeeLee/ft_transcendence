@@ -30,8 +30,9 @@ export class DbFriendListService {
         user: {
           uid: true,
           displayName: true,
-          avatarPath: true,
-          userStatus: true,
+          imgUri: true,
+          status: true,
+          rating: true,
         },
       },
       relations: {

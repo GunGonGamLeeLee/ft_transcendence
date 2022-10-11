@@ -25,14 +25,14 @@ export class DbDmLogService {
         fromUser: {
           uid: true,
           displayName: true,
-          avatarPath: true,
-          userStatus: true,
+          imgUri: true,
+          status: true,
         },
         toUser: {
           uid: true,
           displayName: true,
-          avatarPath: true,
-          userStatus: true,
+          imgUri: true,
+          status: true,
         },
       },
       relations: {

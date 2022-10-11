@@ -1,13 +1,7 @@
-const enum Status {
-  OFFLINE,
-  ONLINE,
-  GAMING,
-}
-
 export interface UserDataType {
   uid: number;
   displayName: string;
   imgUri: string;
   rating: number;
-  status: Status;
+  status: number; // TODO 엔티티 컬럼 네임 수정.
 }

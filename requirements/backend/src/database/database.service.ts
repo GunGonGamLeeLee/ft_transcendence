@@ -99,7 +99,7 @@ export class DatabaseService {
   }
 
   async listDmOfUser(user1: number, user2: number) {
-    if (user1 == user2)
+    if (user1 === user2)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.BAD_REQUEST);
     return await this.dbDmLogsService.findDmLogsOfUser(user1, user2);
   }
@@ -110,9 +110,8 @@ export class DatabaseService {
 
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
-    await this.dbBlockListService.deleteOne(myUid, friendUid);
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
-    if (user == null || myUid == friendUid)
+    if (user == null || myUid === friendUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
     await this.dbFriendListService.saveOne(
       { fromUid: myUid, toUid: friendUid },
@@ -122,9 +121,8 @@ export class DatabaseService {
 
   async addBlock(myUid: number, blockUid: number) {
     // TODO transaction
-    await this.dbFriendListService.deleteOne(myUid, blockUid);
     const user: UserEntity = await this.dbUserService.findOne(blockUid);
-    if (user == null || myUid == blockUid)
+    if (user == null || myUid === blockUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
     await this.dbBlockListService.saveOne(
       { fromUid: myUid, toUid: blockUid },
@@ -190,6 +188,9 @@ export class DatabaseService {
   async findOneUser(uid: number) {
     return await this.dbUserService.findOne(uid);
   }
+  async findOneUserProfile(uid: number) {
+    return await this.dbUserService.findOneProfile(uid);
+  }
 
   async findOneChannel(chid: number) {
     return await this.dbChannelService.findOne(chid);
@@ -202,8 +203,8 @@ export class DatabaseService {
   async updateUserName(uid: number, displayName: string) {
     return this.dbUserService.updateName(uid, displayName);
   }
-  async updateUserAvatar(uid: number, avatarPath: string) {
-    return this.dbUserService.updateAvatarPath(uid, avatarPath);
+  async updateUserAvatar(uid: number, imgUri: string) {
+    return this.dbUserService.updateimgUri(uid, imgUri);
   }
   async updateUserRating(uid: number, rating: number) {
     return this.dbUserService.updateRating(uid, rating);
@@ -212,8 +213,8 @@ export class DatabaseService {
     return this.dbUserService.updateIsRequiredTFA(uid, isRequiredTFA);
   }
 
-  async updateUserStatus(uid: number, userStatus: UserStatus) {
-    return this.dbUserService.updateUserStatus(uid, userStatus);
+  async updateUserStatus(uid: number, status: UserStatus) {
+    return this.dbUserService.updateUserStatus(uid, status);
   }
 
   async updateChName(uid: number, chid: number, chName: string) {

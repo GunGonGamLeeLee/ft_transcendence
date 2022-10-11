@@ -35,7 +35,7 @@ export class DbUserInChannelService {
         user: {
           uid: true,
           displayName: true,
-          avatarPath: true,
+          imgUri: true,
         },
       },
       relations: { user: true },
@@ -50,7 +50,7 @@ export class DbUserInChannelService {
         user: {
           uid: true,
           displayName: true,
-          avatarPath: true,
+          imgUri: true,
         },
       },
       relations: { user: true },
@@ -65,7 +65,7 @@ export class DbUserInChannelService {
         user: {
           uid: true,
           displayName: true,
-          avatarPath: true,
+          imgUri: true,
         },
       },
       relations: { user: true },

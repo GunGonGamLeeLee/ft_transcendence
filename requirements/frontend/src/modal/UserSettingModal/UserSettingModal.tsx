@@ -60,7 +60,7 @@ function UserSetting() {
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/users/profile/namecheck`,
+      `${import.meta.env.VITE_BACKEND_EP}/users/namecheck`,
       {
         method: 'POST',
         headers: {
@@ -96,7 +96,7 @@ function UserSetting() {
     const newInfo = {
       imgUri: previewImg,
       displayName: displayName,
-      isRequiredMfa: isChecked === true,
+      mfaNeed: isChecked === true,
     };
 
     const response = await fetch(
@@ -146,6 +146,7 @@ function UserSetting() {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ pin: qrPin }),
       },

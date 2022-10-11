@@ -96,9 +96,9 @@ export class LoginService {
       const newUser: UserDto = {
         uid: id,
         displayName: Math.random().toString(36).substring(2, 11),
-        avatarPath: 'default/path',
+        imgUri: 'default/path', // TODO 바꾸자.
         rating: 42,
-        isRequiredTFA: false,
+        mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
       };
       this.databaseService.saveOneUser(newUser);
@@ -108,7 +108,7 @@ export class LoginService {
     return {
       id,
       secret: user.qrSecret,
-      isRequiredTFA: user.isRequiredTFA,
+      mfaNeed: user.mfaNeed,
     };
   }
 }

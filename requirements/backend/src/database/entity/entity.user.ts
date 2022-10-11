@@ -9,7 +9,6 @@ export enum UserStatus {
   OFFLINE,
   ONLINE,
   INGAME,
-  INCHANNEL,
 }
 
 @Entity()
@@ -22,19 +21,19 @@ export class UserEntity {
   displayName: string;
 
   @Column()
-  avatarPath: string;
+  imgUri: string;
 
   @Column({ type: 'integer' })
   rating: number;
 
   @Column({ default: false })
-  isRequiredTFA: boolean;
+  mfaNeed: boolean;
 
   @Column()
   qrSecret: string;
 
   @Column()
-  userStatus: UserStatus;
+  status: UserStatus;
 
   @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
   friendList: FriendListEntity[];

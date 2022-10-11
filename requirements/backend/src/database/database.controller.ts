@@ -452,8 +452,6 @@ export class DatabaseController {
   @ApiHeader({ name: 'my_uid' })
   @Delete('delete-block')
   async deleteBlockOfUser(@Headers() header) {
-    console.log(header.my_uid);
-    console.log(header.block_uid);
     return await this.databaseService.deleteBlockOfUser(
       +header.my_uid,
       +header.block_uid,
