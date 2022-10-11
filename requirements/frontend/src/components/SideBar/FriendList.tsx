@@ -18,22 +18,18 @@ export function FriendList() {
 }
 
 function Friend({ user }: { user: UserDataType }) {
-  const setState = useSetRecoilState(userProfileModalState);
+  const setUserProfile = useSetRecoilState(userProfileModalState);
   const onClick = () => {
-    setState(user);
+    setUserProfile(user);
   };
 
   return (
-    <>
-      <li className={styles.user} onClick={onClick}>
-        <div className={styles.user_profile__div}>
-          <img src={user.imgUri} className={styles.user_profile__img} />
-          <div className={styles.user_profile__username}>
-            {user.displayName}
-          </div>
-        </div>
-        <div>{user.status}</div>
-      </li>
-    </>
+    <li className={styles.user} onClick={onClick}>
+      <div className={styles.user_profile__div}>
+        <img src={user.imgUri} className={styles.user_profile__img} />
+        <div className={styles.user_profile__username}>{user.displayName}</div>
+      </div>
+      <div>{user.status}</div>
+    </li>
   );
 }

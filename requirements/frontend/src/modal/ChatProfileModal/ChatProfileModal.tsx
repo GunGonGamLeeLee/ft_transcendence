@@ -1,34 +1,36 @@
-import * as React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { UserDataType } from '../../atoms/userDataType';
-import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
-import { userProfileState } from '../../atoms/userProfileState';
+import React from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { blockedListState } from '../../atoms/blockedListState';
+import { ChatUserType } from '../../atoms/chatUserType';
+import { currRoleState } from '../../atoms/currRoleState';
 import { friendListState } from '../../atoms/friendListState';
+import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
+import { userProfileState } from '../../atoms/userProfileState';
 import { Follow } from '../buttons/Follow';
 import { Unfollow } from '../buttons/Unfollow';
-import { blockedListState } from '../../atoms/blockedListState';
 import { Block } from '../buttons/Block';
-import styles from './UserProfileModal.module.css';
-import modalstyles from '../Modal.module.css';
 import { Unblock } from '../buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
+import styles from './ChatProfileModal.module.css';
+import modalstyles from '../Modal.module.css';
 
-export function UserProfileModal() {
-  const userProfileModal = useRecoilValue(userProfileModalState);
+export function ChatProfileModal() {
+  const chatProfileModal = useRecoilValue(chatProfileModalState);
 
   return (
     <>
-      {userProfileModal === undefined ? (
+      {chatProfileModal === undefined ? (
         <></>
       ) : (
-        <UserProfile user={userProfileModal} />
+        <ChatProfile user={chatProfileModal} />
       )}
     </>
   );
 }
 
-function UserProfile({ user }: { user: UserDataType }) {
-  const setState = useSetRecoilState(userProfileModalState);
+function ChatProfile({ user }: { user: ChatUserType }) {
+  const setChatProfileModal = useSetRecoilState(chatProfileModalState);
+  const currRole = useRecoilValue(currRoleState);
   const userProfile = useRecoilValue(userProfileState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
@@ -36,7 +38,7 @@ function UserProfile({ user }: { user: UserDataType }) {
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
 
   const onClick = () => {
-    setState(undefined);
+    setChatProfileModal(undefined);
   };
 
   React.useEffect(() => {
@@ -66,6 +68,24 @@ function UserProfile({ user }: { user: UserDataType }) {
             <></>
           ) : (
             <>
+              <div className={styles.profile__buttons}>
+                {currRole === 'owner' ? (
+                  <ProfileButton text='임명/해임' />
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div className={styles.profile__buttons}>
+                {currRole === 'owner' ||
+                (currRole === 'admin' && user.role === 'user') ? (
+                  <>
+                    <ProfileButton text='BAN' />
+                    <ProfileButton text='MUTE' />
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
               <div className={styles.profile__buttons}>
                 {!isFriend ? <Follow /> : <Unfollow />}
                 {!isBlocked ? <Block /> : <Unblock />}
