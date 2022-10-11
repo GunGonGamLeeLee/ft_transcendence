@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { UserEntity } from './entity.user';
 
@@ -25,8 +26,16 @@ export class DmLogEntity {
   content: string;
 
   @ManyToOne(() => UserEntity, (user) => user.uid)
-  fromUser: UserEntity
+  @JoinColumn({
+    name: 'fromUid',
+    referencedColumnName: 'uid',
+  })
+  fromUser: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.uid)
-  toUser: UserEntity
+  @JoinColumn({
+    name: 'toUid',
+    referencedColumnName: 'uid',
+  })
+  toUser: UserEntity;
 }

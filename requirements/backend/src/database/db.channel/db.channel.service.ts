@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChannelDto } from '../dto/channel.dto';
 import { ChannelEntity } from '../entity/entity.channel';
+import { UserEntity } from '../entity/entity.user';
 
 @Injectable()
 export class DbChannelService {
@@ -16,7 +17,18 @@ export class DbChannelService {
   }
 
   async findOne(chid: number) {
-    return await this.channelRepo.findOneBy({ chid });
+    return await this.channelRepo.findOne({
+      select: {
+        chOwner: {
+          uid: true,
+          displayName: true,
+        },
+      },
+      relations: {
+        chOwner: true,
+      },
+      where: { chid },
+    });
   }
 
   async findOneWithUsers(chid: number) {
@@ -28,13 +40,12 @@ export class DbChannelService {
     });
   }
 
-  async saveOne(channel: ChannelDto | ChannelEntity) {
-    const ch = new ChannelEntity();
-    ch.chName = channel.chName;
-    ch.chOwnerId = channel.chOwnerId;
-    ch.display = channel.display;
-    ch.isLocked = channel.isLocked;
-    ch.password = channel.password;
+  async countByUid(chOwnerId: number) {
+    return await this.channelRepo.countBy({ chOwnerId });
+  }
+
+  async saveOne(channel: ChannelDto | ChannelEntity, chOwner: UserEntity) {
+    const ch = this.channelRepo.create({ ...channel, chOwner });
     return await this.channelRepo.save(ch);
   }
 

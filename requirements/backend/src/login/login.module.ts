@@ -6,7 +6,8 @@ import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [HttpModule, DatabaseModule],
+  imports: [HttpModule, DatabaseModule, AuthModule],
+  providers: [LoginService],
   controllers: [LoginController],
   providers: [LoginService],
 })

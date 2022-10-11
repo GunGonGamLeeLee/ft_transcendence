@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RelationListDto } from '../dto/relation.list.dto';
@@ -46,11 +46,12 @@ export class DbFriendListService {
     friendRelation: RelationListDto,
     user: UserEntity,
   ): Promise<void> {
-    const rel = new FriendListEntity();
-    rel.fromUid = friendRelation.fromUid;
-    rel.toUid = friendRelation.toUid;
-    rel.user = user;
-    await this.firendListRepo.save(rel);
+    const rel = this.firendListRepo.create({ ...friendRelation, user });
+    try {
+      await this.firendListRepo.save(rel);
+    } catch (err) {
+      throw new HttpException('already friend!', HttpStatus.FORBIDDEN); // FIXME 왜 에러 코드로 응답이 안 갈까?
+    }
   }
 
   async deleteOne(fromUid: number, toUid: number) {
@@ -58,5 +59,9 @@ export class DbFriendListService {
       fromUid,
       toUid,
     });
+  }
+
+  async deleteAll(uid: number) {
+    return await this.firendListRepo.delete({ fromUid: uid });
   }
 }

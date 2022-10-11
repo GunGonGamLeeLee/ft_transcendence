@@ -1,4 +1,12 @@
-import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { UserEntity } from './entity.user';
 import { UserInChannelEntity } from './entity.user.in.channel';
 
 @Entity()
@@ -20,6 +28,13 @@ export class ChannelEntity {
 
   @Column()
   password: string;
+
+  @OneToOne(() => UserEntity)
+  @JoinColumn({
+    name: 'chOwnerId',
+    referencedColumnName: 'uid',
+  })
+  chOwner: UserEntity;
 
   @OneToMany(
     () => UserInChannelEntity,

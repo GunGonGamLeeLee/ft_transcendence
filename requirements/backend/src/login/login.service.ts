@@ -90,7 +90,6 @@ export class LoginService {
     return res;
   }
 
-  // FIXME DB 조회
   async getUserInfo(id: number): Promise<UserInfo> {
     let user: UserEntity | UserDto = await this.databaseService.findOneUser(id);
     if (user == null) {
