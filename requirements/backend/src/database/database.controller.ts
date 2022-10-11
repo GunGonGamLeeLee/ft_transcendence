@@ -185,7 +185,7 @@ export class DatabaseController {
   @ApiTags('database/FriendList')
   @ApiOperation({ summary: '유저의 친구 추가하기' })
   @ApiHeader({ name: 'friend_uid' })
-  @ApiHeader({ name: 'my_uid' }) 
+  @ApiHeader({ name: 'my_uid' })
   @Post('add-friend')
   async addFriend(@Headers() header) {
     return await this.databaseService.addFriend(
@@ -455,8 +455,8 @@ export class DatabaseController {
     console.log(header.my_uid);
     console.log(header.block_uid);
     return await this.databaseService.deleteBlockOfUser(
-      header.my_uid,
-      header.block_uid,
+      +header.my_uid,
+      +header.block_uid,
     );
   }
 
@@ -475,8 +475,8 @@ export class DatabaseController {
   @Delete('delete-user-in-channel')
   async deleteUserInChannel(@Headers() header) {
     return await this.databaseService.deleteUserInChannel(
-      header.uid,
-      header.chid,
+      +header.uid,
+      +header.chid,
     );
   }
 }

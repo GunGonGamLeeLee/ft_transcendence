@@ -159,6 +159,7 @@ export class DatabaseService {
     const channel: ChannelEntity = await this.dbChannelService.findOne(
       userInChannelDto.chid,
     );
+    userInChannelDto.userRole = UserRoleInChannel.USER;
     return await this.dbUserInChannelService.saveOne(
       userInChannelDto,
       user,
@@ -299,7 +300,12 @@ export class DatabaseService {
       'you can`t change userRole in channel.',
     );
     if (role == UserRoleInChannel.OWNER)
-      throw new HttpException('permission denied', HttpStatus.FORBIDDEN);
+      throw new HttpException('권한이 없습니다.', HttpStatus.FORBIDDEN);
+    if (role > UserRoleInChannel.USER || role < UserRoleInChannel.OWNER)
+      throw new HttpException(
+        '구현되지 않았습니다.',
+        HttpStatus.NOT_IMPLEMENTED,
+      );
     return this.dbUserInChannelService.changeRole(targetUid, chid, role);
   }
 
@@ -310,13 +316,8 @@ export class DatabaseService {
     return await this.dbChannelService.deleteOne(chid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나? -> ㅇㅇ
   }
 
-  async deleteChannel(chid: number) {
-    // TODO 관련 목록 정리
-    await this.dbChannelService.deleteOne(chid);
-  }
-
   async deleteFriendOfUser(myUid: number, friendUid: number) {
-    await this.dbFriendListService.deleteOne(myUid, friendUid);
+    return await this.dbFriendListService.deleteOne(myUid, friendUid);
   }
 
   async deleteFriendAll(uid: number) {
@@ -335,6 +336,9 @@ export class DatabaseService {
     const channel = await this.dbChannelService.findOne(chid);
     if (channel == null)
       throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);
+    console.log(typeof channel.chOwnerId);
+    console.log(typeof uid);
+    console.log(typeof uid);
     if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
     return await this.dbUserInChannelService.deleteOne(uid, chid);
   }

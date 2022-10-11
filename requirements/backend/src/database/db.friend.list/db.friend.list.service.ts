@@ -55,7 +55,7 @@ export class DbFriendListService {
   }
 
   async deleteOne(fromUid: number, toUid: number) {
-    await this.firendListRepo.delete({
+    return await this.firendListRepo.delete({
       fromUid,
       toUid,
     });

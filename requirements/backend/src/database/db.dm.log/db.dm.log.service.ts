@@ -20,6 +20,8 @@ export class DbDmLogService {
     const msg = await this.dmLogRepo.find({
       select: {
         index: true,
+        content: true,
+        time: true,
         fromUser: {
           uid: true,
           displayName: true,
