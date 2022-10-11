@@ -20,7 +20,9 @@ function UserSetting() {
     userProfile.imgUri,
   );
   const [displayName, setDisplayName] = React.useState<string>('');
-  const [isChecked, setIsChecked] = React.useState<boolean>(false);
+  const [isChecked, setIsChecked] = React.useState<boolean>(
+    userProfile.mfaNeed,
+  );
   const [dupCheckStatus, setDupCheckStatus] = React.useState<string>('');
   const [qrcode, setQrcode] = React.useState<string>('');
   const [qrCheckStatus, setQrCheckStatus] = React.useState<string>('');
@@ -46,6 +48,11 @@ function UserSetting() {
   };
 
   const onChangeChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (userProfile.mfaNeed && isChecked && qrCheckStatus !== 'qr확인완료') {
+      setQrCheckStatus('qr 인증 해주세요!');
+      return;
+    }
+
     setIsChecked(event.target.checked);
   };
 
