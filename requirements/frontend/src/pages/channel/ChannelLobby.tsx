@@ -1,19 +1,25 @@
 import * as React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { Link } from 'react-router-dom';
 import { FilterButton } from './components/FilterButton';
 import { filterState } from '../../atoms/filterState';
 import { RoomList } from './components/RoomList';
 import { RoomType } from '../../atoms/currRoomState';
+import { newRoomModalState } from '../../atoms/modals/newRoomModalState';
+import {
+  allRoomListState,
+  dmRoomListState,
+  joinedRoomListState,
+} from '../../atoms/roomListState';
 import styles from './ChannelLobby.module.css';
 import pagestyles from '../pages.module.css';
-import { newRoomModalState } from '../../atoms/modals/newRoomModalState';
 
 export function ChannelLobby() {
-  const [allRoomList, setAllRoomList] = React.useState<RoomType[]>([]);
-  const [joinedRoomList, setJoinedRoomList] = React.useState<RoomType[]>([]);
-  const [dmRoomList, setDmRoomList] = React.useState<RoomType[]>([]);
+  const [allRoomList, setAllRoomList] = useRecoilState(allRoomListState);
+  const [joinedRoomList, setJoinedRoomList] =
+    useRecoilState(joinedRoomListState);
+  const [dmRoomList, setDmRoomList] = useRecoilState(dmRoomListState);
   const { token } = useRecoilValue(authState);
   const [isRefresh, setIsRefresh] = React.useState<boolean>(true);
   const filter = useRecoilValue(filterState);
@@ -35,7 +41,7 @@ export function ChannelLobby() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     if (!response.ok) throw new Error();
