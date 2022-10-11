@@ -73,11 +73,9 @@ function UserSetting() {
 
     if (response.status === 201) {
       setDupCheckStatus('중복확인완료');
-      console.log(`adsfn ${dupCheckStatus}`);
       return;
     } else {
       setDupCheckStatus('중복된 이름입니다');
-      console.log(dupCheckStatus);
       setDisplayName('');
     }
   };

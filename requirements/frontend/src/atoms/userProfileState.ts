@@ -20,7 +20,6 @@ export const userProfileState = atom<ProfileType>({
 });
 
 const useRequestUserProfile = async (token: string): Promise<ProfileType> => {
-  console.log(token);
   const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/users/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
