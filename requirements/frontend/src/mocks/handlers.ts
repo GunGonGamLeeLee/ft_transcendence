@@ -5,7 +5,7 @@ export const handlers = [
     return res(
       ctx.status(200),
       ctx.json({
-        id: 99945,
+        uid: 99945,
         displayName: 'jaham',
         imgUri:
           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -22,7 +22,7 @@ export const handlers = [
         ctx.status(200),
         ctx.json([
           {
-            id: 2,
+            uid: 2,
             displayName: 'jeongble',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -39,7 +39,7 @@ export const handlers = [
       ctx.status(200),
       ctx.json([
         {
-          id: 2,
+          uid: 2,
           displayName: 'jeongble',
           imgUri:
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -47,7 +47,7 @@ export const handlers = [
           status: 'offline',
         },
         {
-          id: 3,
+          uid: 3,
           displayName: 'yeju',
           imgUri:
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -55,7 +55,7 @@ export const handlers = [
           status: 'online',
         },
         {
-          id: 99945,
+          uid: 99945,
           displayName: 'jaham',
           imgUri:
             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -75,7 +75,7 @@ export const handlers = [
         ctx.status(200),
         ctx.json([
           {
-            id: 99945,
+            uid: 99945,
             displayName: 'jaham',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -85,7 +85,7 @@ export const handlers = [
             muted: false,
           },
           {
-            id: 2,
+            uid: 2,
             displayName: 'jeongble',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -95,7 +95,7 @@ export const handlers = [
             muted: false,
           },
           {
-            id: 3,
+            uid: 3,
             displayName: 'yeju',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -198,7 +198,7 @@ export const handlers = [
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
     (req, res, ctx) => {
       req.json().then((res) => {
-        console.log(`[MSW] request follow, id: ${res.id}`);
+        console.log(`[MSW] request follow, uid: ${res.uid}`);
       });
       return res(ctx.status(201));
     },
@@ -207,7 +207,7 @@ export const handlers = [
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
     (req, res, ctx) => {
       req.json().then((res) => {
-        console.log(`[MSW] request unfollow, id: ${res.id}`);
+        console.log(`[MSW] request unfollow, uid: ${res.uid}`);
       });
       return res(ctx.status(200));
     },
@@ -219,7 +219,7 @@ export const handlers = [
         ctx.status(200),
         ctx.json([
           {
-            id: 1093,
+            uid: 1093,
             displayName: 'blockedUser',
             imgUri:
               'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
@@ -234,7 +234,7 @@ export const handlers = [
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
     (req, res, ctx) => {
       req.json().then((res) => {
-        console.log(`[MSW] request block, id: ${res.id}`);
+        console.log(`[MSW] request block, uid: ${res.uid}`);
       });
       return res(ctx.status(201));
     },
@@ -243,7 +243,7 @@ export const handlers = [
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
     (req, res, ctx) => {
       req.json().then((res) => {
-        console.log(`[MSW] request unblock, id: ${res.id}`);
+        console.log(`[MSW] request unblock, id: ${res.uid}`);
       });
       return res(ctx.status(200));
     },
@@ -288,7 +288,7 @@ export const handlers = [
     return res(
       ctx.status(201),
       ctx.json({
-        id: 99945,
+        uid: 99945,
         displayName: 'newName',
         imgUri: 'https://avatars.githubusercontent.com/u/76723089?s=80&v=4',
         rating: 2048,

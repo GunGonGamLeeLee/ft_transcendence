@@ -26,8 +26,8 @@ export function Block() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: user.id }),
-      }
+        body: JSON.stringify({ uid: user.uid }),
+      },
     );
 
     if (response.status === 201) {

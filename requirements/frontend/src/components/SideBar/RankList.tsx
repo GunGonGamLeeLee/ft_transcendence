@@ -30,7 +30,7 @@ export function RankList() {
   return (
     <>
       {rankList.map((user, index) => (
-        <Rank user={user} index={index} key={user.id} />
+        <Rank user={user} index={index} key={user.uid} />
       ))}
     </>
   );

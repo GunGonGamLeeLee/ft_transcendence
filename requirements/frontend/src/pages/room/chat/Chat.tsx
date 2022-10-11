@@ -3,7 +3,7 @@ import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './Chat.module.css';
 
 interface ChatType {
-  id: number;
+  uid: number;
   displayName: string;
   imgUri: string;
   msg: string;
@@ -11,31 +11,31 @@ interface ChatType {
 
 const array1: Array<ChatType> = [
   {
-    id: 2,
+    uid: 2,
     displayName: 'jeongble',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hi',
   },
   {
-    id: 2,
+    uid: 2,
     displayName: 'jeongble',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hi',
   },
   {
-    id: 3,
+    uid: 3,
     displayName: 'yeju',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihi',
   },
   {
-    id: 99945,
+    uid: 99945,
     displayName: 'jaham',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hi',
   },
   {
-    id: 99945,
+    uid: 99945,
     displayName: 'jaham',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: '안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. ',
@@ -53,7 +53,7 @@ function LeftChat({
 }) {
   return (
     <>
-      {info.id === lastId ? (
+      {info.uid === lastId ? (
         <></>
       ) : (
         <div className={`${styles.chat__profile} ${styles.chat__left}`}>
@@ -79,7 +79,7 @@ function RightChat({
 }) {
   return (
     <>
-      {info.id === lastId ? (
+      {info.uid === lastId ? (
         <></>
       ) : (
         <div className={`${styles.chat__profile} ${styles.chat__right}`}>
@@ -104,8 +104,8 @@ export function Chat() {
     <div className={styles.chatbox}>
       {array2.map((info, key) => {
         tempId = lastId;
-        lastId = info.id;
-        return info.id === userProfile.id ? (
+        lastId = info.uid;
+        return info.uid === userProfile.uid ? (
           <RightChat info={info} lastId={tempId} key={key} />
         ) : (
           <LeftChat info={info} lastId={tempId} key={key} />

@@ -25,12 +25,12 @@ export function Unblock() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: user.id }),
-      }
+        body: JSON.stringify({ uid: user.uid }),
+      },
     );
 
     if (response.status === 200) {
-      setBlockedList(blockedList.filter((curr) => curr.id !== user.id));
+      setBlockedList(blockedList.filter((curr) => curr.uid !== user.uid));
       return;
     }
 

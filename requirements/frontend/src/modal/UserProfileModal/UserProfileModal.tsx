@@ -40,8 +40,10 @@ function UserProfile({ user }: { user: UserDataType }) {
   };
 
   React.useEffect(() => {
-    setIsFriend(friendList.find((curr) => curr.id === user.id) !== undefined);
-    setIsBlocked(blockedList.find((curr) => curr.id === user.id) !== undefined);
+    setIsFriend(friendList.find((curr) => curr.uid === user.uid) !== undefined);
+    setIsBlocked(
+      blockedList.find((curr) => curr.uid === user.uid) !== undefined,
+    );
   }, [friendList, blockedList]);
 
   return (
@@ -62,7 +64,7 @@ function UserProfile({ user }: { user: UserDataType }) {
             </div>
           </div>
           <div className={styles.profile__stat}>매칭 기록이 없습니다.</div>
-          {userProfile.id === user.id ? (
+          {userProfile.uid === user.uid ? (
             <></>
           ) : (
             <>

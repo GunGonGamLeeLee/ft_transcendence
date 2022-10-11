@@ -11,7 +11,7 @@ export function FriendList() {
   return (
     <>
       {friendList.map((user) => (
-        <Friend user={user} key={user.id} />
+        <Friend user={user} key={user.uid} />
       ))}
     </>
   );

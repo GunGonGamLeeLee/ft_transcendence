@@ -1,7 +1,7 @@
 type Status = 'online' | 'chatting' | 'gaming' | 'offline';
 
 export interface UserDataType {
-  id: number;
+  uid: number;
   displayName: string;
   imgUri: string;
   rating: number;

@@ -25,12 +25,12 @@ export function Unfollow() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: user.id }),
-      }
+        body: JSON.stringify({ uid: user.uid }),
+      },
     );
 
     if (response.status === 200) {
-      setFriendList(friendList.filter((curr) => curr.id !== user.id));
+      setFriendList(friendList.filter((curr) => curr.uid !== user.uid));
       return;
     }
 
@@ -38,7 +38,7 @@ export function Unfollow() {
   };
 
   const handleUnfollowClick = async (
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
 
