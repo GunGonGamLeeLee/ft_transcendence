@@ -11,7 +11,13 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -22,7 +28,7 @@ import { TokenPayloadDto } from './token.payload.dto';
 export interface UserInfo {
   id: number;
   secret: string;
-  isRequiredTFA: boolean;
+  mfaNeed: boolean;
 }
 
 @Controller('login')
@@ -53,7 +59,7 @@ export class LoginController {
     const userInfo = await this.loginService.getUserInfo(userId);
     const payload: TokenPayloadDto = {
       id: userInfo.id,
-      isRequiredTFA: userInfo.isRequiredTFA,
+      isRequiredTFA: userInfo.mfaNeed,
     };
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
@@ -97,5 +103,16 @@ export class LoginController {
 
     const json = { token: this.loginService.issueToken(payload) };
     return json;
+  }
+
+  @ApiTags('token')
+  @ApiOperation({ summary: '토큰 발급받기 - 디버그용 api입니다.' })
+  @ApiHeader({ name: 'uid' })
+  @Get('token')
+  async getToken(@Headers() header) {
+    return this.loginService.issueToken({
+      id: header.uid,
+      isRequiredTFA: false,
+    });
   }
 }

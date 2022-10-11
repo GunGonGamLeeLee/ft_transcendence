@@ -6,11 +6,11 @@ export class UserDto {
   @ApiProperty({ example: 'jaham' })
   displayName: string;
   @ApiProperty({ example: '/path/to/avatar/in/server' })
-  avatarPath: string;
+  imgUri: string;
   @ApiProperty()
   rating: number;
   @ApiProperty({ example: false })
-  isRequiredTFA: boolean;
+  mfaNeed: boolean;
   @ApiProperty()
   qrSecret: string;
 }

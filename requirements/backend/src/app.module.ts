@@ -11,6 +11,7 @@ import * as dotenv from 'dotenv';
 import { ChannelEntity } from './database/entity/entity.channel';
 import { UserInChannelEntity } from './database/entity/entity.user.in.channel';
 import { DmLogEntity } from './database/entity/entity.dm.log';
+import { UsersModule } from './users/users.module';
 
 dotenv.config({
   path: '/backend.env',
@@ -35,7 +36,12 @@ const dbOptions: TypeOrmModuleOptions = {
 };
 
 @Module({
-  imports: [LoginModule, DatabaseModule, TypeOrmModule.forRoot(dbOptions)],
+  imports: [
+    LoginModule,
+    DatabaseModule,
+    TypeOrmModule.forRoot(dbOptions),
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
