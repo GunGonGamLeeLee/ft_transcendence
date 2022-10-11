@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from '../dto/user.dto';
-import { UserEntity } from '../entity/entity.user';
+import { UserEntity, UserStatus } from '../entity/entity.user';
 
 @Injectable()
 export class DbUserService {
@@ -14,28 +14,58 @@ export class DbUserService {
     return await this.userRepo.find();
   }
 
-  async findOneById(id: number): Promise<UserEntity> {
-    return await this.userRepo.findOneBy({ uid: id });
+  async findOne(uid: number): Promise<UserEntity> {
+    return await this.userRepo.findOneBy({ uid });
   }
 
-  async findFriendList(id: number) {
-    const user = await this.userRepo.findOne({
-      where: { uid: id },
+  async findOneWithLists(uid: number): Promise<UserEntity> {
+    return await this.userRepo.findOne({
       relations: {
         friendList: true,
+        blockList: true,
+        inChannelList: true,
       },
+      where: { uid },
     });
-    return user.friendList;
   }
 
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
-    const user = new UserEntity();
-    user.uid = userDto.uid;
-    user.displayName = userDto.displayName;
-    user.avatarPath = userDto.avatarPath;
-    user.rating = userDto.rating;
-    user.isRequiredTFA = userDto.isRequiredTFA;
-    user.qrSecret = userDto.qrSecret;
-    await this.userRepo.save(user);
+    const user = this.userRepo.create({
+      ...userDto,
+      userStatus: UserStatus.OFFLINE,
+    });
+    try {
+      await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
+    } catch (err) {
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async updateName(uid: number, displayName: string) {
+    try {
+      await this.userRepo.update({ uid }, { displayName });
+    } catch (err) {
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN); // TODO 없는 유저? -> 현재는 무시됨.
+    }
+  }
+
+  async updateAvatarPath(uid: number, avatarPath: string) {
+    await this.userRepo.update({ uid }, { avatarPath }); // TODO 없는 유저? -> 현재는 무시됨.
+  }
+
+  async updateRating(uid: number, rating: number) {
+    await this.userRepo.update({ uid }, { rating });
+  }
+
+  async updateIsRequiredTFA(uid: number, isRequiredTFA: boolean) {
+    await this.userRepo.update({ uid }, { isRequiredTFA });
+  }
+
+  async updateUserStatus(uid: number, userStatus: UserStatus) {
+    await this.userRepo.update({ uid }, { userStatus });
+  }
+
+  async deleteOne(uid: number) {
+    return await this.userRepo.delete({ uid });
   }
 }

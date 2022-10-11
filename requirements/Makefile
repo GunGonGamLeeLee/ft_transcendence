@@ -25,8 +25,6 @@ help:
 	@echo make install cont=CONTAINER_NAME
 	@echo
 
-
-
 #dev operations
 
 update:
@@ -64,6 +62,10 @@ dev-down:
 
 dev-clean: dev-down
 	@$(RM) $(DEV_DATABASE_DIR)/*
+
+dev-fclean: dev-down
+	@$(MAKE) dev-clean
+	@docker rmi $(shell docker images -aq)
 
 dev-dependencies: $(DEV_DATABASE_DIR)
 	@echo "Checking dependencies is done"

@@ -3,8 +3,8 @@ import { RelationListEntity } from './entity.relation.list';
 import { UserEntity } from './entity.user';
 
 @Entity()
-export class FriendListEntity extends RelationListEntity {
-  @ManyToOne(() => UserEntity, (user) => user.friendList)
+export class BlockListEntity extends RelationListEntity {
+  @ManyToOne(() => UserEntity, (user) => user.blockList)
   @JoinColumn({
     name: 'toUid',
     referencedColumnName: 'uid',

@@ -1,4 +1,8 @@
-export interface RelationListDto {
-  fuid: number;
-  tuid: number;
+import { ApiProperty } from '@nestjs/swagger';
+
+export class RelationListDto {
+  @ApiProperty()
+  fromUid: number;
+  @ApiProperty()
+  toUid: number;
 }
