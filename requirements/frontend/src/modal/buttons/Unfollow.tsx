@@ -15,7 +15,7 @@ export function Unfollow() {
 
   const requestUnfollow = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/users/unfollow`,
+      `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
       {
         method: 'DELETE',
         headers: {
