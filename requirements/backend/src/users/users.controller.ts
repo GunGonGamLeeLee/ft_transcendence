@@ -16,7 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { TokenPayloadDto } from '../login/token.payload.dto';
+import { Uid } from './decorator/uid.decorator';
 import { UidDto } from './dto/uid.dto';
 import { UsersService } from './users.service';
 import { UserDto } from 'src/database/dto/user.dto';
@@ -40,9 +40,7 @@ export class UsersController {
   @ApiResponse({ status: 401, description: '쿠키 인증 실패' })
   @ApiResponse({ status: 404, description: '존재하지 않는 유저' })
   @Get('me')
-  async me(@Req() req) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async me(@Uid() uid) {
     return await this.usersService.me(uid);
   }
 
@@ -79,9 +77,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '내 친구 목록 가져오기' })
   @Get('friend')
-  async friend(@Req() req) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async friend(@Uid() uid) {
     return await this.usersService.friend(uid);
   }
 
@@ -89,9 +85,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '내 차단 목록 가져오기' })
   @Get('blocklist')
-  async blocklist(@Req() req) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async blocklist(@Uid() uid) {
     return await this.usersService.blocklist(uid);
   }
 
@@ -99,9 +93,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '친구 추가(팔로우)' })
   @Post('follow')
-  async follow(@Req() req, @Body() body: UidDto) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async follow(@Uid() uid, @Body() body: UidDto) {
     return await this.usersService.follow(uid, body.uid);
   }
 
@@ -109,9 +101,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '친구 삭제(언팔로우)' })
   @Delete('follow')
-  async unfollow(@Req() req, @Body() body: UidDto) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async unfollow(@Uid() uid, @Body() body: UidDto) {
     return await this.usersService.unfollow(uid, body.uid);
   }
 
@@ -119,9 +109,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '차단 하기' })
   @Post('block')
-  async block(@Req() req, @Body() body: UidDto) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async block(@Uid() uid, @Body() body: UidDto) {
     return await this.usersService.block(uid, body.uid);
   }
 
@@ -129,9 +117,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '차단 해제' })
   @Delete('block')
-  async unblock(@Req() req, @Body() body: UidDto) {
-    const payload: TokenPayloadDto = (req as any).jwtPayload;
-    const uid: number = payload.id;
+  async unblock(@Uid() uid, @Body() body: UidDto) {
     return await this.usersService.unblock(uid, body.uid);
   }
 }
