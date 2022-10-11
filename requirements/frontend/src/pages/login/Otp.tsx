@@ -30,7 +30,7 @@ export function Otp() {
     <>
       <p>otp!!</p>
       <form onSubmit={handleSubmit}>
-        <input name='pin' placeholder='otp' />
+        <input name='pin' type='password' placeholder='otp' maxLength={20} />
         <button type='submit'>submit</button>
       </form>
     </>

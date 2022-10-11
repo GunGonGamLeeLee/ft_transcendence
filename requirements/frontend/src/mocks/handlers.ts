@@ -10,7 +10,8 @@ export const handlers = [
         imgUri:
           'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
         rating: 2048,
-      })
+        mfaNeed: false,
+      }),
     );
   }),
 
@@ -28,9 +29,9 @@ export const handlers = [
             rating: 1024,
             status: 'offline',
           },
-        ])
+        ]),
       );
-    }
+    },
   ),
 
   rest.get(`${import.meta.env.VITE_BACKEND_EP}/users/rank`, (req, res, ctx) => {
@@ -61,7 +62,7 @@ export const handlers = [
           rating: 1024,
           status: 'online',
         },
-      ])
+      ]),
     );
   }),
 
@@ -103,9 +104,9 @@ export const handlers = [
             banned: false,
             muted: false,
           },
-        ])
+        ]),
       );
-    }
+    },
   ),
 
   rest.get(
@@ -183,15 +184,15 @@ export const handlers = [
               private: false,
             },
           ],
-        })
+        }),
       );
-    }
+    },
   ),
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/channel/auth`,
     (req, res, ctx) => {
       return res(ctx.status(200));
-    }
+    },
   ),
   rest.post(
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
@@ -200,7 +201,7 @@ export const handlers = [
         console.log(`[MSW] request follow, id: ${res.id}`);
       });
       return res(ctx.status(201));
-    }
+    },
   ),
   rest.delete(
     `${import.meta.env.VITE_BACKEND_EP}/users/follow`,
@@ -209,7 +210,7 @@ export const handlers = [
         console.log(`[MSW] request unfollow, id: ${res.id}`);
       });
       return res(ctx.status(200));
-    }
+    },
   ),
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/users/blocklist`,
@@ -225,9 +226,9 @@ export const handlers = [
             rating: 2048,
             status: 'online',
           },
-        ])
+        ]),
       );
-    }
+    },
   ),
   rest.post(
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
@@ -236,7 +237,7 @@ export const handlers = [
         console.log(`[MSW] request block, id: ${res.id}`);
       });
       return res(ctx.status(201));
-    }
+    },
   ),
   rest.delete(
     `${import.meta.env.VITE_BACKEND_EP}/users/block`,
@@ -245,13 +246,13 @@ export const handlers = [
         console.log(`[MSW] request unblock, id: ${res.id}`);
       });
       return res(ctx.status(200));
-    }
+    },
   ),
   rest.post(`${import.meta.env.VITE_BACKEND_EP}/channel`, (req, res, ctx) => {
     req.json().then((data) => {
       const { title, mode, password } = data;
       console.log(
-        `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`
+        `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`,
       );
     });
 
@@ -264,7 +265,39 @@ export const handlers = [
         ownerName: 'jaham',
         userCount: 1,
         lock: false,
-      })
+      }),
     );
+  }),
+  rest.post(
+    `${import.meta.env.VITE_BACKEND_EP}/users/profile/namecheck`,
+    (req, res, ctx) => {
+      req.json().then((res) => {
+        console.log(`[MSW] request namecheck, name: ${res.displayName}`);
+      });
+
+      return res(ctx.status(201));
+    },
+  ),
+  rest.post(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
+    req.json().then((res) => {
+      console.log(
+        `[MSW] request change profile, name: ${res.displayName} img: ${res.imgUri} mfa: ${res.isRequiredMfa}`,
+      );
+    });
+
+    return res(
+      ctx.status(201),
+      ctx.json({
+        id: 99945,
+        displayName: 'newName',
+        imgUri: 'https://avatars.githubusercontent.com/u/76723089?s=80&v=4',
+        rating: 2048,
+        status: 'online',
+      }),
+    );
+  }),
+  rest.post(`${import.meta.env.VITE_BACKEND_EP}/login/otp`, (req, res, ctx) => {
+    console.log(`[MSW] request otp auth`);
+    return res(ctx.status(201));
   }),
 ];

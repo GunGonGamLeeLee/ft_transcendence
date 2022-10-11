@@ -2,7 +2,11 @@ import { atom, selector } from 'recoil';
 import { authState } from './authState';
 import { UserDataType } from './userDataType';
 
-export const userProfileState = atom<UserDataType>({
+interface ProfileType extends UserDataType {
+  mfaNeed: boolean;
+}
+
+export const userProfileState = atom<ProfileType>({
   key: 'userProfile',
   default: selector({
     key: 'userProfile/default',
@@ -15,7 +19,7 @@ export const userProfileState = atom<UserDataType>({
   }),
 });
 
-const useRequestUserProfile = async (token: string): Promise<UserDataType> => {
+const useRequestUserProfile = async (token: string): Promise<ProfileType> => {
   const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/users/me`, {
     headers: {
       Authorizatioin: `Bearer ${token}`,
