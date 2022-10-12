@@ -73,7 +73,6 @@ export class DbUserService {
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = this.userRepo.create({
       ...userDto,
-      imgUri: `http://localhost:4243/users/img/${userDto.uid}.png`,
       status: UserStatus.OFFLINE,
     });
     try {
