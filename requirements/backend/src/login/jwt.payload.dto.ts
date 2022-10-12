@@ -1,4 +1,4 @@
-export interface TokenPayloadDto {
+export interface JwtPayloadDto {
   id: number;
   isRequiredTFA: boolean;
 }
