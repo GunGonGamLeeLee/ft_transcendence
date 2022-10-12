@@ -53,10 +53,12 @@ export class DbMatchHistoryService {
       select: {
         index: true,
         winner: {
+          uid: true,
           displayName: true,
           imgUri: true,
         },
         loser: {
+          uid: true,
           displayName: true,
           imgUri: true,
         },
@@ -78,10 +80,12 @@ export class DbMatchHistoryService {
       select: {
         index: true,
         winner: {
+          uid: true,
           displayName: true,
           imgUri: true,
         },
         loser: {
+          uid: true,
           displayName: true,
           imgUri: true,
         },
