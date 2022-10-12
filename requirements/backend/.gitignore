@@ -37,4 +37,4 @@ lerna-debug.log*
 # env
 .env
 
-img/*
+public/img/*
