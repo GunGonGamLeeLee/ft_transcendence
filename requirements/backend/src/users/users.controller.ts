@@ -7,10 +7,12 @@ import {
   Post,
   Delete,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -122,8 +124,9 @@ export class UsersController {
   @ApiTags('users')
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: '전적 보기 (최신 5게임)' })
+  @ApiQuery({ name: 'uid' })
   @Get('match')
-  async match(@MyUid() uid: number) {
+  async match(@Query('uid') uid) {
     return await this.usersService.match(uid, 5, 1);
   }
 }
