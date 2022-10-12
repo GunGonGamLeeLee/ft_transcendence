@@ -9,6 +9,7 @@ import { UserInfo } from './login.controller';
 import { UserEntity } from 'src/database/entity/entity.user';
 import { DatabaseService } from 'src/database/database.service';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
 import { UserDto } from 'src/database/dto/user.dto';
 
 dotenv.config({
@@ -27,7 +28,7 @@ export class LoginService {
     private readonly databaseService: DatabaseService,
   ) {}
 
-  async getIntraInfo(code: string) {
+  async getIntraInfo(code: string): Promise<number> {
     const getTokenUrl = 'https://api.intra.42.fr/oauth/token';
     const params = new URLSearchParams();
     params.set('grant_type', 'authorization_code');
@@ -48,6 +49,17 @@ export class LoginService {
           Authorization: `Bearer ${response.data.access_token}`,
         },
       }),
+    );
+
+    const imgUri: string = userInfo.data.image.versions.small;
+    const imgData = await lastValueFrom(
+      this.httpService.get(imgUri, { responseEncoding: 'base64' }),
+    );
+
+    fs.mkdirSync('img/', { recursive: true });
+    fs.writeFileSync(
+      `img/${userInfo.data.id}`,
+      `data:image/png;base64,${imgData.data}`,
     );
 
     return userInfo.data.id;
@@ -78,10 +90,10 @@ export class LoginService {
     });
   }
 
-  async createQrCode(id: number) {
-    const { secret } = await this.getUserInfo(id);
+  async createQrCode(uid: number) {
+    const { secret } = await this.getUserInfo(uid);
     const otpauth = authenticator.keyuri(
-      id.toString(),
+      uid.toString(),
       'transcendence',
       secret,
     );
@@ -90,13 +102,15 @@ export class LoginService {
     return res;
   }
 
-  async getUserInfo(id: number): Promise<UserInfo> {
-    let user: UserEntity | UserDto = await this.databaseService.findOneUser(id);
+  async getUserInfo(uid: number): Promise<UserInfo> {
+    let user: UserEntity | UserDto = await this.databaseService.findOneUser(
+      uid,
+    );
     if (user == null) {
       const newUser: UserDto = {
-        uid: id,
+        uid: uid,
         displayName: Math.random().toString(36).substring(2, 11),
-        imgUri: 'default/path', // TODO 바꾸자.
+        imgUri: `http://localhost:4243/users/img/${uid}`,
         rating: 42,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
@@ -106,7 +120,7 @@ export class LoginService {
     }
 
     return {
-      id,
+      id: uid,
       secret: user.qrSecret,
       mfaNeed: user.mfaNeed,
     };

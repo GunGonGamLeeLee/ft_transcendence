@@ -5,7 +5,7 @@ export class UserDto {
   uid: number;
   @ApiProperty({ example: 'jaham' })
   displayName: string;
-  @ApiProperty({ example: 'http://backend/users/img/default_img' })
+  @ApiProperty({ example: 'http://localhost:4243/users/img/uid' })
   imgUri: string;
   @ApiProperty()
   rating: number;
