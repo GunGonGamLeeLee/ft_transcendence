@@ -7,6 +7,7 @@ import {
   Delete,
   HttpException,
   Query,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -108,11 +109,12 @@ export class UsersController {
   async match(@Query('uid') uid) {
     return await this.usersService.match(uid, 5, 1);
   }
-  
-  // @ApiOperation({ summary: '이미지 uri' })
-  // @ApiQuery({ name: 'uid', required: true, description: '조회할 id' })
-  // @Get('img')
-  // async getImage(@Query('uid') query) { //return res body that get base64
-  //   return await this.usersService.getImage(query);
-  // }
+
+  @ApiOperation({ summary: '이미지 uri' })
+  @Get('img/:id')
+  async getImage(@Param('id') param: number) {
+    const imgData = await this.usersService.getImage(+param);
+
+    return imgData;
+  }
 }
