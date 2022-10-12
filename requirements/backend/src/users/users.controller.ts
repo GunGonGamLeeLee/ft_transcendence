@@ -55,7 +55,7 @@ export class UsersController {
   @ApiOperation({ summary: '닉네임 중복 조회' })
   @ApiResponse({ status: 201, description: '닉네임 중복 조회 성공' })
   @ApiResponse({ status: 401, description: '쿠키 인증 실패' })
-  @ApiResponse({ status: 400, description: '존재하지 않는 유저' })
+  @ApiResponse({ status: 400, description: '존재하는 유저' })
   @Post('namecheck')
   async namecheck(@Body() body: namecheckDto) {
     const result = await this.usersService.namecheck(body.displayName);
