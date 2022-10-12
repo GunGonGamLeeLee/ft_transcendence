@@ -13,11 +13,17 @@ export default function Menu() {
   const onProfileClick = () => {};
 
   return (
-    <div className={styles.Menu}>
-      <button onClick={onMatchMakeClick}>match make</button>
-      <button onClick={onChannelClick}>
-        <Link to='/channel'>channel</Link>
-      </button>
+    <div className={styles.menu}>
+      <Link className={styles.menu__link} to='/channel'>
+        <div className={styles.menu__button} onClick={onMatchMakeClick}>
+          PLAY
+        </div>
+      </Link>
+      <Link className={styles.menu__link} to='/channel'>
+        <div className={styles.menu__button} onClick={onMatchMakeClick}>
+          CHAT
+        </div>
+      </Link>
     </div>
   );
 }

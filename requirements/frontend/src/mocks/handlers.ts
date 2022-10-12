@@ -29,6 +29,86 @@ export const handlers = [
   //           rating: 1024,
   //           status: 'offline',
   //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
+  //         {
+  //           uid: 2,
+  //           displayName: 'jeongble',
+  //           imgUri:
+  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+  //           rating: 1024,
+  //           status: 'offline',
+  //         },
   //       ]),
   //     );
   //   },
@@ -116,6 +196,78 @@ export const handlers = [
         ctx.status(200),
         ctx.json({
           all: [
+            {
+              roomId: 1,
+              title: 'example chat room title',
+              ownerId: 99945,
+              ownerName: 'jeongble',
+              userCount: 10,
+              lock: true,
+              private: false,
+            },
+            {
+              roomId: 201,
+              title: '자함을 국회로!!!!!!!',
+              ownerId: 99945,
+              ownerName: 'jaham',
+              userCount: 99,
+              lock: false,
+              private: true,
+            },
+            {
+              roomId: 200,
+              title: 'cjeon의 Haskell 강의',
+              ownerId: 99,
+              ownerName: 'cjeon',
+              userCount: 10,
+              lock: false,
+              private: false,
+            },
+            {
+              roomId: 404,
+              title: 'ljeongin의 minishell은 언제 끝날 것인가',
+              ownerId: 77,
+              ownerName: 'rjeongin',
+              userCount: 44,
+              lock: true,
+              private: false,
+            },
+            {
+              roomId: 1,
+              title: 'example chat room title',
+              ownerId: 99945,
+              ownerName: 'jeongble',
+              userCount: 10,
+              lock: true,
+              private: false,
+            },
+            {
+              roomId: 201,
+              title: '자함을 국회로!!!!!!!',
+              ownerId: 99945,
+              ownerName: 'jaham',
+              userCount: 99,
+              lock: false,
+              private: true,
+            },
+            {
+              roomId: 200,
+              title: 'cjeon의 Haskell 강의',
+              ownerId: 99,
+              ownerName: 'cjeon',
+              userCount: 10,
+              lock: false,
+              private: false,
+            },
+            {
+              roomId: 404,
+              title: 'ljeongin의 minishell은 언제 끝날 것인가',
+              ownerId: 77,
+              ownerName: 'rjeongin',
+              userCount: 44,
+              lock: true,
+              private: false,
+            },
             {
               roomId: 1,
               title: 'example chat room title',

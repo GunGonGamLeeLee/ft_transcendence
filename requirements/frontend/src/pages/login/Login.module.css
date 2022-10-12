@@ -1,0 +1,50 @@
+.login__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 150px;
+  background-color: rgb(255, 159, 159);
+  font-size: 100px;
+  color: white;
+  text-decoration: none;
+}
+
+.otp__text {
+  height: 60px;
+  font-size: 50px;
+  font-weight: 600;
+  color: rgb(128, 128, 255);
+}
+
+.otp__form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 70px;
+}
+
+.otp__input {
+  width: 400px;
+  height: 60px;
+  box-sizing: border-box;
+  color: rgb(128, 128, 255);
+  font-size: 30px;
+}
+
+.otp__input::placeholder {
+  color: rgb(195, 195, 255);
+}
+
+.otp__button {
+  width: 100px;
+  height: 60px;
+  background-color: rgb(128, 128, 255);
+  color: white;
+  font-size: 30px;
+}
+
+.otp__warning {
+  font-size: 25px;
+  color: red;
+}

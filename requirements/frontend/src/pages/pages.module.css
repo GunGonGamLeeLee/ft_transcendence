@@ -16,7 +16,6 @@
   align-items: center;
   padding: 0px 30px;
   box-sizing: border-box;
-  background-color: rgb(241, 243, 244);
 }
 
 .page__main {
@@ -25,9 +24,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 30px 10px 30px;
+  padding: 0px 30px;
   box-sizing: border-box;
-  background-color: rgb(241, 243, 244);
 }
 
 .page__footer {
@@ -38,5 +36,4 @@
   height: 120px;
   padding: 0px 30px;
   box-sizing: border-box;
-  background-color: bisque;
 }

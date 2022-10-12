@@ -3,7 +3,7 @@ import { authState } from '../../atoms/authState';
 import { rankListState } from '../../atoms/rankListState';
 import { useInterval } from '../../hooks/useInterval';
 import { UserDataType } from '../../atoms/userDataType';
-import styles from './UserLi.module.css';
+import styles from './UserList.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 
@@ -36,7 +36,7 @@ export function RankList() {
   );
 }
 
-function Rank({ user, index }: { user: UserDataType; index: number }) {
+export function Rank({ user, index }: { user: UserDataType; index: number }) {
   const setState = useSetRecoilState(userProfileModalState);
   const onClick = () => {
     setState(user);
@@ -51,7 +51,7 @@ function Rank({ user, index }: { user: UserDataType; index: number }) {
             {user.displayName}
           </div>
         </div>
-        <div>{user.rating}</div>
+        <div className={styles.user_state__div}>{user.rating}</div>
       </li>
     </>
   );

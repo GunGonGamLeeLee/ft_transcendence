@@ -30,7 +30,7 @@ export function ChannelLobby() {
     setNewRoomModal(true);
   };
 
-  const handleRefreshClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleRefreshClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsRefresh(true);
   };
@@ -67,8 +67,17 @@ export function ChannelLobby() {
       <div className={styles.page}>
         <div className={pagestyles.page__header}>
           <BackButton to='/lobby' />
-          <button onClick={handleRefreshClick}>refresh</button>
           <div className={styles.channel__filters}>
+            <div className={styles.channel__refresh}>
+              <abbr title='새로고침'>
+                <img
+                  src='/refresh.png'
+                  onClick={handleRefreshClick}
+                  className={styles.channel__refreshi}
+                />
+              </abbr>
+            </div>
+
             <FilterButton
               text='모든 채팅방'
               type='all'
@@ -93,7 +102,7 @@ export function ChannelLobby() {
         </div>
         <div className={pagestyles.page__footer}>
           <button className={`${styles.channel__new}`} onClick={onClickNew}>
-            새 채팅방
+            NEW ROOM
           </button>
         </div>
       </div>

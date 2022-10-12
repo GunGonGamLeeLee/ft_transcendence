@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { friendListState } from '../../atoms/friendListState';
 import { UserDataType } from '../../atoms/userDataType';
-import styles from './UserLi.module.css';
+import styles from './UserList.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 
@@ -30,7 +30,7 @@ function Friend({ user }: { user: UserDataType }) {
         <img src={user.imgUri} className={styles.user_profile__img} />
         <div className={styles.user_profile__username}>{user.displayName}</div>
       </div>
-      <div>{user.status}</div>
+      <div className={styles.user_state__div}>{user.status}</div>
     </li>
   );
 }

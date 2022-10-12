@@ -1,0 +1,108 @@
+.channel__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 900px;
+  height: 480px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  border: 2px solid green;
+  background-color: white;
+}
+
+.channel__list::-webkit-scrollbar {
+  width: 6px; /* 스크롤바의 너비 */
+}
+
+.channel__list::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: rgb(0, 0, 0); /* 스크롤바의 색상 */
+  border-radius: 10px;
+}
+
+.channel__list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0); /*스크롤바 뒷 배경 색상*/
+}
+
+.channel__inactive {
+  display: none;
+}
+
+:root {
+  --rindex-border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.room_index {
+  cursor: default;
+  display: flex;
+  align-items: center;
+  width: 900px;
+  height: 60px;
+  box-sizing: border-box;
+  background-color: green;
+  color: white;
+}
+
+.room_index__id {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 82px;
+  height: 50px;
+  box-sizing: border-box;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.room_index__title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--rindex-border);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.room_index__owner {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--rindex-border);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.room_index__count {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--rindex-border);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.room_index__mode {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 88px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--rindex-border);
+  font-size: 20px;
+  font-weight: 500;
+}

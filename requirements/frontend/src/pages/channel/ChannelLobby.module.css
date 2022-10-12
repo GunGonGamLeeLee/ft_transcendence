@@ -1,39 +1,39 @@
 .channel__filters {
   display: flex;
+  justify-content: flex-end;
   align-items: flex-end;
   width: 600px;
   height: 60px;
 }
 
-.channel__list {
+.channel__refresh {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 900px;
-  height: 530px;
-  padding: 0px 10px 10px 10px;
-  box-sizing: border-box;
-  overflow-y: scroll;
-  border-radius: 10px 0px 10px 10px;
-  background-color: rgb(255, 255, 128);
+  width: 100px;
+  height: 60px;
 }
 
-.channel__list::-webkit-scrollbar {
-  width: 5px; /* 스크롤바의 너비 */
+.channel__refreshi {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
 }
 
-.channel__list::-webkit-scrollbar-thumb {
-  height: 30%; /* 스크롤바의 길이 */
-  background: rgb(0, 0, 0); /* 스크롤바의 색상 */
-  border-radius: 10px;
+@keyframes Turning {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
 }
 
-.channel__list::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0); /*스크롤바 뒷 배경 색상*/
-}
-
-.channel__inactive {
-  display: none;
+.channel__refreshi:hover {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  animation: Turning 2s linear infinite;
 }
 
 .channel__new {
@@ -41,8 +41,8 @@
   width: 120px;
   height: 50px;
   border: 1px solid green;
-  border-radius: 25px;
   font-size: 20px;
   font-weight: 600;
-  background-color: greenyellow;
+  background-color: green;
+  color: white;
 }

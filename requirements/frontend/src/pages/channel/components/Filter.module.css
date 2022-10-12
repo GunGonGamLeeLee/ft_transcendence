@@ -1,12 +1,14 @@
 .filter {
   cursor: pointer;
-  width: 200px;
+  width: 150px;
   height: 50px;
   font-size: 20px;
   font-weight: 600;
   border: 0px solid yellow;
-  background-color: rgb(255, 255, 128);
-  border-radius: 10px 10px 0px 0px;
+  background-color: white;
+  border: 2px solid green;
+  border-bottom: 0px;
+  box-sizing: border-box;
 }
 
 .filter:hover {
@@ -15,5 +17,5 @@
 
 .filter__inactive {
   font-weight: 400;
-  background-color: rgb(255, 255, 196);
+  background-color: rgb(168, 168, 168);
 }

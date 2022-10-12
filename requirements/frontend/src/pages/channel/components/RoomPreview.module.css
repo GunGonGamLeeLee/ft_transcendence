@@ -1,19 +1,20 @@
+:root {
+  --room-border: 2px solid green;
+}
+
 .li__li {
   cursor: pointer;
   display: flex;
   align-items: center;
-  width: 850px;
+  width: 890px;
   height: 60px;
-  background-color: rgb(255, 229, 229);
-  border-radius: 30px;
-  margin-top: 10px;
   padding: 15px 0px;
   box-sizing: border-box;
 }
 
 .li__li:hover {
   top: 5px;
-  background-color: rgb(255, 199, 199);
+  background-color: rgba(0, 128, 0, 0.2);
 }
 
 .li__id {
@@ -21,11 +22,10 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  width: 60px;
-  height: 30px;
+  width: 80px;
+  height: 50px;
   padding-right: 5px;
   box-sizing: border-box;
-  border-right: 1px solid red;
   font-size: 20px;
   font-weight: 500;
 }
@@ -35,11 +35,11 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  width: 450px;
-  height: 30px;
+  width: 500px;
+  height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-right: 1px solid red;
+  border-left: var(--room-border);
   font-size: 20px;
   font-weight: 500;
 }
@@ -50,10 +50,10 @@
   justify-content: flex-start;
   align-items: center;
   width: 150px;
-  height: 30px;
+  height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-right: 1px solid red;
+  border-left: var(--room-border);
   font-size: 20px;
   font-weight: 500;
 }
@@ -64,10 +64,28 @@
   justify-content: flex-end;
   align-items: center;
   width: 80px;
-  height: 30px;
+  height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-right: 1px solid red;
+  border-left: var(--room-border);
   font-size: 20px;
   font-weight: 500;
+}
+
+.li__mode {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--room-border);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.li__icon {
+  width: 30px;
+  height: 30px;
 }

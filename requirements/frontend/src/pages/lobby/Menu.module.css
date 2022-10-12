@@ -1,7 +1,27 @@
-.Menu {
+.menu {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   width: 960px;
   height: 720px;
+}
+
+.menu__link {
+  text-decoration: none;
+}
+
+.menu__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 200px;
+  background-color: rgb(255, 159, 159);
+  font-size: 100px;
+  color: white;
+}
+
+.menu__button:visited {
+  text-decoration: none;
 }

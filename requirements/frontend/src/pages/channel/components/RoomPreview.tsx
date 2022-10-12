@@ -28,8 +28,17 @@ export function RoomPreview({ room }: { room: RoomType }) {
       <div className={`${styles.li__title}`}>{room.title}</div>
       <div className={`${styles.li__owner}`}>{room.ownerName}</div>
       <div className={`${styles.li__count}`}>{room.userCount}명</div>
-      <div className={`${styles.li__count}`}>
-        {room.lock ? 'lock' : 'unlock'}
+      <div className={`${styles.li__mode}`}>
+        <img
+          src={
+            room.private
+              ? '/private.png'
+              : room.lock
+              ? '/lock.png'
+              : '/unlock.png'
+          }
+          className={styles.li__icon}
+        />
       </div>
     </li>
   );
