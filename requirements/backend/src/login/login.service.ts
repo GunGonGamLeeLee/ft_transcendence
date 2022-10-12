@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { authenticator } from '@otplib/preset-default';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
@@ -56,10 +56,10 @@ export class LoginService {
       this.httpService.get(imgUri, { responseEncoding: 'base64' }),
     );
 
-    fs.mkdirSync('img/', { recursive: true });
+    fs.mkdirSync('public/img/', { recursive: true });
     fs.writeFileSync(
-      `img/${userInfo.data.id}`,
-      `data:image/png;base64,${imgData.data}`,
+      `public/img/${userInfo.data.id}.png`,
+      Buffer.from(imgData.data, 'base64'),
     );
 
     return userInfo.data.id;
@@ -110,7 +110,7 @@ export class LoginService {
       const newUser: UserDto = {
         uid: uid,
         displayName: Math.random().toString(36).substring(2, 11),
-        imgUri: `http://localhost:4243/users/img/${uid}`,
+        imgUri: `http://localhost:4243/img/${uid}.png`,
         rating: 42,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
@@ -124,5 +124,23 @@ export class LoginService {
       secret: user.qrSecret,
       mfaNeed: user.mfaNeed,
     };
+  }
+
+  async validateOtp(jwtString: string, pin: string) {
+    const userId = this.getIdInJwt(jwtString);
+    const userInfo = await this.getUserInfo(userId);
+    const secret = userInfo.secret;
+    const token = authenticator.generate(secret);
+
+    if (token !== pin) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const payload: TokenPayloadDto = {
+      id: userId,
+      isRequiredTFA: false,
+    };
+
+    return { token: this.issueToken(payload) };
   }
 }

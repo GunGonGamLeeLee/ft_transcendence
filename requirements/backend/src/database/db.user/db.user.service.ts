@@ -73,7 +73,7 @@ export class DbUserService {
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = this.userRepo.create({
       ...userDto,
-      imgUri: `http://localhost:4243/users/img/${userDto.uid}`,
+      imgUri: `http://localhost:4243/users/img/${userDto.uid}.png`,
       status: UserStatus.OFFLINE,
     });
     try {
@@ -83,34 +83,26 @@ export class DbUserService {
     }
   }
 
-  async createFile(filepath: string, filename: string, data: string) {
-    if (!fs.existsSync(filepath)) fs.mkdirSync(filepath);
-    fs.writeFileSync(`${filepath}/${filename}`, data);
+  async updateImgFile(filepath: string, filename: string, imgData: any) {
+    if (imgData === '') return;
+    const base64 = imgData.replace(/^data:image\/\w+;base64,/, '');
+    const pngfile = Buffer.from(base64, 'base64');
+    fs.writeFileSync(`${filepath}/${filename}.png`, pngfile);
   }
 
   async updateUser(uid: number, body: ProfileUpdateDto): Promise<ProfileType> {
-    const updating: {
-      displayName?: string;
-      mfaNeed: boolean;
-    } = {
-      mfaNeed: body.mfaNeed,
-    };
-
-    if (body.imgData !== '') {
-      this.createFile(`img`, `${uid}`, body.imgData);
-    }
-
+    const user = await this.findOneProfile(uid);
+    this.updateImgFile(`public/img`, `${uid}`, body.imgData);
     if (body.displayName !== '') {
-      updating.displayName = body.displayName;
+      user.displayName = body.displayName;
     }
-
+    user.mfaNeed = user.mfaNeed;
     try {
-      await this.userRepo.update({ uid: uid }, updating);
+      await this.userRepo.update({ uid }, user);
     } catch (err) {
       throw new HttpException('update user error', HttpStatus.FORBIDDEN);
     }
-
-    return await this.findOneProfile(uid);
+    return user;
   }
 
   async isExistedName(displayName: string): Promise<boolean> {

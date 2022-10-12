@@ -54,11 +54,11 @@ export class LoginController {
   @Get('oauth/callback')
   async codeCallback(@Res() res: Response, @Query('code') query) {
     const userId = await this.loginService.getIntraInfo(query);
-
     const userInfo = await this.loginService.getUserInfo(userId);
+
     const payload: TokenPayloadDto = {
       id: userInfo.id,
-      isRequiredTFA: userInfo.mfaNeed,
+      isRequiredTFA: userInfo.mfaNeed, // TODO refactor 건의..?
     };
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
@@ -82,22 +82,7 @@ export class LoginController {
   @Post('otp')
   async validateOtp(@Headers() header, @Body() body: optDto) {
     const jwtString = header.authorization.split('Bearer ')[1];
-    const userId = this.loginService.getIdInJwt(jwtString);
-    const userInfo = await this.loginService.getUserInfo(userId);
-    const secret = userInfo.secret;
-    const token = authenticator.generate(secret);
-
-    if (token !== body.pin) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    const payload: TokenPayloadDto = {
-      id: userId,
-      isRequiredTFA: false,
-    };
-
-    const json = { token: this.loginService.issueToken(payload) };
-    return json;
+    return this.loginService.validateOtp(jwtString, body.pin);
   }
 
   @ApiTags('token')
