@@ -4,6 +4,7 @@ import { authState } from '../../atoms/authState';
 import { friendListState } from '../../atoms/friendListState';
 import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
+import { UserDataType } from '../../atoms/userDataType';
 import styles from '../UserProfileModal/UserProfileModal.module.css';
 
 export function Follow() {
@@ -30,7 +31,8 @@ export function Follow() {
     );
 
     if (response.status === 201) {
-      setFriendList([...friendList, user]);
+      const newUser: UserDataType = await response.json();
+      setFriendList([...friendList, newUser]);
       return;
     }
 
