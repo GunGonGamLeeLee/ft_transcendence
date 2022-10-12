@@ -267,7 +267,7 @@ export class DatabaseService {
     await this.dbUserService.saveOne(userDto);
   }
 
-  async nameCheck(displayName: string) {
+  async isExistedName(displayName: string) {
     return await this.dbUserService.isExistedName(displayName);
   }
 

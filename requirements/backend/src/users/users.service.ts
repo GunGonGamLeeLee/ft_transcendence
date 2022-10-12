@@ -60,6 +60,6 @@ export class UsersService {
   }
 
   async namecheck(displayName: string) {
-    return await this.database.nameCheck(displayName);
+    return !(await this.database.isExistedName(displayName));
   }
 }
