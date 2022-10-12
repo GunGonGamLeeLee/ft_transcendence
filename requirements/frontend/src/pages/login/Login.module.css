@@ -4,9 +4,9 @@
   align-items: center;
   width: 400px;
   height: 150px;
-  background-color: rgb(255, 159, 159);
+  background-color: var(--color-2);
   font-size: 100px;
-  color: white;
+  color: var(--color-6);
   text-decoration: none;
 }
 
@@ -14,7 +14,7 @@
   height: 60px;
   font-size: 50px;
   font-weight: 600;
-  color: rgb(128, 128, 255);
+  color: var(--color-4);
 }
 
 .otp__form {
@@ -28,19 +28,19 @@
   width: 400px;
   height: 60px;
   box-sizing: border-box;
-  color: rgb(128, 128, 255);
+  color: var(--color-4);
   font-size: 30px;
 }
 
 .otp__input::placeholder {
-  color: rgb(195, 195, 255);
+  /* color: rgb(195, 195, 255); */
 }
 
 .otp__button {
   width: 100px;
   height: 60px;
-  background-color: rgb(128, 128, 255);
-  color: white;
+  background-color: var(--color-4);
+  color: var(--color-6);
   font-size: 30px;
 }
 

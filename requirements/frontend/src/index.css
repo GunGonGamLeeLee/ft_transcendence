@@ -5,6 +5,12 @@
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
   background-color: #242424;
+  --color-1: #f1c5c5;
+  --color-2: #faf0af;
+  --color-3: #e5edb7;
+  --color-4: #8bcdcd;
+  --color-5: white;
+  --color-6: black;
 }
 
 button {

@@ -2,7 +2,7 @@
   height: 60px;
   font-size: 50px;
   font-weight: 600;
-  color: rgb(128, 128, 255);
+  color: var(--color-4);
 }
 
 .checker__form {
@@ -16,27 +16,27 @@
   width: 400px;
   height: 60px;
   box-sizing: border-box;
-  color: rgb(128, 128, 255);
+  color: var(--color-4);
   font-size: 30px;
   border-radius: 0px;
 }
 
 .checker__input::placeholder {
-  color: rgb(195, 195, 255);
+  /* color: var(--color-4); */
 }
 
 .checker__button {
   width: 150px;
   height: 60px;
-  background-color: rgb(128, 128, 255);
-  color: white;
+  background-color: var(--color-4);
+  color: var(--color-6);
   font-size: 30px;
 }
 
 .checker__cancel {
   width: 140px;
   height: 50px;
-  background-color: rgb(128, 128, 255);
-  color: white;
+  background-color: var(--color-4);
+  color: var(--color-6);
   font-size: 30px;
 }

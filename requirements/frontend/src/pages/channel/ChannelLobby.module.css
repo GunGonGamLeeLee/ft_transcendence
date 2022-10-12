@@ -38,16 +38,16 @@
 
 .channel__newdiv {
   width: 120px;
-  height: 120px;
+  height: 60px;
 }
 
 .channel__new {
   cursor: pointer;
   width: 120px;
   height: 50px;
-  border: 1px solid green;
+  border: 0px solid var(--color-2);
   font-size: 20px;
   font-weight: 600;
-  background-color: green;
-  color: white;
+  background-color: var(--color-2);
+  color: var(--color-6);
 }

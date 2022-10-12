@@ -1,15 +1,12 @@
-:root {
-  --modal-yellow: rgb(253, 255, 139);
-}
-
 .new {
   display: flex;
   flex-direction: column;
   z-index: 50;
   width: 350px;
-  height: 250px;
-  background-color: rgb(255, 255, 255);
+  /* height: 250px; */
+  background-color: white;
   box-sizing: border-box;
+  color: var(--color-6);
 }
 
 .new__header {
@@ -18,7 +15,7 @@
   align-items: center;
   width: 350px;
   height: 30px;
-  background-color: var(--modal-yellow);
+  background-color: var(--color-2);
   box-sizing: border-box;
 }
 
@@ -29,7 +26,6 @@
   width: 200px;
   font-size: 15px;
   font-weight: 500;
-  color: rgb(50, 50, 50);
   padding-left: 10px;
   box-sizing: border-box;
 }
@@ -50,7 +46,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  width: 300px;
+  width: 330px;
   height: 50px;
 }
 
@@ -61,9 +57,10 @@
   font-size: 15px;
   font-weight: 500;
   width: 100px;
-  height: 40px;
+  height: 50px;
   margin-right: 1px;
-  background-color: var(--modal-yellow);
+  background-color: var(--color-2);
+  border: 2px solid white;
 }
 
 .new__checkboxdiv {
@@ -82,8 +79,8 @@
 .new__input {
   display: flex;
   justify-content: flex-start;
-  width: 200px;
-  height: 40px;
+  width: 220px;
+  height: 50px;
   border-radius: 0px;
   box-sizing: border-box;
 }
@@ -98,5 +95,5 @@
   border-radius: 0px;
   font-weight: 600;
   border: 0px;
-  background-color: var(--modal-yellow);
+  background-color: var(--color-2);
 }

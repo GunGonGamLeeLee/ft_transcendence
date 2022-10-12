@@ -1,7 +1,3 @@
-:root {
-  --room-border: 2px solid green;
-}
-
 .li__li {
   cursor: pointer;
   display: flex;
@@ -10,11 +6,13 @@
   height: 60px;
   padding: 15px 0px;
   box-sizing: border-box;
+  color: var(--color-2);
 }
 
 .li__li:hover {
   top: 5px;
-  background-color: rgba(0, 128, 0, 0.2);
+  background-color: var(--color-3);
+  color: var(--color-6);
 }
 
 .li__id {
@@ -28,6 +26,7 @@
   box-sizing: border-box;
   font-size: 20px;
   font-weight: 500;
+  color: inherit;
 }
 
 .li__title {
@@ -39,9 +38,10 @@
   height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-left: var(--room-border);
+  border-left: 2px solid var(--color-2);
   font-size: 20px;
   font-weight: 500;
+  color: inherit;
 }
 
 .li__owner {
@@ -53,9 +53,10 @@
   height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-left: var(--room-border);
+  border-left: 2px solid var(--color-2);
   font-size: 20px;
   font-weight: 500;
+  color: inherit;
 }
 
 .li__count {
@@ -67,9 +68,10 @@
   height: 50px;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-left: var(--room-border);
+  border-left: 2px solid var(--color-2);
   font-size: 20px;
   font-weight: 500;
+  color: inherit;
 }
 
 .li__mode {
@@ -80,7 +82,7 @@
   width: 80px;
   height: 50px;
   box-sizing: border-box;
-  border-left: var(--room-border);
+  border-left: 2px solid var(--color-2);
   font-size: 20px;
   font-weight: 500;
 }

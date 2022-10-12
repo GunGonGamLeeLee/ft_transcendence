@@ -20,7 +20,7 @@
 
 .page__main {
   width: 960px;
-  height: 540px;
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,7 +33,7 @@
   justify-content: flex-end;
   align-items: center;
   width: 960px;
-  height: 120px;
+  height: 60px;
   padding: 0px 30px;
   box-sizing: border-box;
 }
