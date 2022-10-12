@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
+import { ProfileType } from 'src/users/dto/profile.type.dto';
+import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
 import { Repository } from 'typeorm';
 import { UserDto } from '../dto/user.dto';
 import { UserEntity, UserStatus } from '../entity/entity.user';
@@ -70,7 +73,7 @@ export class DbUserService {
   async saveOne(userDto: UserDto | UserEntity): Promise<void> {
     const user = this.userRepo.create({
       ...userDto,
-      imgUri: 'http://backend/users/img/default_img',
+      imgUri: `http://backend/users/img/${userDto.uid}`,
       status: UserStatus.OFFLINE,
     });
     try {
@@ -80,18 +83,28 @@ export class DbUserService {
     }
   }
 
-  async updateUser(body: UserDto): Promise<UserDto> { //TODO myUid == body.uid
+  async createFile(filepath: string, filename: string, data: string) {
+    fs.mkdirSync(filepath);
+    fs.writeFileSync(`${filepath}/${filename}`, data);
+  }
+
+  async updateUser(uid: number, body: ProfileUpdateDto): Promise<ProfileType> {
+    if (body.imgData !== "")
+      this.createFile(`img`, `${uid}`, body.imgData);
+
     try {
-      await this.userRepo.update({ uid: body.uid }, {
-        displayName: body.displayName,
-        imgUri: body.imgUri,
-        mfaNeed: body.mfaNeed,
-      });
+      await this.userRepo.update(
+        { uid: uid },
+        {
+          displayName: body.displayName,
+          mfaNeed: body.mfaNeed,
+        },
+      );
     } catch (err) {
       throw new HttpException('update user error', HttpStatus.FORBIDDEN);
     }
 
-    return await this.userRepo.findOneBy({uid: body.uid});
+    return await this.findOneProfile(uid);
   }
 
   async isExistedName(displayName: string): Promise<boolean> {

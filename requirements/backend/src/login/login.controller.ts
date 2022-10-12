@@ -87,10 +87,6 @@ export class LoginController {
     const secret = userInfo.secret;
     const token = authenticator.generate(secret);
 
-    // ANCHOR 같은 secret으로 연결되었다면 otp 값 일치!
-    // console.log(token);
-    // console.log(body.code);
-
     if (token !== body.pin) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }

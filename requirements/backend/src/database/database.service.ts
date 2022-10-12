@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
 import { DbBlockListService } from './db.block.list/db.block.list.service';
 import { DbChannelService } from './db.channel/db.channel.service';
 import { DbDmLogService } from './db.dm.log/db.dm.log.service';
@@ -153,8 +154,8 @@ export class DatabaseService {
     return await this.dbUserService.saveOne(userDto);
   }
 
-  async updateUser(userDto: UserDto) {
-    return await this.dbUserService.updateUser(userDto);
+  async updateUser(uid: number, userDto: ProfileUpdateDto) {
+    return await this.dbUserService.updateUser(uid, userDto);
   }
 
   async addFriend(myUid: number, friendUid: number) {
@@ -166,6 +167,7 @@ export class DatabaseService {
       { fromUid: myUid, toUid: friendUid },
       user,
     );
+    return await this.dbUserService.findOneProfile(friendUid);
   }
 
   async addBlock(myUid: number, blockUid: number) {
@@ -264,7 +266,7 @@ export class DatabaseService {
   }
 
   async saveOneUser(userDto: UserDto): Promise<void> {
-    await this.dbUserService.saveOne(userDto);
+    await await this.dbUserService.saveOne(userDto);
   }
 
   async isExistedName(displayName: string) {
@@ -272,20 +274,20 @@ export class DatabaseService {
   }
 
   async updateUserName(uid: number, displayName: string) {
-    return this.dbUserService.updateName(uid, displayName);
+    return await this.dbUserService.updateName(uid, displayName);
   }
   async updateUserAvatar(uid: number, imgUri: string) {
-    return this.dbUserService.updateimgUri(uid, imgUri);
+    return await this.dbUserService.updateimgUri(uid, imgUri);
   }
   async updateUserRating(uid: number, rating: number) {
-    return this.dbUserService.updateRating(uid, rating);
+    return await this.dbUserService.updateRating(uid, rating);
   }
   async updateUserIsRequiredTFA(uid: number, isRequiredTFA: boolean) {
-    return this.dbUserService.updateIsRequiredTFA(uid, isRequiredTFA);
+    return await this.dbUserService.updateIsRequiredTFA(uid, isRequiredTFA);
   }
 
   async updateUserStatus(uid: number, status: UserStatus) {
-    return this.dbUserService.updateUserStatus(uid, status);
+    return await this.dbUserService.updateUserStatus(uid, status);
   }
 
   async updateChName(uid: number, chid: number, chName: string) {
@@ -294,7 +296,7 @@ export class DatabaseService {
       chid,
       'you can`t edit channel name.',
     );
-    return this.dbChannelService.updateChName(chid, chName);
+    return await this.dbChannelService.updateChName(chid, chName);
   }
 
   async updateChDisplay(uid: number, chid: number, display: boolean) {
@@ -303,7 +305,7 @@ export class DatabaseService {
       chid,
       'you can`t edit channel display state.',
     );
-    return this.dbChannelService.updateDisplay(chid, display);
+    return await this.dbChannelService.updateDisplay(chid, display);
   }
 
   async updateChRemovePassword(uid: number, chid: number) {
@@ -312,7 +314,7 @@ export class DatabaseService {
       chid,
       'you can`t remove channel password.',
     );
-    return this.dbChannelService.removePassword(chid);
+    return await this.dbChannelService.removePassword(chid);
   }
 
   async updateChSetPassword(uid: number, chid: number, password: string) {
@@ -321,7 +323,7 @@ export class DatabaseService {
       chid,
       'you can`t set channel password.',
     );
-    return this.dbChannelService.setPassword(chid, password);
+    return await this.dbChannelService.setPassword(chid, password);
   }
 
   async banUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -330,7 +332,7 @@ export class DatabaseService {
       chid,
       'you can`t ban user in channel.',
     );
-    return this.dbUserInChannelService.banOne(targetUid, chid);
+    return await this.dbUserInChannelService.banOne(targetUid, chid);
   }
 
   async muteUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -339,7 +341,7 @@ export class DatabaseService {
       chid,
       'you can`t mute user in channel.',
     );
-    return this.dbUserInChannelService.muteOne(targetUid, chid);
+    return await this.dbUserInChannelService.muteOne(targetUid, chid);
   }
 
   async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -348,7 +350,7 @@ export class DatabaseService {
       chid,
       'you can`t unban user in channel.',
     );
-    return this.dbUserInChannelService.unbanOne(targetUid, chid);
+    return await this.dbUserInChannelService.unbanOne(targetUid, chid);
   }
 
   async unmuteUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -357,7 +359,7 @@ export class DatabaseService {
       chid,
       'you can`t unmute user in channel.',
     );
-    return this.dbUserInChannelService.unmuteOne(targetUid, chid);
+    return await this.dbUserInChannelService.unmuteOne(targetUid, chid);
   }
 
   async changeUserRoleInChannel(
@@ -378,7 +380,7 @@ export class DatabaseService {
         '구현되지 않았습니다.',
         HttpStatus.NOT_IMPLEMENTED,
       );
-    return this.dbUserInChannelService.changeRole(targetUid, chid, role);
+    return await this.dbUserInChannelService.changeRole(targetUid, chid, role);
   }
 
   async deleteChannel(uid: number, chid: number) {
