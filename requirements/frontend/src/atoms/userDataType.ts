@@ -1,4 +1,4 @@
-const enum Status {
+export const enum Status {
   OFFLINE,
   ONLINE,
   GAMING,

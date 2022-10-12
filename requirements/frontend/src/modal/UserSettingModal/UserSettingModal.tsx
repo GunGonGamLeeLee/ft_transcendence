@@ -76,6 +76,11 @@ function UserSetting() {
       return;
     }
 
+    if (displayName.length > 8) {
+      setDupCheckStatus('이름의 길이는 8글자를 초과하면 안됩니다');
+      return;
+    }
+
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_EP}/users/namecheck`,
       {
