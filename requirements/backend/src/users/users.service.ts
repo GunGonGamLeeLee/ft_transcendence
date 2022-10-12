@@ -62,4 +62,12 @@ export class UsersService {
   async namecheck(displayName: string) {
     return !(await this.database.isExistedName(displayName));
   }
+
+  async match(uid: number, take: number, page: number) {
+    return await this.database.listMatchHistoryOfUserWithUserInfo(
+      uid,
+      take,
+      page,
+    );
+  }
 }
