@@ -3,10 +3,12 @@ import { DbBlockListService } from './db.block.list/db.block.list.service';
 import { DbChannelService } from './db.channel/db.channel.service';
 import { DbDmLogService } from './db.dm.log/db.dm.log.service';
 import { DbFriendListService } from './db.friend.list/db.friend.list.service';
+import { DbMatchHistoryService } from './db.match.history/db.match.history.service';
 import { DbUserInChannelService } from './db.user.in.channel/db.user.in.channel.service';
 import { DbUserService } from './db.user/db.user.service';
 import { ChannelDto } from './dto/channel.dto';
 import { DmLogDto } from './dto/dm.log.dto';
+import { MatchHistoryDto } from './dto/match.history.dto';
 import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
 import { ChannelEntity } from './entity/entity.channel';
@@ -25,6 +27,7 @@ export class DatabaseService {
     private readonly dbDmLogsService: DbDmLogService,
     private readonly dbChannelService: DbChannelService,
     private readonly dbUserInChannelService: DbUserInChannelService,
+    private readonly dbMatchHistoryService: DbMatchHistoryService,
   ) {}
 
   async listAllUser() {
@@ -49,6 +52,10 @@ export class DatabaseService {
 
   async listAllDmLogs() {
     return await this.dbDmLogsService.findAll();
+  }
+
+  async listAllMatchHistory() {
+    return await this.dbMatchHistoryService.findAll();
   }
 
   async listUserFriend(uid: number) {
@@ -106,6 +113,40 @@ export class DatabaseService {
 
   async listUserRank() {
     return await this.dbUserService.findUserRankList();
+  }
+
+  async listMatchHistoryOfUser(uid: number, take: number, page: number) {
+    if (page < 1)
+      throw new HttpException(
+        'page must not be 0 or negative',
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.dbMatchHistoryService.findListOfUser(uid, take, page);
+  }
+
+  async listMatchHistoryOfUserWithUserInfo(
+    uid: number,
+    take: number,
+    page: number,
+  ) {
+    if (page < 1)
+      throw new HttpException(
+        'page must not be 0 or negative',
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.dbMatchHistoryService.findListOfUserWithInfo(
+      uid,
+      take,
+      page,
+    );
+  }
+
+  async listAllMatchHistoryOfUser(uid: number) {
+    return await this.dbMatchHistoryService.findAllListOfUser(uid);
+  }
+
+  async listAllMatchHistoryOfUserWithUserInfo(uid: number) {
+    return await this.dbMatchHistoryService.findAllListOfUserWithInfo(uid);
   }
 
   async addUser(userDto: UserDto) {
@@ -191,6 +232,24 @@ export class DatabaseService {
     if (fromUser.uid === toUser.uid)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
     this.dbDmLogsService.saveOne(dmLog, fromUser, toUser);
+  }
+
+  async addMatchHistory(matchHistory: MatchHistoryDto) {
+    // 자기 자신과 경기 할 수 없음
+    if (matchHistory.winnerUid === matchHistory.loserUid)
+      throw new HttpException('invalid game history', HttpStatus.FORBIDDEN);
+
+    const winner: UserEntity = await this.dbUserService.findOne(
+      matchHistory.winnerUid,
+    );
+    const loser: UserEntity = await this.dbUserService.findOne(
+      matchHistory.loserUid,
+    );
+    return await this.dbMatchHistoryService.saveOne(
+      matchHistory,
+      winner,
+      loser,
+    );
   }
 
   async findOneUser(uid: number) {
@@ -354,6 +413,10 @@ export class DatabaseService {
     console.log(typeof uid);
     if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
     return await this.dbUserInChannelService.deleteOne(uid, chid);
+  }
+
+  async deleteMatchHistory() {
+    return await this.dbMatchHistoryService.deleteAll();
   }
 
   private async checkPermissionInChannel(

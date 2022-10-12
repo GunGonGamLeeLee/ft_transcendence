@@ -11,6 +11,7 @@ import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DatabaseService } from './database.service';
 import { ChannelDto } from './dto/channel.dto';
 import { DmLogDto } from './dto/dm.log.dto';
+import { MatchHistoryDto } from './dto/match.history.dto';
 import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
 
@@ -183,6 +184,59 @@ export class DatabaseController {
     );
   }
 
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '전체 전적 보기' })
+  @Get('show-match-history')
+  async listAllMatchHistory() {
+    return await this.databaseService.listAllMatchHistory();
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '유저의 전적 전부 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('list-all-match-history-of-user')
+  async listAllMatchHistoryOfUser(@Headers() header) {
+    return await this.databaseService.listAllMatchHistoryOfUser(header.uid);
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '유저의 전적 전부 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('list-all-match-history-of-user-with-user-info')
+  async listAllMatchHistoryOfUserWithUserInfo(@Headers() header) {
+    return await this.databaseService.listAllMatchHistoryOfUserWithUserInfo(
+      header.uid,
+    );
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '유저의 전적 보기 (take, page)' })
+  @ApiHeader({ name: 'uid' })
+  @ApiHeader({ name: 'take' })
+  @ApiHeader({ name: 'page' })
+  @Get('list-user-match-history')
+  async listMatchHistoryOfUser(@Headers() header) {
+    return await this.databaseService.listMatchHistoryOfUser(
+      header.uid,
+      header.take,
+      header.page,
+    );
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '유저의 전적 보기 (take, page)' })
+  @ApiHeader({ name: 'uid' })
+  @ApiHeader({ name: 'take' })
+  @ApiHeader({ name: 'page' })
+  @Get('list-user-match-history-with-user-info')
+  async listMatchHistoryOfUserWithUserInfo(@Headers() header) {
+    return await this.databaseService.listMatchHistoryOfUserWithUserInfo(
+      header.uid,
+      header.take,
+      header.page,
+    );
+  }
+
   //NOTE - POST
   @ApiTags('database/User')
   @ApiOperation({ summary: '유저 추가하기' })
@@ -235,6 +289,13 @@ export class DatabaseController {
   @Post('add-dm')
   async addDmLog(@Body() body: DmLogDto) {
     return await this.databaseService.addDmLog(body);
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '전적 추가하기' })
+  @Post('add-match-history')
+  async addMatchHistory(@Body() body: MatchHistoryDto) {
+    return await this.databaseService.addMatchHistory(body);
   }
 
   //NOTE - PUT
@@ -485,5 +546,12 @@ export class DatabaseController {
       +header.uid,
       +header.chid,
     );
+  }
+
+  @ApiTags('database/MatchHistory')
+  @ApiOperation({ summary: '모든 전적 삭제' })
+  @Delete('delete-match-history')
+  async deleteMatchHistory() {
+    return await this.databaseService.deleteMatchHistory();
   }
 }
