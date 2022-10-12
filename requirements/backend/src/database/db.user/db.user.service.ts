@@ -84,7 +84,7 @@ export class DbUserService {
   }
 
   async createFile(filepath: string, filename: string, data: string) {
-    fs.mkdirSync(filepath);
+    if (!fs.existsSync(filepath)) fs.mkdirSync(filepath);
     fs.writeFileSync(`${filepath}/${filename}`, data);
   }
 
