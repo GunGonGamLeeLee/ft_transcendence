@@ -89,17 +89,23 @@ export class DbUserService {
   }
 
   async updateUser(uid: number, body: ProfileUpdateDto): Promise<ProfileType> {
-    if (body.imgData !== "")
+    const updating: {
+      displayName?: string;
+      mfaNeed: boolean;
+    } = {
+      mfaNeed: body.mfaNeed,
+    };
+
+    if (body.imgData !== '') {
       this.createFile(`img`, `${uid}`, body.imgData);
+    }
+
+    if (body.displayName !== '') {
+      updating.displayName = body.displayName;
+    }
 
     try {
-      await this.userRepo.update(
-        { uid: uid },
-        {
-          displayName: body.displayName,
-          mfaNeed: body.mfaNeed,
-        },
-      );
+      await this.userRepo.update({ uid: uid }, updating);
     } catch (err) {
       throw new HttpException('update user error', HttpStatus.FORBIDDEN);
     }

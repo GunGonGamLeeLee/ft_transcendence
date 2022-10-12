@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { ProfileType } from './dto/profile.type.dto';
 import { ProfileUpdateDto } from './dto/profile.update.dto';
 import { UserDataType } from './dto/user.data.type.dto';
+import * as fs from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -71,7 +72,12 @@ export class UsersService {
     );
   }
 
-  // async getImage(uid: number) {
-  //    return await this.database.getImage(uid);
-  // }
+  async getImage(uid: number) {
+    const imgData = fs.readFileSync(`img/${uid}`, {
+      encoding: 'utf8',
+      flag: 'r',
+    });
+
+    return imgData;
+  }
 }
