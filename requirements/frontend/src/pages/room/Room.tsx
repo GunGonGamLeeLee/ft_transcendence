@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ChatSideBar from './chat/ChatSideBar';
+import ChatSideBar from '../../components/SideBar/ChatSideBar';
 import { CharMain } from './chat/ChatMain';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';

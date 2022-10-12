@@ -68,25 +68,13 @@ function LeftChat({
   );
 }
 
-function RightChat({
-  info,
-  lastId,
-}: {
-  info: ChatType;
-  lastId: number | undefined;
-}) {
+function RightChat({ info }: { info: ChatType }) {
   return (
     <>
-      {info.uid === lastId ? (
-        <></>
-      ) : (
-        <div className={`${styles.chat__profile} ${styles.chat__right}`}>
-          <div className={styles.chat__name}>{info.displayName}</div>
-          <img src={info.imgUri} className={styles.chat__img} />
-        </div>
-      )}
       <div className={`${styles.chat__msgbox} ${styles.chat__right}`}>
-        <div className={`${styles.chat__msg}`}>{info.msg}</div>
+        <div className={`${styles.chat__msg} ${styles.chat__msg__right}`}>
+          {info.msg}
+        </div>
       </div>
     </>
   );
@@ -102,7 +90,7 @@ export function Chat() {
         tempId = lastId;
         lastId = info.uid;
         return info.uid === userProfile.uid ? (
-          <RightChat info={info} lastId={tempId} key={key} />
+          <RightChat info={info} key={key} />
         ) : (
           <LeftChat info={info} lastId={tempId} key={key} />
         );

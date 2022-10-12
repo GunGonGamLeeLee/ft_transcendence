@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { FriendList } from './FriendList';
 import { MyProfile } from './MyProfile';
-import { RankList } from './RankList';
+import { FriendList } from './FriendList';
+import { ChatUserList } from './/ChatUserList';
 import styles from './SideBar.module.css';
 
-export function SideBar() {
+export default function ChatSideBar() {
   const [isLeft, setIsLeft] = React.useState(true);
 
   const onLeftClick = () => {
@@ -28,7 +28,7 @@ export function SideBar() {
           }`}
           onClick={onLeftClick}
         >
-          RANKING
+          CHAT
         </li>
         <li
           className={`${styles.sidebar__tab} ${
@@ -42,10 +42,10 @@ export function SideBar() {
       <div
         className={`${styles.sidebar__list} ${isLeft ? '' : styles.inactive}`}
       >
-        <Index index1='RANK' index2='NAME' index3='RATING' />
+        <Index index1='RANK' index2='NAME' index3='ROLE' />
         <ul className={styles.sidebar__ul}>
           <React.Suspense fallback={<h1>Loading ...</h1>}>
-            <RankList />
+            <ChatUserList />
           </React.Suspense>
         </ul>
       </div>
@@ -59,7 +59,7 @@ export function SideBar() {
           </React.Suspense>
         </ul>
       </div>
-      <React.Suspense fallback={<h1>Loading ...</h1>}>
+      <React.Suspense fallback={<h1>Loading</h1>}>
         <MyProfile />
       </React.Suspense>
     </div>

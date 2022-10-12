@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import Cookies from 'js-cookie';
+import styles from './Login.module.css';
 
 export function Otp() {
   const setAuthState = useSetRecoilState(authState);
@@ -34,14 +35,24 @@ export function Otp() {
   };
 
   return (
-    <>
-      <p>otp!!</p>
-      <form onSubmit={handleSubmit}>
-        <input name='pin' type='password' placeholder='otp' maxLength={20} />
-        <button type='submit'>submit</button>
+    <div className={styles.otp}>
+      <div className={styles.otp__text}>ONE TIME PASSWORD</div>
+      <form onSubmit={handleSubmit} className={styles.otp__form}>
+        <input
+          name='pin'
+          type='text'
+          placeholder='code'
+          maxLength={6}
+          className={styles.otp__input}
+        />
+        <button type='submit' className={styles.otp__button}>
+          SEND
+        </button>
       </form>
-      {count ? <h1>2차 인증에 실패하였습니다!</h1> : null}
-    </>
+      {count ? (
+        <h1 className={styles.otp__warning}>2차 인증에 실패하였습니다!</h1>
+      ) : null}
+    </div>
   );
 }
 

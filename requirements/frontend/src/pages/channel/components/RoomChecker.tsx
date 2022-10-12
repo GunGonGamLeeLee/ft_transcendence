@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../atoms/authState';
 import { currRoomState } from '../../../atoms/currRoomState';
+import styles from './RoomChecker.module.css';
 
 export function RoomChecker() {
   const { token } = useRecoilValue(authState);
@@ -54,13 +55,22 @@ export function RoomChecker() {
   };
 
   return (
-    <>
-      <p>Room Password</p>
-      <form onSubmit={handleSubmit}>
-        <input name='password' type='password' />
-        <button type='submit'>submit</button>
+    <div>
+      <div className={styles.checker__text}>ROOM PASSWORD</div>
+      <form onSubmit={handleSubmit} className={styles.checker__form}>
+        <input
+          name='password'
+          type='password'
+          placeholder='PASSWORD'
+          className={styles.checker__input}
+        />
+        <button type='submit' className={styles.checker__button}>
+          SUBMIT
+        </button>
       </form>
-      <button onClick={handleCancelClick}>cancel</button>
-    </>
+      <button onClick={handleCancelClick} className={styles.checker__cancel}>
+        CANCEL
+      </button>
+    </div>
   );
 }

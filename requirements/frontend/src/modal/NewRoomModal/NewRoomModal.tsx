@@ -97,13 +97,13 @@ function NewRoom() {
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.new}>
           <div className={styles.new__header}>
-            <span className={styles.new__headertitle}>새 채팅방</span>
+            <span className={styles.new__headertitle}>NEW ROOM</span>
             <RedCross onClick={onClick} />
           </div>
           <form onSubmit={handleSubmit}>
             <div className={styles.new__options}>
               <div className={styles.new__option}>
-                <span className={styles.new__title}>방 제목</span>
+                <span className={styles.new__title}>TITLE</span>
                 <input
                   required
                   type='text'
@@ -115,7 +115,7 @@ function NewRoom() {
                 />
               </div>
               <div className={styles.new__option}>
-                <span className={styles.new__title}>초대 only</span>
+                <span className={styles.new__title}>PRIVATE</span>
                 <div className={styles.new__checkboxdiv}>
                   <input
                     type='checkbox'
@@ -130,19 +130,19 @@ function NewRoom() {
                   isPrivate ? styles.new__inactive : ''
                 }`}
               >
-                <span className={styles.new__title}>비밀번호</span>
+                <span className={styles.new__title}>PASSWORD</span>
                 <input
                   type='password'
                   className={styles.new__input}
                   maxLength={10}
-                  placeholder='비밀번호'
+                  placeholder='PASSWORD'
                   value={password}
                   onChange={onChangePassword}
                 />
               </div>
             </div>
             <div className={styles.new__buttons}>
-              <button className={styles.new__button}>만들기</button>
+              <button className={styles.new__button}>CREATE</button>
             </div>
           </form>
         </div>

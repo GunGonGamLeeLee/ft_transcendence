@@ -1,3 +1,9 @@
+:root {
+  --tab_active: rgb(81, 81, 81);
+  --tab_inactive: rgb(255, 255, 255);
+  --border: 2px solid rgb(24, 30, 56, 0.3);
+}
+
 .user {
   cursor: pointer;
   display: flex;
@@ -6,24 +12,22 @@
   align-items: center;
   padding: 5px;
   box-sizing: border-box;
-  width: 315px;
+  width: 311px;
   height: 60px;
-  border-radius: 30px;
+  color: white;
 }
 
 .user:hover {
-  background-color: rgb(199, 171, 254);
-}
-
-.user__active {
-  background-color: rgb(199, 171, 254);
+  background-color: rgb(64, 64, 64);
 }
 
 .user_profile__div {
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 60px;
   padding: 15px 5px;
+  box-sizing: border-box;
 }
 
 .user_profile__img {
@@ -47,5 +51,23 @@
 }
 
 .user_profile__username {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: var(--border);
+  height: 50px;
   font-size: 25px;
+  padding-left: 5px;
+  box-sizing: border-box;
+}
+
+.user_state__div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 75px;
+  height: 50px;
+  border-left: var(--border);
+  padding: 5px;
+  box-sizing: border-box;
 }

@@ -30,7 +30,6 @@ export function Authenticate() {
 
     setToken(cookieToken);
   }, [setAuthState]);
-
   if (token !== null) return <Otp />;
   return <LoginButton />;
 }

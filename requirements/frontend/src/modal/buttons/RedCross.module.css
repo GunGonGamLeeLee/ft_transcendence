@@ -1,3 +1,11 @@
+.redcross_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+}
+
 .redcross {
   cursor: pointer;
   width: 15px;
