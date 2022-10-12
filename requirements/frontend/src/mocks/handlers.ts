@@ -279,11 +279,15 @@ export const handlers = [
   //   },
   // ),
   // rest.post(`${import.meta.env.VITE_BACKEND_EP}/users/me`, (req, res, ctx) => {
-  //   req.json().then((res) => {
-  //     console.log(
-  //       `[MSW] request change profile, name: ${res.displayName} img: ${res.imgUri} mfa: ${res.isRequiredMfa}`,
+  //   req
+  //     .json()
+  //     .then(
+  //       (res: { imgUri: string; displayName: string; mfaNeed: boolean }) => {
+  //         console.log(
+  //           `[MSW] request change profile, name: ${res.displayName} img: ${res.imgUri} mfa: ${res.mfaNeed}`,
+  //         );
+  //       },
   //     );
-  //   });
 
   //   return res(
   //     ctx.status(201),
@@ -300,4 +304,84 @@ export const handlers = [
   //   console.log(`[MSW] request otp auth`);
   //   return res(ctx.status(201));
   // }),
+  // rest.get(
+  //   `${import.meta.env.VITE_BACKEND_EP}/users/match`,
+  //   (req, res, ctx) => {
+  //     return res(
+  //       ctx.status(200),
+  //       ctx.json([
+  //         {
+  //           index: 1,
+  //           isRank: false,
+  //           winner: {
+  //             uid: 99947,
+  //             displayName: 'jaham',
+  //             imgUri: '',
+  //           },
+  //           looser: {
+  //             uid: 3,
+  //             displayName: 'puhaha',
+  //             imgUri: '',
+  //           },
+  //         },
+  //         {
+  //           index: 2,
+  //           isRank: false,
+  //           winner: {
+  //             uid: 99947,
+  //             displayName: 'jaham',
+  //             imgUri: '',
+  //           },
+  //           looser: {
+  //             uid: 3,
+  //             displayName: 'puhaha',
+  //             imgUri: '',
+  //           },
+  //         },
+  //         {
+  //           index: 3,
+  //           isRank: false,
+  //           winner: {
+  //             uid: 99947,
+  //             displayName: 'jaham',
+  //             imgUri: '',
+  //           },
+  //           looser: {
+  //             uid: 3,
+  //             displayName: 'puhaha',
+  //             imgUri: '',
+  //           },
+  //         },
+  //         {
+  //           index: 4,
+  //           isRank: false,
+  //           winner: {
+  //             uid: 99947,
+  //             displayName: 'jaham',
+  //             imgUri: '',
+  //           },
+  //           looser: {
+  //             uid: 3,
+  //             displayName: 'puhaha',
+  //             imgUri: '',
+  //           },
+  //         },
+  //         {
+  //           index: 5,
+  //           isRank: false,
+  //           winner: {
+  //             uid: 99947,
+  //             displayName: 'jaham',
+  //             imgUri: '',
+  //           },
+  //           looser: {
+  //             uid: 3,
+  //             displayName: 'puhaha',
+  //             imgUri: '',
+  //           },
+  //         },
+  //       ]),
+  //     );
+  //   },
+  // ),
 ];

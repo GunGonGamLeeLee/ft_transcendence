@@ -13,6 +13,12 @@ import modalstyles from '../Modal.module.css';
 import { Unblock } from '../buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState } from '../../atoms/currRoomState';
+import { MatchHistoryList } from '../MatchHistoryList';
+import { authState } from '../../atoms/authState';
+import {
+  matchHistoryListState,
+  requestMatchHistory,
+} from '../../atoms/modals/matchHistoryListState';
 
 export function UserProfileModal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -36,6 +42,10 @@ function UserProfile({ user }: { user: UserDataType }) {
   const blockedList = useRecoilValue(blockedListState);
   const [isFriend, setIsFriend] = React.useState<boolean>(false);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
+  const setMatchHistory = useSetRecoilState(matchHistoryListState);
+
+  const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
 
   const onClick = () => {
     setState(undefined);
@@ -47,6 +57,17 @@ function UserProfile({ user }: { user: UserDataType }) {
       blockedList.find((curr) => curr.uid === user.uid) !== undefined,
     );
   }, [friendList, blockedList]);
+
+  React.useEffect(() => {
+    const matchHistoryQuery = async () => {
+      const newHistory = await requestMatchHistory(token, user.uid);
+      setMatchHistory(newHistory);
+    };
+
+    matchHistoryQuery();
+
+    return setMatchHistory([]);
+  }, [token, user]);
 
   return (
     <>
@@ -65,7 +86,7 @@ function UserProfile({ user }: { user: UserDataType }) {
               </div>
             </div>
           </div>
-          <div className={styles.profile__stat}>매칭 기록이 없습니다.</div>
+          <MatchHistoryList myUid={user.uid} />
           {userProfile.uid === user.uid ? (
             <></>
           ) : (
