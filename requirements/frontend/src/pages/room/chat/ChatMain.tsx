@@ -7,6 +7,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { setRoomModalState } from '../../../atoms/modals/setRoomModalState';
 import { userProfileState } from '../../../atoms/userProfileState';
 import { currRoomState } from '../../../atoms/currRoomState';
+import { BackButton } from '../../../components/BackButton';
 
 function SetRoomButton() {
   const setSetRoomModal = useSetRecoilState(setRoomModalState);
@@ -15,11 +16,30 @@ function SetRoomButton() {
   };
 
   return (
-    <img
-      src='/settings.png'
-      onClick={onClick}
-      className={styles.chatmain__setting}
-    />
+    <div className={styles.chatmain__icon}>
+      <abbr title='방 설정'>
+        <img
+          src='/settings.png'
+          onClick={onClick}
+          className={styles.chatmain__setting}
+        />
+      </abbr>
+    </div>
+  );
+}
+
+function LeaveRoomButton() {
+  const onClick = () => {};
+  return (
+    <div className={styles.chatmain__icon}>
+      <abbr title='방 나가기'>
+        <img
+          src='/leave.png'
+          onClick={onClick}
+          className={styles.chatmain__leave}
+        />
+      </abbr>
+    </div>
   );
 }
 
@@ -29,14 +49,15 @@ export function CharMain() {
 
   return (
     <>
-      <div className={styles.page}>
+      <div className={pagestyles.page}>
         <div className={pagestyles.page__header}>
-          <Link to='/channel'>뒤로가기!</Link>
-          {currRoom !== null && userProfile.id === currRoom.ownerId ? (
-            <SetRoomButton />
-          ) : (
-            <></>
-          )}
+          <BackButton to='/channel' />
+          <div className={styles.chatmain__icons}>
+            {currRoom !== null && userProfile.uid === currRoom.ownerId ? (
+              <SetRoomButton />
+            ) : null}
+            <LeaveRoomButton />
+          </div>
         </div>
         <div className={pagestyles.page__main}>
           <Chat />

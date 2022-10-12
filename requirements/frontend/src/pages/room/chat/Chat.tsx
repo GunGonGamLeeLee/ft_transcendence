@@ -62,9 +62,7 @@ function LeftChat({
         </div>
       )}
       <div className={styles.chat__msgbox}>
-        <div className={`${styles.chat__msg} ${styles.chat__left}`}>
-          {info.msg}
-        </div>
+        <div className={`${styles.chat__msg}`}>{info.msg}</div>
       </div>
     </>
   );
@@ -88,9 +86,7 @@ function RightChat({
         </div>
       )}
       <div className={`${styles.chat__msgbox} ${styles.chat__right}`}>
-        <div className={`${styles.chat__msg} ${styles.chat__right}`}>
-          {info.msg}
-        </div>
+        <div className={`${styles.chat__msg}`}>{info.msg}</div>
       </div>
     </>
   );

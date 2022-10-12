@@ -12,6 +12,7 @@ import styles from './UserProfileModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { Unblock } from '../buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
+import { currRoomState } from '../../atoms/currRoomState';
 
 export function UserProfileModal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -30,6 +31,7 @@ export function UserProfileModal() {
 function UserProfile({ user }: { user: UserDataType }) {
   const setState = useSetRecoilState(userProfileModalState);
   const userProfile = useRecoilValue(userProfileState);
+  const currRoom = useRecoilValue(currRoomState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
   const [isFriend, setIsFriend] = React.useState<boolean>(false);
@@ -68,6 +70,11 @@ function UserProfile({ user }: { user: UserDataType }) {
             <></>
           ) : (
             <>
+              {currRoom && currRoom.ownerId === userProfile.uid ? (
+                <div className={styles.profile__buttons}>
+                  <ProfileButton text='초대' />
+                </div>
+              ) : null}
               <div className={styles.profile__buttons}>
                 {!isFriend ? <Follow /> : <Unfollow />}
                 {!isBlocked ? <Block /> : <Unblock />}

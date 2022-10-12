@@ -1,4 +1,48 @@
+.chatmain__icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 90px;
+  height: 35px;
+}
+
+.chatmain__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  width: 35px;
+  height: 35px;
+}
+
 .chatmain__setting {
-  width: 20px;
-  height: 20px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
+@keyframes Turning {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.chatmain__setting:hover {
+  width: 35px;
+  height: 35px;
+  animation: Turning 2s linear infinite;
+}
+
+.chatmain__leave {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+}
+
+.chatmain__leave:hover {
+  width: 35px;
+  height: 35px;
 }

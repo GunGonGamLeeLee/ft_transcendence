@@ -66,48 +66,48 @@ export const handlers = [
   //   );
   // }),
 
-  // rest.get(
-  //   `${import.meta.env.VITE_BACKEND_EP}/channel/users`,
-  //   (req, res, ctx) => {
-  //     const param = req.url.searchParams;
-  //     const id = param.get('roomId');
-  //     return res(
-  //       ctx.status(200),
-  //       ctx.json([
-  //         {
-  //           uid: 99945,
-  //           displayName: 'jaham',
-  //           imgUri:
-  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-  //           rating: 1111,
-  //           role: 'owner',
-  //           banned: false,
-  //           muted: false,
-  //         },
-  //         {
-  //           uid: 2,
-  //           displayName: 'jeongble',
-  //           imgUri:
-  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-  //           rating: 4096,
-  //           role: 'admin',
-  //           banned: false,
-  //           muted: false,
-  //         },
-  //         {
-  //           uid: 3,
-  //           displayName: 'yeju',
-  //           imgUri:
-  //             'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-  //           rating: 2048,
-  //           role: 'user',
-  //           banned: false,
-  //           muted: false,
-  //         },
-  //       ]),
-  //     );
-  //   },
-  // ),
+  rest.get(
+    `${import.meta.env.VITE_BACKEND_EP}/channel/users`,
+    (req, res, ctx) => {
+      const param = req.url.searchParams;
+      const id = param.get('roomId');
+      return res(
+        ctx.status(200),
+        ctx.json([
+          {
+            uid: 99945,
+            displayName: 'jaham',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 1111,
+            role: 'owner',
+            banned: false,
+            muted: false,
+          },
+          {
+            uid: 2,
+            displayName: 'jeongble',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 4096,
+            role: 'admin',
+            banned: false,
+            muted: false,
+          },
+          {
+            uid: 3,
+            displayName: 'yeju',
+            imgUri:
+              'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
+            rating: 2048,
+            role: 'user',
+            banned: false,
+            muted: false,
+          },
+        ]),
+      );
+    },
+  ),
 
   rest.get(
     `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,

@@ -13,12 +13,10 @@
 
 .chat__left {
   justify-content: flex-start;
-  text-align: left;
 }
 
 .chat__right {
   justify-content: flex-end;
-  text-align: right;
 }
 
 .chat__profile {
@@ -49,6 +47,7 @@
 .chat__msg {
   word-break: break-all;
   word-wrap: normal;
+  text-align: left;
   width: fit-content;
   max-width: 750px;
   font-size: 20px;

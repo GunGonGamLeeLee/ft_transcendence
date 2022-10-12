@@ -27,14 +27,14 @@ export function ChatUserList() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) throw new Error();
 
       const data: ChatUserType[] = await response.json();
       setChatUserList(data);
-      const myrole = data.find((curr) => curr.id === userProfile.id);
+      const myrole = data.find((curr) => curr.uid === userProfile.uid);
       if (myrole) {
         setCurrRole(myrole.role);
       } else {
@@ -48,7 +48,7 @@ export function ChatUserList() {
   return (
     <>
       {chatUserList.map((user) => (
-        <ChatUser user={user} key={user.id} />
+        <ChatUser user={user} key={user.uid} />
       ))}
     </>
   );

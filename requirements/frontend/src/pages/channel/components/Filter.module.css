@@ -14,5 +14,6 @@
 }
 
 .filter__inactive {
+  font-weight: 400;
   background-color: rgb(255, 255, 196);
 }
