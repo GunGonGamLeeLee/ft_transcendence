@@ -101,9 +101,11 @@ export function ChannelLobby() {
           <RoomList roomList={dmRoomList} isActive={filter === 'dm'} />
         </div>
         <div className={pagestyles.page__footer}>
-          <button className={`${styles.channel__new}`} onClick={onClickNew}>
-            NEW ROOM
-          </button>
+          <div className={styles.channel__newdiv}>
+            <button className={`${styles.channel__new}`} onClick={onClickNew}>
+              NEW ROOM
+            </button>
+          </div>
         </div>
       </div>
     </>

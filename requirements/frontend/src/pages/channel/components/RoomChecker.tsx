@@ -61,15 +61,15 @@ export function RoomChecker() {
         <input
           name='password'
           type='password'
-          placeholder='password'
+          placeholder='PASSWORD'
           className={styles.checker__input}
         />
         <button type='submit' className={styles.checker__button}>
-          submit
+          SUBMIT
         </button>
       </form>
       <button onClick={handleCancelClick} className={styles.checker__cancel}>
-        cancel
+        CANCEL
       </button>
     </div>
   );

@@ -36,6 +36,11 @@
   animation: Turning 2s linear infinite;
 }
 
+.channel__newdiv {
+  width: 120px;
+  height: 120px;
+}
+
 .channel__new {
   cursor: pointer;
   width: 120px;
