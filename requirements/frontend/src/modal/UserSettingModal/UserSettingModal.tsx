@@ -34,12 +34,22 @@ function UserSetting() {
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file: FileList | null = event.target.files;
-    if (file && file[0]) {
-      setPreviewImg(URL.createObjectURL(file[0]));
-    } else {
+    const fileList: FileList | null = event.target.files;
+
+    if (fileList === null || fileList.length === 0) {
       setPreviewImg(userProfile.imgUri);
+      return;
     }
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      console.log(reader.result);
+      if (typeof reader.result === 'string') setPreviewImg(reader.result);
+      else setPreviewImg(userProfile.imgUri);
+    };
+
+    reader.readAsDataURL(fileList[0]);
   };
 
   const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +111,7 @@ function UserSetting() {
     }
 
     const newInfo = {
-      imgUri: previewImg,
+      imgData: previewImg === userProfile.imgUri ? '' : previewImg,
       displayName: displayName,
       mfaNeed: isChecked === true,
     };
