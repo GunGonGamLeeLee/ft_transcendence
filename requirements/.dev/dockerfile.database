@@ -1,5 +1,6 @@
 FROM postgres:alpine3.16
 COPY ./.dev/entrypoint.database.sh /docker-entrypoint-initdb.d/
+COPY ./.dev/entrypoint.database.sql /
 
 STOPSIGNAL SIGKILL
 EXPOSE 4245
