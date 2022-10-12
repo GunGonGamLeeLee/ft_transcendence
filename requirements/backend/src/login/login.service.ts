@@ -57,7 +57,10 @@ export class LoginService {
     );
 
     fs.mkdirSync('img/', { recursive: true });
-    fs.writeFileSync(`img/${userInfo.data.id}.png`, imgData.data);
+    fs.writeFileSync(
+      `img/${userInfo.data.id}`,
+      `data:image/png;base64,${imgData.data}`,
+    );
 
     return userInfo.data.id;
   }
@@ -107,7 +110,7 @@ export class LoginService {
       const newUser: UserDto = {
         uid: uid,
         displayName: Math.random().toString(36).substring(2, 11),
-        imgUri: `http://backend/users/img/${uid}`,
+        imgUri: `http://localhost:4243/users/img/${uid}`,
         rating: 42,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
