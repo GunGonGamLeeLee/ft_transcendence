@@ -22,6 +22,7 @@ export class DbMatchHistoryService {
         index: true,
         winnerUid: true,
         loserUid: true,
+        isRank: true,
       },
       where: [{ winnerUid: uid }, { loserUid: uid }],
       order: {
@@ -30,18 +31,20 @@ export class DbMatchHistoryService {
     });
   }
 
-  async findListOfUser(uid: number) {
+  async findListOfUser(uid: number, take: number, page: number) {
     return await this.matchHistoryRepo.find({
       select: {
         index: true,
         winnerUid: true,
         loserUid: true,
+        isRank: true,
       },
       where: [{ winnerUid: uid }, { loserUid: uid }],
       order: {
         index: 'desc',
       },
-      take: 5,
+      skip: (page - 1) * take, // index 1부터 시작
+      take: take,
     });
   }
 
@@ -50,17 +53,14 @@ export class DbMatchHistoryService {
       select: {
         index: true,
         winner: {
-          uid: true,
           displayName: true,
           imgUri: true,
-          status: true,
         },
         loser: {
-          uid: true,
           displayName: true,
           imgUri: true,
-          status: true,
         },
+        isRank: true,
       },
       relations: {
         winner: true,
@@ -73,22 +73,19 @@ export class DbMatchHistoryService {
     });
   }
 
-  async findListOfUserWithInfo(uid: number) {
+  async findListOfUserWithInfo(uid: number, take: number, page: number) {
     return await this.matchHistoryRepo.find({
       select: {
         index: true,
         winner: {
-          uid: true,
           displayName: true,
           imgUri: true,
-          status: true,
         },
         loser: {
-          uid: true,
           displayName: true,
           imgUri: true,
-          status: true,
         },
+        isRank: true,
       },
       relations: {
         winner: true,
@@ -98,7 +95,8 @@ export class DbMatchHistoryService {
       order: {
         index: 'desc',
       },
-      take: 5,
+      skip: (page - 1) * take,
+      take: take,
     });
   }
 

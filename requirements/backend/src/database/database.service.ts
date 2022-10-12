@@ -114,12 +114,31 @@ export class DatabaseService {
   async listUserRank() {
     return await this.dbUserService.findUserRankList();
   }
-  async listMatchHistoryOfUser(uid: number) {
-    return await this.dbMatchHistoryService.findListOfUser(uid);
+
+  async listMatchHistoryOfUser(uid: number, take: number, page: number) {
+    if (page < 1)
+      throw new HttpException(
+        'page must not be 0 or negative',
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.dbMatchHistoryService.findListOfUser(uid, take, page);
   }
 
-  async listMatchHistoryOfUserWithUserInfo(uid: number) {
-    return await this.dbMatchHistoryService.findListOfUserWithInfo(uid);
+  async listMatchHistoryOfUserWithUserInfo(
+    uid: number,
+    take: number,
+    page: number,
+  ) {
+    if (page < 1)
+      throw new HttpException(
+        'page must not be 0 or negative',
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.dbMatchHistoryService.findListOfUserWithInfo(
+      uid,
+      take,
+      page,
+    );
   }
 
   async listAllMatchHistoryOfUser(uid: number) {

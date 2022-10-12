@@ -196,7 +196,7 @@ export class DatabaseController {
   @ApiHeader({ name: 'uid' })
   @Get('list-all-match-history-of-user')
   async listAllMatchHistoryOfUser(@Headers() header) {
-    return await this.databaseService.listMatchHistoryOfUser(header.uid);
+    return await this.databaseService.listAllMatchHistoryOfUser(header.uid);
   }
 
   @ApiTags('database/MatchHistory')
@@ -204,26 +204,36 @@ export class DatabaseController {
   @ApiHeader({ name: 'uid' })
   @Get('list-all-match-history-of-user-with-user-info')
   async listAllMatchHistoryOfUserWithUserInfo(@Headers() header) {
-    return await this.databaseService.listMatchHistoryOfUserWithUserInfo(
+    return await this.databaseService.listAllMatchHistoryOfUserWithUserInfo(
       header.uid,
     );
   }
 
   @ApiTags('database/MatchHistory')
-  @ApiOperation({ summary: '유저의 전적 보기 (최근 5게임)' })
+  @ApiOperation({ summary: '유저의 전적 보기 (take, page)' })
   @ApiHeader({ name: 'uid' })
+  @ApiHeader({ name: 'take' })
+  @ApiHeader({ name: 'page' })
   @Get('list-user-match-history')
   async listMatchHistoryOfUser(@Headers() header) {
-    return await this.databaseService.listMatchHistoryOfUser(header.uid);
+    return await this.databaseService.listMatchHistoryOfUser(
+      header.uid,
+      header.take,
+      header.page,
+    );
   }
 
   @ApiTags('database/MatchHistory')
-  @ApiOperation({ summary: '유저의 전적 보기 (최근 5게임)' })
+  @ApiOperation({ summary: '유저의 전적 보기 (take, page)' })
   @ApiHeader({ name: 'uid' })
+  @ApiHeader({ name: 'take' })
+  @ApiHeader({ name: 'page' })
   @Get('list-user-match-history-with-user-info')
   async listMatchHistoryOfUserWithUserInfo(@Headers() header) {
     return await this.databaseService.listMatchHistoryOfUserWithUserInfo(
       header.uid,
+      header.take,
+      header.page,
     );
   }
 
