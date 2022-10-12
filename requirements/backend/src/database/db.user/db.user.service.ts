@@ -18,6 +18,10 @@ export class DbUserService {
     return await this.userRepo.findOneBy({ uid });
   }
 
+  async findUserByName(displayName: string): Promise<UserEntity> {
+    return await this.userRepo.findOneBy({ displayName });
+  }
+
   async findOneProfile(uid: number): Promise<UserEntity> {
     return await this.userRepo.findOne({
       select: {
@@ -76,10 +80,23 @@ export class DbUserService {
     }
   }
 
-  async nameCheck(displayName: string) {
-    //TODO - 이게맞나?
-    const users: UserEntity[] = await this.findAll();
-    return users.find((curr) => curr.displayName === displayName) === undefined;
+  async updateUser(body: UserDto): Promise<UserDto> { //TODO myUid == body.uid
+    try {
+      await this.userRepo.update({ uid: body.uid }, {
+        displayName: body.displayName,
+        imgUri: body.imgUri,
+        mfaNeed: body.mfaNeed,
+      });
+    } catch (err) {
+      throw new HttpException('update user error', HttpStatus.FORBIDDEN);
+    }
+
+    return await this.userRepo.findOneBy({uid: body.uid});
+  }
+
+  async isExistedName(displayName: string) {
+    const user: UserEntity = await this.findUserByName(displayName);
+    return user != null;
   }
 
   async updateName(uid: number, displayName: string) {
