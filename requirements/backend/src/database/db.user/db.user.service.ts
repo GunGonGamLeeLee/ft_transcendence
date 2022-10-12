@@ -94,7 +94,7 @@ export class DbUserService {
     return await this.userRepo.findOneBy({uid: body.uid});
   }
 
-  async isExistedName(displayName: string) {
+  async isExistedName(displayName: string): Promise<boolean> {
     const user: UserEntity = await this.findUserByName(displayName);
     return user != null;
   }
