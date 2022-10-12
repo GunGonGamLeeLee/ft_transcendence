@@ -26,6 +26,7 @@ import { namecheckDto } from './dto/namecheck.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  //TODO - method 순서대로 정렬 필요!
   //NOTE - GET
   @ApiTags('users')
   @ApiBearerAuth('access-token')
@@ -116,5 +117,13 @@ export class UsersController {
   @Delete('block')
   async unblock(@MyUid() uid: number, @Body() body: UidDto) {
     return await this.usersService.unblock(uid, body.uid);
+  }
+
+  @ApiTags('users')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: '전적 보기 (최신 5게임)' })
+  @Get('match')
+  async match(@MyUid() uid: number) {
+    return await this.usersService.match(uid, 5, 1);
   }
 }
