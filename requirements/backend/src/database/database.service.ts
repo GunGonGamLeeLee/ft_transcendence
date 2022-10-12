@@ -112,6 +112,10 @@ export class DatabaseService {
     return await this.dbUserService.saveOne(userDto);
   }
 
+  async updateUser(userDto: UserDto) {
+    return await this.dbUserService.updateUser(userDto);
+  }
+
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
@@ -205,7 +209,7 @@ export class DatabaseService {
   }
 
   async nameCheck(displayName: string) {
-    return await this.dbUserService.nameCheck(displayName);
+    return await this.dbUserService.isExistedName(displayName);
   }
 
   async updateUserName(uid: number, displayName: string) {
