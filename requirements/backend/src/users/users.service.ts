@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { UserDto } from 'src/database/dto/user.dto';
 import { ProfileType } from './dto/profile.type.dto';
+import { ProfileUpdateDto } from './dto/profile.update.dto';
 import { UserDataType } from './dto/user.data.type.dto';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class UsersService {
     return profile;
   }
 
-  async updateme(body: UserDto) {
-    return await this.database.updateUser(body);
+  async updateme(uid: number, body: ProfileUpdateDto) {
+    return await this.database.updateUser(uid, body);
   }
 
   async friend(uid: number) {
@@ -70,4 +70,8 @@ export class UsersService {
       page,
     );
   }
+
+  // async getImage(uid: number) {
+  //    return await this.database.getImage(uid);
+  // }
 }
