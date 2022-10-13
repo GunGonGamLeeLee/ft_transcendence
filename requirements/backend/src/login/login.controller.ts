@@ -7,8 +7,6 @@ import {
   Query,
   Redirect,
   Body,
-  HttpException,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -18,18 +16,12 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { authenticator } from '@otplib/preset-default';
 import { Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtPayload } from 'src/users/decorator/jwt.payload.decorator';
+import { MyUid } from 'src/users/decorator/uid.decorator';
 import { apiUid, LoginService, redirectUri } from './login.service';
 import { optDto } from './otp.dto';
-import { TokenPayloadDto } from './token.payload.dto';
-
-export interface UserInfo {
-  id: number;
-  secret: string;
-  mfaNeed: boolean;
-}
 
 @Controller('login')
 export class LoginController {
@@ -53,13 +45,8 @@ export class LoginController {
   })
   @Get('oauth/callback')
   async codeCallback(@Res() res: Response, @Query('code') query) {
-    const userId = await this.loginService.getIntraInfo(query);
-
-    const userInfo = await this.loginService.getUserInfo(userId);
-    const payload: TokenPayloadDto = {
-      id: userInfo.id,
-      isRequiredTFA: userInfo.mfaNeed,
-    };
+    const intraInfo = await this.loginService.getIntraInfo(query);
+    const payload = await this.loginService.getTokenInfo(intraInfo);
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
 
@@ -70,34 +57,16 @@ export class LoginController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @Get('qr')
-  sendQrCode(@Headers() header) {
-    const jwtString = header.authorization.split('Bearer ')[1];
-    const id = this.loginService.getIdInJwt(jwtString);
-    return this.loginService.createQrCode(id);
+  sendQrCode(@MyUid() uid) {
+    return this.loginService.createQrCode(uid);
   }
 
   @ApiTags('login')
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @Post('otp')
-  async validateOtp(@Headers() header, @Body() body: optDto) {
-    const jwtString = header.authorization.split('Bearer ')[1];
-    const userId = this.loginService.getIdInJwt(jwtString);
-    const userInfo = await this.loginService.getUserInfo(userId);
-    const secret = userInfo.secret;
-    const token = authenticator.generate(secret);
-
-    if (token !== body.pin) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    const payload: TokenPayloadDto = {
-      id: userId,
-      isRequiredTFA: false,
-    };
-
-    const json = { token: this.loginService.issueToken(payload) };
-    return json;
+  async validateOtp(@JwtPayload() payload, @Body() body: optDto) {
+    return this.loginService.validateOtp(payload, body.pin);
   }
 
   @ApiTags('token')

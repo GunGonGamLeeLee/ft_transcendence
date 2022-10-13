@@ -418,20 +418,20 @@ COPY public.match_history_entity (index, "isRank", "winnerUid", "loserUid") FROM
 --
 
 COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSecret", status) FROM stdin;
-81730	yeju	https://cdn.intra.42.fr/users/small_yeju.jpg	42	f	KAHBK63XHN6SYMJV	0
-99857	mypark	https://cdn.intra.42.fr/users/small_mypark.jpg	42	f	PZSQCFRPDERRSMIZ	0
-85355	hyojekim	https://cdn.intra.42.fr/users/small_hyojekim.jpg	42	t	OQ2XQJSDKMFS2A2B	0
-0	dummy0	https://cdn.intra.42.fr/users/small_sujpark.jpg	0	f	string	0
-1	dummy1	https://cdn.intra.42.fr/users/small_sujpark.jpg	2000	f	string	0
-2	dummy2	https://cdn.intra.42.fr/users/small_sujpark.jpg	200	f	string	0
-3	dummy3	https://cdn.intra.42.fr/users/small_sujpark.jpg	20000	f	string	0
-4	dummy4	https://cdn.intra.42.fr/users/small_sujpark.jpg	200	f	string	0
-5	dummy5	https://cdn.intra.42.fr/users/small_sujpark.jpg	4242	f	string	0
-99947	jaham	https://cdn.intra.42.fr/users/small_jaham.jpg	42	f	O4TX43QVPVNFQOSP	0
-6	dummy6	https://cdn.intra.42.fr/users/small_mypark.jpg	2020	f	string	0
-99909	chanhpar	https://cdn.intra.42.fr/users/small_chanhpar.jpg	42	f	LZHV6YQHNVTVA4RW	0
-112230	9ey7a3gdu	https://cdn.intra.42.fr/users/small_jaham.jpg	42	f	M5NA6HJHAMXQKQIH	0
-99778	qm3tc7kxp	http://localhost:4243/users/img/99778	42	f	KVFGW6TMD5UHGMJ5	0
+81730	yeju	http://localhost:4243/img/81730.png	4244	f	KAHBK63XHN6SYMJV	0
+99857	mypark	http://localhost:4243/img/99857.png	4245	f	PZSQCFRPDERRSMIZ	0
+85355	hyojekim	http://localhost:4243/img/85355.png	4243	t	OQ2XQJSDKMFS2A2B	0
+0	dummy0	http://localhost:4243/img/81730.png	0	f	string	0
+1	dummy1	http://localhost:4243/img/81730.png	20	f	string	0
+2	dummy2	http://localhost:4243/img/81730.png	2	f	string	0
+3	dummy3	http://localhost:4243/img/81730.png	200	f	string	0
+4	dummy4	http://localhost:4243/img/81730.png	200	f	string	0
+5	dummy5	http://localhost:4243/img/81730.png	4242	f	string	0
+99947	jaham	http://localhost:4243/img/99947.png	4244	f	O4TX43QVPVNFQOSP	0
+6	dummy6	http://localhost:4243/img/81730.png	2020	f	string	0
+99909	chanhpar	http://localhost:4243/img/99909.png	4442	f	LZHV6YQHNVTVA4RW	0
+112230	9ey7a3gdu	http://localhost:4243/img/112230.png	42	f	M5NA6HJHAMXQKQIH	0
+99778	qm3tc7kxp	http://localhost:4243/img/99778.png	4732	f	KVFGW6TMD5UHGMJ5	0
 \.
 
 

@@ -63,6 +63,7 @@ export class DbBlockListService {
   }
 
   async deleteAll(uid: number) {
-    return await this.blockListRepo.delete({ fromUid: uid });
+    await this.blockListRepo.delete({ fromUid: uid });
+    await this.blockListRepo.delete({ toUid: uid });
   }
 }

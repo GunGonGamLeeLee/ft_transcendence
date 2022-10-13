@@ -31,6 +31,7 @@ export class DatabaseService {
     private readonly dbMatchHistoryService: DbMatchHistoryService,
   ) {}
 
+  // NOTE list
   async listAllUser() {
     return await this.dbUserService.findAll();
   }
@@ -158,6 +159,7 @@ export class DatabaseService {
     return await this.dbUserService.updateUser(uid, userDto);
   }
 
+  // NOTE add
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
@@ -254,6 +256,7 @@ export class DatabaseService {
     );
   }
 
+  // NOTE find
   async findOneUser(uid: number) {
     return await this.dbUserService.findOne(uid);
   }
@@ -265,14 +268,16 @@ export class DatabaseService {
     return await this.dbChannelService.findOne(chid);
   }
 
-  async saveOneUser(userDto: UserDto): Promise<void> {
-    await await this.dbUserService.saveOne(userDto);
-  }
-
   async isExistedName(displayName: string) {
     return await this.dbUserService.isExistedName(displayName);
   }
 
+  // NOTE save
+  async saveOneUser(userDto: UserDto): Promise<void> {
+    await await this.dbUserService.saveOne(userDto);
+  }
+
+  // NOTE update
   async updateUserName(uid: number, displayName: string) {
     return await this.dbUserService.updateName(uid, displayName);
   }
@@ -383,6 +388,18 @@ export class DatabaseService {
     return await this.dbUserInChannelService.changeRole(targetUid, chid, role);
   }
 
+  // NOTE delete
+
+  async deleteUser(uid: number) {
+    // NOTE 디버그 용
+    await this.dbFriendListService.deleteAll(uid);
+    await this.dbBlockListService.deleteAll(uid);
+    await this.dbUserInChannelService.deleteUserInChannelAll(uid);
+    await this.dbMatchHistoryService.deleteUserAll(uid);
+    await this.dbDmLogsService.deleteUserAll(uid);
+    return await this.dbUserService.deleteOne(uid);
+  }
+
   async deleteChannel(uid: number, chid: number) {
     await this.checkPermissionInChannel(uid, chid, 'you can`t delete channel.');
     // TODO 관련 목록 정리
@@ -410,9 +427,6 @@ export class DatabaseService {
     const channel = await this.dbChannelService.findOne(chid);
     if (channel == null)
       throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);
-    console.log(typeof channel.chOwnerId);
-    console.log(typeof uid);
-    console.log(typeof uid);
     if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
     return await this.dbUserInChannelService.deleteOne(uid, chid);
   }

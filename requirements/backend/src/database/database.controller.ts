@@ -486,6 +486,13 @@ export class DatabaseController {
   }
 
   //NOTE - DELETE
+  @ApiTags('database/User')
+  @ApiOperation({ summary: '유저 지우기' })
+  @ApiHeader({ name: 'uid' })
+  @Delete('delete-user')
+  async deleteUser(@Headers() header) {
+    return await this.databaseService.deleteUser(header.uid);
+  }
 
   @ApiTags('database/Channel')
   @ApiOperation({ summary: '채널 지우기' })

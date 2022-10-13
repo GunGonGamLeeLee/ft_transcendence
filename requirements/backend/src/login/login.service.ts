@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { authenticator } from '@otplib/preset-default';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import * as qrcode from 'qrcode';
 import * as jwt from 'jsonwebtoken';
-import { TokenPayloadDto } from './token.payload.dto';
-import { UserInfo } from './login.controller';
+import { JwtPayloadDto } from './jwt.payload.dto';
 import { UserEntity } from 'src/database/entity/entity.user';
 import { DatabaseService } from 'src/database/database.service';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { UserDto } from 'src/database/dto/user.dto';
+import { IntraInfoDto } from './intra.info.dto';
 
 dotenv.config({
   path: '/backend.env',
@@ -20,16 +20,17 @@ export const redirectUri = process.env.API_URI;
 export const apiUid = process.env.API_UID;
 const apiSecret = process.env.API_SECRET;
 const jwtSecret = process.env.JWT_SECRET;
+const intraApiTokenUri = 'https://api.intra.42.fr/oauth/token'; // TODO env로
+const intraApiMyInfoUri = 'https://api.intra.42.fr/v2/me';
 
 @Injectable()
 export class LoginService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly databaseService: DatabaseService,
+    private readonly database: DatabaseService,
   ) {}
 
-  async getIntraInfo(code: string): Promise<number> {
-    const getTokenUrl = 'https://api.intra.42.fr/oauth/token';
+  async getIntraInfo(code: string): Promise<IntraInfoDto> {
     const params = new URLSearchParams();
     params.set('grant_type', 'authorization_code');
     params.set('client_id', apiUid);
@@ -37,48 +38,38 @@ export class LoginService {
     params.set('code', code);
     params.set('redirect_uri', redirectUri);
 
-    const response = await lastValueFrom(
-      this.httpService.post(getTokenUrl, params),
+    const tokens = await lastValueFrom(
+      this.httpService.post(intraApiTokenUri, params),
     );
-
-    const getUserUrl = 'https://api.intra.42.fr/v2/me';
-
     const userInfo = await lastValueFrom(
-      this.httpService.get(getUserUrl, {
+      this.httpService.get(intraApiMyInfoUri, {
         headers: {
-          Authorization: `Bearer ${response.data.access_token}`,
+          Authorization: `Bearer ${tokens.data.access_token}`,
         },
       }),
     );
 
-    const imgUri: string = userInfo.data.image.versions.small;
+    return {
+      uid: userInfo.data.id,
+      imgUri: userInfo.data.image.versions.small,
+    };
+  }
+
+  async downloadProfileImg(intraInfo: IntraInfoDto) {
+    const { uid, imgUri } = intraInfo;
     const imgData = await lastValueFrom(
       this.httpService.get(imgUri, { responseEncoding: 'base64' }),
     );
 
-    fs.mkdirSync('img/', { recursive: true });
+    fs.mkdirSync('public/img/', { recursive: true });
     fs.writeFileSync(
-      `img/${userInfo.data.id}`,
-      `data:image/png;base64,${imgData.data}`,
+      `public/img/${uid}.png`,
+      Buffer.from(imgData.data, 'base64'),
     );
-
-    return userInfo.data.id;
   }
 
-  issueToken(payload: TokenPayloadDto) {
+  issueToken(payload: JwtPayloadDto) {
     return jwt.sign(payload, jwtSecret);
-  }
-
-  validateQrCode() {
-    const payload = {
-      qr: true,
-    };
-    return jwt.sign(payload, jwtSecret);
-  }
-
-  getIdInJwt(token: string): number {
-    const payload: any = jwt.decode(token); // FIXME 나중에 고침 - type
-    return payload.id;
   }
 
   private async toDataUrl(otpauth: any) {
@@ -91,38 +82,46 @@ export class LoginService {
   }
 
   async createQrCode(uid: number) {
-    const { secret } = await this.getUserInfo(uid);
+    const { qrSecret } = await this.database.findOneUser(uid);
     const otpauth = authenticator.keyuri(
       uid.toString(),
       'transcendence',
-      secret,
+      qrSecret,
     );
-
-    const res = this.toDataUrl(otpauth);
-    return res;
+    return this.toDataUrl(otpauth);
   }
 
-  async getUserInfo(uid: number): Promise<UserInfo> {
-    let user: UserEntity | UserDto = await this.databaseService.findOneUser(
-      uid,
-    );
+  async getTokenInfo(intraInfo: IntraInfoDto): Promise<JwtPayloadDto> {
+    const { uid } = intraInfo;
+    let user: UserEntity | UserDto = await this.database.findOneUser(uid);
     if (user == null) {
       const newUser: UserDto = {
-        uid: uid,
+        uid,
         displayName: Math.random().toString(36).substring(2, 11),
-        imgUri: `http://localhost:4243/users/img/${uid}`,
+        imgUri: `http://localhost:4243/img/${uid}.png`,
         rating: 42,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
       };
-      this.databaseService.saveOneUser(newUser);
+      this.database.saveOneUser(newUser);
+      await this.downloadProfileImg(intraInfo);
       user = newUser;
     }
 
     return {
       id: uid,
-      secret: user.qrSecret,
-      mfaNeed: user.mfaNeed,
+      isRequiredTFA: user.mfaNeed,
     };
+  }
+
+  async validateOtp(payload: JwtPayloadDto, pin: string) {
+    const user = await this.database.findOneUser(payload.id);
+
+    if (pin !== authenticator.generate(user.qrSecret)) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    payload.isRequiredTFA = false;
+    return { token: this.issueToken(payload) };
   }
 }

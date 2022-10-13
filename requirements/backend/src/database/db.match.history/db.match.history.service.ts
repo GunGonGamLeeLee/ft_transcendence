@@ -124,4 +124,9 @@ export class DbMatchHistoryService {
   async deleteAll() {
     return await this.matchHistoryRepo.clear();
   }
+
+  async deleteUserAll(uid: number) {
+    await this.matchHistoryRepo.delete({ winnerUid: uid });
+    await this.matchHistoryRepo.delete({ loserUid: uid });
+  }
 }

@@ -144,7 +144,7 @@ export class DbUserInChannelService {
     return await this.userInChannelRepo.delete({ uid, chid });
   }
 
-  async deleteAllOfUser(uid: number) {
+  async deleteUserInChannelAll(uid: number) {
     return await this.userInChannelRepo.delete({ uid });
   }
 

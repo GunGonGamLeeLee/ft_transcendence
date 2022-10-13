@@ -3,6 +3,7 @@ DOCKER_COMPOSE						= docker-compose
 DEV_DOCKER_COMPOSE_FILE		= ./.dev/docker-compose.yaml
 DEV_DOCKER_COMPOSE_FLAGS	= -f $(DEV_DOCKER_COMPOSE_FILE)
 DEV_DATABASE_DIR = ./database
+DEV_IMG_DIR = ./public/img
 
 PROD_DOCKER_COMPOSE_FILE	= ./.prod/docker-compose.yaml
 
@@ -62,15 +63,19 @@ dev-down:
 
 dev-clean: dev-down
 	@$(RM) $(DEV_DATABASE_DIR)/*
+	@$(RM) $(DEV_IMG_DIR)/*
 
 dev-fclean: dev-down
 	@$(MAKE) dev-clean
 	@docker rmi $(shell docker images -aq)
 
-dev-dependencies: $(DEV_DATABASE_DIR)
+dev-dependencies: $(DEV_DATABASE_DIR) $(DEV_IMG_DIR)
 	@echo "Checking dependencies is done"
 
 $(DEV_DATABASE_DIR):
+	@$(MKDIR) $@
+
+$(DEV_IMG_DIR):
 	@$(MKDIR) $@
 
 # prod operations	

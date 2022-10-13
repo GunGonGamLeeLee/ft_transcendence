@@ -44,7 +44,6 @@ function UserSetting() {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      console.log(reader.result);
       if (typeof reader.result === 'string') setPreviewImg(reader.result);
       else setPreviewImg(userProfile.imgUri);
     };

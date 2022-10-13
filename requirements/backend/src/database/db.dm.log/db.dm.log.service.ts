@@ -69,4 +69,9 @@ export class DbDmLogService {
       throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async deleteUserAll(uid: number) {
+    await this.dmLogRepo.delete({ fromUser: { uid: Equal(uid) } });
+    await this.dmLogRepo.delete({ toUser: { uid: Equal(uid) } });
+  }
 }

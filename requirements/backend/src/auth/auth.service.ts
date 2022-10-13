@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { TokenPayloadDto } from 'src/login/token.payload.dto';
+import { JwtPayloadDto } from 'src/login/jwt.payload.dto';
 
 dotenv.config({
   path: '/backend.env',
@@ -15,11 +15,11 @@ export class AuthService {
     // console.log(jwtSecret);
     // console.log(jwtString);
     try {
-      const payload: TokenPayloadDto = jwt.verify(jwtString, jwtSecret) as (
+      const payload: JwtPayloadDto = jwt.verify(jwtString, jwtSecret) as (
         | jwt.JwtPayload
         | string
       ) &
-        TokenPayloadDto;
+        JwtPayloadDto;
       return payload;
     } catch (e) {
       throw new UnauthorizedException();

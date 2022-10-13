@@ -63,6 +63,7 @@ export class DbFriendListService {
   }
 
   async deleteAll(uid: number) {
-    return await this.firendListRepo.delete({ fromUid: uid });
+    await this.firendListRepo.delete({ fromUid: uid });
+    await this.firendListRepo.delete({ toUid: uid });
   }
 }

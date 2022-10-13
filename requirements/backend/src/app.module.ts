@@ -13,6 +13,8 @@ import { UserInChannelEntity } from './database/entity/entity.user.in.channel';
 import { DmLogEntity } from './database/entity/entity.dm.log';
 import { UsersModule } from './users/users.module';
 import { MatchHistoryEntity } from './database/entity/entity.matchhistory.list';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 dotenv.config({
   path: '/backend.env',
@@ -43,6 +45,9 @@ const dbOptions: TypeOrmModuleOptions = {
     DatabaseModule,
     TypeOrmModule.forRoot(dbOptions),
     UsersModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
