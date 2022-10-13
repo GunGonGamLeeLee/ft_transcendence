@@ -14,6 +14,7 @@ import { DmLogEntity } from './database/entity/entity.dm.log';
 import { UsersModule } from './users/users.module';
 import { MatchHistoryEntity } from './database/entity/entity.matchhistory.list';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ChatGateway } from './chat/chat.gateway';
 import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
 
@@ -52,6 +53,6 @@ const dbOptions: TypeOrmModuleOptions = {
     DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule {}

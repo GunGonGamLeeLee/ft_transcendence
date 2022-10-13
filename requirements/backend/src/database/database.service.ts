@@ -124,6 +124,10 @@ export class DatabaseService {
     );
   }
 
+  async listAdminInChannel(chid: number) {
+    return await this.dbUserInChannelService.findAdminInChannel(chid);
+  }
+
   async listDmOfUser(user1: number, user2: number) {
     if (user1 === user2)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.BAD_REQUEST);
@@ -292,6 +296,10 @@ export class DatabaseService {
     return await this.dbUserService.findOneProfile(uid);
   }
 
+  async findUserByName(nickname: string) {
+    return await this.dbUserService.findUserByName(nickname);
+  }
+
   async findOneChannel(chid: number) {
     return await this.dbChannelService.findOne(chid);
   }
@@ -364,6 +372,11 @@ export class DatabaseService {
       chid,
       'you can`t ban user in channel.',
     );
+
+    // const banUsers: Promise<UserInChannelEntity[]> = this.listBanUserInChannelWithUserInfo(chid);
+    // const user = this.dbUserInChannelService.findOne(targetUid, chid);
+    // if ((await banUsers).find(user)) throw new HttpException(`already ban`, HttpStatus.FORBIDDEN);
+
     return await this.dbUserInChannelService.banOne(targetUid, chid);
   }
 
@@ -398,21 +411,28 @@ export class DatabaseService {
     myUid: number,
     targetUid: number,
     chid: number,
-    role: UserRoleInChannel,
+    roleTo: UserRoleInChannel,
   ) {
     await this.checkPermissionInChannel(
       myUid,
       chid,
-      'you can`t change userRole in channel.',
+      `you can't change userRole in channel.`,
     );
-    if (role == UserRoleInChannel.OWNER)
-      throw new HttpException('권한이 없습니다.', HttpStatus.FORBIDDEN);
-    if (role > UserRoleInChannel.USER || role < UserRoleInChannel.OWNER)
+    if (roleTo === UserRoleInChannel.OWNER)
+      throw new HttpException(
+        'OWNER로 변경할 수 없습니다.',
+        HttpStatus.FORBIDDEN,
+      );
+    if (roleTo > UserRoleInChannel.USER || roleTo < UserRoleInChannel.OWNER)
       throw new HttpException(
         '구현되지 않았습니다.',
         HttpStatus.NOT_IMPLEMENTED,
       );
-    return await this.dbUserInChannelService.changeRole(targetUid, chid, role);
+    return await this.dbUserInChannelService.changeRole(
+      targetUid,
+      chid,
+      roleTo,
+    );
   }
 
   // NOTE delete
@@ -469,7 +489,7 @@ export class DatabaseService {
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
     if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
-    if (uic.userRole == UserRoleInChannel.USER)
+    if (uic.userRole === UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
 }
