@@ -32,7 +32,19 @@ export function Follow() {
 
     if (response.status === 201) {
       const newUser: UserDataType = await response.json();
-      setFriendList([...friendList, newUser]);
+      setFriendList(
+        [...friendList, newUser].sort((first, second) => {
+          if (first.uid < second.uid) {
+            return -1;
+          }
+
+          if (first.uid > second.uid) {
+            return 1;
+          }
+
+          return 0;
+        }),
+      );
       return;
     }
 
