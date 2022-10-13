@@ -22,6 +22,7 @@
   width: 960px;
   height: 540px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0px 30px;

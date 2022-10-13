@@ -11,13 +11,13 @@ interface ChatType {
 
 const array1: Array<ChatType> = [
   {
-    uid: 2,
+    uid: 112230,
     displayName: 'jeongble',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hi',
   },
   {
-    uid: 2,
+    uid: 112230,
     displayName: 'jeongble',
     imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
     msg: 'hi',

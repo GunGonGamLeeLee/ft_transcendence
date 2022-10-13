@@ -16,7 +16,7 @@
   box-sizing: border-box;
   font-size: 20px;
   border-radius: 0px;
-  border: 2px solid rgb(255, 139, 139);
+  border: 2px solid var(--color-2);
   border-top: 0px;
 }
 
@@ -24,7 +24,7 @@
   cursor: pointer;
   width: 120px;
   height: 50px;
-  background-color: rgb(255, 139, 139);
+  background-color: var(--color-2);
   box-sizing: border-box;
   font-size: 25px;
   color: white;

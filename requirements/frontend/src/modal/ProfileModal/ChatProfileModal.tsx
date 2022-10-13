@@ -6,13 +6,15 @@ import { currRoleState } from '../../atoms/currRoleState';
 import { friendListState } from '../../atoms/friendListState';
 import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
 import { userProfileState } from '../../atoms/userProfileState';
-import { Follow } from '../buttons/Follow';
-import { Unfollow } from '../buttons/Unfollow';
-import { Block } from '../buttons/Block';
-import { Unblock } from '../buttons/Unblock';
+import { Follow } from './buttons/Follow';
+import { Unfollow } from './buttons/Unfollow';
+import { Block } from './buttons/Block';
+import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
-import styles from './ChatProfileModal.module.css';
+import styles from './ProfileModal.module.css';
 import modalstyles from '../Modal.module.css';
+import { InviteGame } from './buttons/InviteGame';
+import { DM } from './buttons/DirectMessage';
 
 export function ChatProfileModal() {
   const chatProfileModal = useRecoilValue(chatProfileModalState);
@@ -54,6 +56,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
           <div className={styles.profile__header}>
+            <span className={styles.profile__headertitle}>PROFILE</span>
             <RedCross onClick={onClick} />
           </div>
           <div className={styles.profile__display}>
@@ -93,8 +96,8 @@ function ChatProfile({ user }: { user: ChatUserType }) {
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
               <div className={styles.profile__buttons}>
-                <ProfileButton text='대전' />
-                <ProfileButton text='DM' />
+                <InviteGame />
+                <DM />
               </div>
             </>
           )}
@@ -105,5 +108,5 @@ function ChatProfile({ user }: { user: ChatUserType }) {
 }
 
 function ProfileButton({ text }: { text: string }) {
-  return <button className={styles.profile__button}>{text}</button>;
+  return <button className={styles.buttons}>{text}</button>;
 }

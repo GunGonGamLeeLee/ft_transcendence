@@ -67,6 +67,8 @@ export function ChannelLobby() {
       <div className={styles.page}>
         <div className={pagestyles.page__header}>
           <BackButton to='/lobby' />
+        </div>
+        <div className={pagestyles.page__main}>
           <div className={styles.channel__filters}>
             <div className={styles.channel__refresh}>
               <abbr title='새로고침'>
@@ -94,8 +96,6 @@ export function ChannelLobby() {
               isActive={filter === 'dm'}
             />
           </div>
-        </div>
-        <div className={pagestyles.page__main}>
           <RoomList roomList={allRoomList} isActive={filter === 'all'} />
           <RoomList roomList={joinedRoomList} isActive={filter === 'joined'} />
           <RoomList roomList={dmRoomList} isActive={filter === 'dm'} />

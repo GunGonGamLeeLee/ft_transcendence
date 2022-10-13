@@ -1,81 +1,73 @@
-.li__li {
-  cursor: pointer;
+.chat_info {
+  cursor: default;
   display: flex;
   align-items: center;
-  width: 890px;
+  width: 900px;
   height: 60px;
-  padding: 15px 0px;
+  padding-right: 6px;
   box-sizing: border-box;
-  color: var(--color-2);
-}
-
-.li__li:hover {
-  top: 5px;
-  background-color: var(--color-3);
+  border: 2px solid var(--color-6);
+  background-color: var(--color-2);
   color: var(--color-6);
 }
 
-.li__id {
+.chat_info__id {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 80px;
   height: 50px;
-  padding-right: 5px;
   box-sizing: border-box;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 500;
-  color: inherit;
 }
 
-.li__title {
+.chat_info__mode {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  /* justify-content: flex-end; */
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 50px;
+  box-sizing: border-box;
+  border-left: var(--rindex-border);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.chat_info__icon {
+  width: 30px;
+  height: 30px;
+}
+
+.chat_info__title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   width: 500px;
   height: 50px;
-  padding: 0px 5px;
   box-sizing: border-box;
-  border-left: 2px solid var(--color-2);
+  border-left: var(--rindex-border);
   font-size: 20px;
   font-weight: 500;
-  color: inherit;
 }
 
-.li__owner {
+.chat_info__owner {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 150px;
   height: 50px;
-  padding: 0px 5px;
   box-sizing: border-box;
-  border-left: 2px solid var(--color-2);
+  border-left: var(--rindex-border);
   font-size: 20px;
   font-weight: 500;
-  color: inherit;
 }
 
-.li__count {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 50px;
-  padding: 0px 5px;
-  box-sizing: border-box;
-  border-left: 2px solid var(--color-2);
-  font-size: 20px;
-  font-weight: 500;
-  color: inherit;
-}
-
-.li__mode {
+.chat_info__count {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -83,12 +75,7 @@
   width: 80px;
   height: 50px;
   box-sizing: border-box;
-  border-left: 2px solid var(--color-2);
+  border-left: var(--rindex-border);
   font-size: 20px;
   font-weight: 500;
-}
-
-.li__icon {
-  width: 30px;
-  height: 30px;
 }

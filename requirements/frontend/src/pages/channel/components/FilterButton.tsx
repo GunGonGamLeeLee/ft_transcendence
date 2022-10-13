@@ -13,18 +13,17 @@ export function FilterButton({
 }) {
   const setFilter = useSetRecoilState(filterState);
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
     setFilter(type);
   };
 
   return (
-    <button
+    <div
       className={`${styles.filter} ${isActive ? '' : styles.filter__inactive}`}
       onClick={handleButtonClick}
     >
       {text}
-    </button>
+    </div>
   );
 }

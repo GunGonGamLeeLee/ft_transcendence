@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { authState } from '../../atoms/authState';
-import { friendListState } from '../../atoms/friendListState';
-import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
-import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
-import { UserDataType } from '../../atoms/userDataType';
-import styles from '../UserProfileModal/UserProfileModal.module.css';
+import { authState } from '../../../atoms/authState';
+import { friendListState } from '../../../atoms/friendListState';
+import { chatProfileModalState } from '../../../atoms/modals/chatProfileModalState';
+import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
+import { UserDataType } from '../../../atoms/userDataType';
+import styles from './Buttons.module.css';
 
 export function Follow() {
   const { token } = useRecoilValue(authState);
@@ -58,8 +58,8 @@ export function Follow() {
   };
 
   return (
-    <button className={styles.profile__button} onClick={handleFollowClick}>
-      Follow
+    <button className={styles.buttons} onClick={handleFollowClick}>
+      FOLLOW
     </button>
   );
 }

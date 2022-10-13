@@ -1,14 +1,17 @@
 .filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   width: 150px;
   height: 50px;
   font-size: 20px;
   font-weight: 600;
-  border: 0px solid yellow;
-  background-color: white;
-  border: 2px solid green;
-  border-bottom: 0px;
   box-sizing: border-box;
+  background-color: var(--color-2);
+  border: 2px solid var(--color-6);
+  border-bottom: 0px;
+  color: var(--color-6);
 }
 
 .filter:hover {
@@ -17,5 +20,7 @@
 
 .filter__inactive {
   font-weight: 400;
-  background-color: rgb(168, 168, 168);
+  background-color: var(--color-5);
+  border: 2px solid var(--color-2);
+  color: var(--color-2);
 }

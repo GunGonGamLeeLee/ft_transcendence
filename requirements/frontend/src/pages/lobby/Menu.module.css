@@ -17,9 +17,9 @@
   align-items: center;
   width: 600px;
   height: 200px;
-  background-color: rgb(255, 159, 159);
   font-size: 100px;
-  color: white;
+  background-color: var(--color-2);
+  color: var(--color-6);
 }
 
 .menu__button:visited {

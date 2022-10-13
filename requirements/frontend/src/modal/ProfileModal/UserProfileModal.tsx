@@ -4,21 +4,24 @@ import { UserDataType } from '../../atoms/userDataType';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 import { userProfileState } from '../../atoms/userProfileState';
 import { friendListState } from '../../atoms/friendListState';
-import { Follow } from '../buttons/Follow';
-import { Unfollow } from '../buttons/Unfollow';
+import { Follow } from './buttons/Follow';
+import { Unfollow } from './buttons/Unfollow';
 import { blockedListState } from '../../atoms/blockedListState';
-import { Block } from '../buttons/Block';
-import styles from './UserProfileModal.module.css';
+import { Block } from './buttons/Block';
+import styles from './ProfileModal.module.css';
 import modalstyles from '../Modal.module.css';
-import { Unblock } from '../buttons/Unblock';
+import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState } from '../../atoms/currRoomState';
-import { MatchHistoryList } from '../MatchHistoryList';
+import { MatchHistoryList } from './MatchHistoryList';
 import { authState } from '../../atoms/authState';
 import {
   matchHistoryListState,
   requestMatchHistory,
 } from '../../atoms/modals/matchHistoryListState';
+import { InviteGame } from './buttons/InviteGame';
+import { DM } from './buttons/DirectMessage';
+import { InviteRoom } from './buttons/InviteRoom';
 
 export function UserProfileModal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -75,6 +78,7 @@ function UserProfile({ user }: { user: UserDataType }) {
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
           <div className={styles.profile__header}>
+            <span className={styles.profile__headertitle}>PROFILE</span>
             <RedCross onClick={onClick} />
           </div>
           <div className={styles.profile__display}>
@@ -93,7 +97,7 @@ function UserProfile({ user }: { user: UserDataType }) {
             <>
               {currRoom && currRoom.ownerId === userProfile.uid ? (
                 <div className={styles.profile__buttons}>
-                  <ProfileButton text='초대' />
+                  <InviteRoom />
                 </div>
               ) : null}
               <div className={styles.profile__buttons}>
@@ -101,8 +105,8 @@ function UserProfile({ user }: { user: UserDataType }) {
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
               <div className={styles.profile__buttons}>
-                <ProfileButton text='대전' />
-                <ProfileButton text='DM' />
+                <InviteGame />
+                <DM />
               </div>
             </>
           )}
@@ -113,5 +117,5 @@ function UserProfile({ user }: { user: UserDataType }) {
 }
 
 function ProfileButton({ text }: { text: string }) {
-  return <button className={styles.profile__button}>{text}</button>;
+  return <button className={styles.buttons}>{text}</button>;
 }
