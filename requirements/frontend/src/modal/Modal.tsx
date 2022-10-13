@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Outlet } from 'react-router-dom';
-import { UserProfileModal } from './UserProfileModal/UserProfileModal';
-import { ChatProfileModal } from './ChatProfileModal/ChatProfileModal';
+import { UserProfileModal } from './ProfileModal/UserProfileModal';
+import { ChatProfileModal } from './ProfileModal/ChatProfileModal';
 import { ChatInviteModal } from './InviteModal/ChatInviteModal';
 import { GameInviteModal } from './InviteModal/GameInviteModal';
 import { UserSettingModal } from './UserSettingModal/UserSettingModal';

@@ -20,8 +20,9 @@
 
 .page__main {
   width: 960px;
-  height: 600px;
+  height: 540px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0px 30px;
@@ -33,7 +34,7 @@
   justify-content: flex-end;
   align-items: center;
   width: 960px;
-  height: 60px;
+  height: 120px;
   padding: 0px 30px;
   box-sizing: border-box;
 }

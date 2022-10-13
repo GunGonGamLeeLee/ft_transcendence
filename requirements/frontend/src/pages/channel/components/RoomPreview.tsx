@@ -25,9 +25,6 @@ export function RoomPreview({ room }: { room: RoomType }) {
   return (
     <li className={styles.li__li} onClick={onClick}>
       <div className={styles.li__id}>{room.roomId}</div>
-      <div className={`${styles.li__title}`}>{room.title}</div>
-      <div className={`${styles.li__owner}`}>{room.ownerName}</div>
-      <div className={`${styles.li__count}`}>{room.userCount}명</div>
       <div className={`${styles.li__mode}`}>
         <img
           src={
@@ -40,6 +37,9 @@ export function RoomPreview({ room }: { room: RoomType }) {
           className={styles.li__icon}
         />
       </div>
+      <div className={`${styles.li__title}`}>{room.title}</div>
+      <div className={`${styles.li__count}`}>{room.userCount}</div>
+      <div className={`${styles.li__owner}`}>{room.ownerName}</div>
     </li>
   );
 }

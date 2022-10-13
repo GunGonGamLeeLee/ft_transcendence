@@ -54,7 +54,7 @@ export const handlers = [
             {
               roomId: 1,
               title: 'example chat room title',
-              ownerId: 99945,
+              ownerId: 112230,
               ownerName: 'jeongble',
               userCount: 10,
               lock: true,
@@ -90,7 +90,7 @@ export const handlers = [
             {
               roomId: 1,
               title: 'example chat room title',
-              ownerId: 99945,
+              ownerId: 112230,
               ownerName: 'jeongble',
               userCount: 10,
               lock: true,
@@ -126,7 +126,7 @@ export const handlers = [
             {
               roomId: 1,
               title: 'example chat room title',
-              ownerId: 99945,
+              ownerId: 112230,
               ownerName: 'jeongble',
               userCount: 10,
               lock: true,

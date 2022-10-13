@@ -8,6 +8,7 @@ import { setRoomModalState } from '../../../atoms/modals/setRoomModalState';
 import { userProfileState } from '../../../atoms/userProfileState';
 import { currRoomState } from '../../../atoms/currRoomState';
 import { BackButton } from '../../../components/BackButton';
+import { ChatInfo } from './ChatInfo';
 
 function SetRoomButton() {
   const setSetRoomModal = useSetRecoilState(setRoomModalState);
@@ -60,6 +61,7 @@ export function CharMain() {
           </div>
         </div>
         <div className={pagestyles.page__main}>
+          <ChatInfo />
           <Chat />
         </div>
         <div className={pagestyles.page__footer}>

@@ -1,0 +1,13 @@
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 145px;
+  height: 40px;
+  font-size: 20px;
+  padding: 5px 0px;
+  border-radius: 0px;
+  background-color: var(--color-2);
+  color: var(--color-5);
+}

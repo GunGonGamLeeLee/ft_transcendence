@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
-import { matchHistoryListState } from '../atoms/modals/matchHistoryListState';
-import { userProfileState } from '../atoms/userProfileState';
-import styles from '../modal/UserProfileModal/UserProfileModal.module.css';
+import { matchHistoryListState } from '../../atoms/modals/matchHistoryListState';
+import { userProfileState } from '../../atoms/userProfileState';
+import styles from './ProfileModal.module.css';
 
 export function MatchHistoryList({ myUid }: { myUid: number }) {
   const matchHistoryList = useRecoilValue(matchHistoryListState);

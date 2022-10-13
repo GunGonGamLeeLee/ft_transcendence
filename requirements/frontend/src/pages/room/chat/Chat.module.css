@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 900px;
-  height: 600px;
+  height: 480px;
   padding: 0px 10px 10px 10px;
   border: 2px solid var(--color-2);
   box-sizing: border-box;
@@ -17,7 +17,7 @@
 
 .chatbox::-webkit-scrollbar-thumb {
   height: 30%; /* 스크롤바의 길이 */
-  background: var(--color-2); /* 스크롤바의 색상 */
+  background: var(--color-7); /* 스크롤바의 색상 */
   border-radius: 10px;
 }
 
@@ -63,9 +63,9 @@
   word-wrap: normal;
   text-align: left;
   width: fit-content;
-  max-width: 700px;
+  max-width: 600px;
   font-size: 20px;
-  padding: 5px;
+  padding: 10px;
   margin: 10px 25px 0px 25px;
   box-sizing: border-box;
   /* border-radius: 5px; */

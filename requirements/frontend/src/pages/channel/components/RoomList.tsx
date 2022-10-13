@@ -13,10 +13,10 @@ export function RoomList({
     <div className={`${isActive ? '' : styles.channel__inactive}`}>
       <div className={styles.room_index}>
         <div className={styles.room_index__id}>ID</div>
-        <div className={`${styles.room_index__title}`}>TITLE</div>
-        <div className={`${styles.room_index__owner}`}>OWNER</div>
-        <div className={`${styles.room_index__count}`}>COUNT</div>
         <div className={`${styles.room_index__mode}`}>MODE</div>
+        <div className={`${styles.room_index__title}`}>TITLE</div>
+        <div className={`${styles.room_index__count}`}>COUNT</div>
+        <div className={`${styles.room_index__owner}`}>OWNER</div>
       </div>
       <ol className={`${styles.channel__list} `}>
         {roomList.map((room, index) => {

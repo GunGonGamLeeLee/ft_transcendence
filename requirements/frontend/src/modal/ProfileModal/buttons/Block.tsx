@@ -1,11 +1,11 @@
 import React, * as Reaact from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { authState } from '../../atoms/authState';
-import { blockedListState } from '../../atoms/blockedListState';
-import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
-import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
-import { UserDataType } from '../../atoms/userDataType';
-import styles from '../UserProfileModal/UserProfileModal.module.css';
+import { authState } from '../../../atoms/authState';
+import { blockedListState } from '../../../atoms/blockedListState';
+import { chatProfileModalState } from '../../../atoms/modals/chatProfileModalState';
+import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
+import { UserDataType } from '../../../atoms/userDataType';
+import styles from './Buttons.module.css';
 
 export function Block() {
   const { token } = useRecoilValue(authState);
@@ -45,8 +45,8 @@ export function Block() {
   };
 
   return (
-    <button className={styles.profile__button} onClick={handleBlockClick}>
-      Block
+    <button className={styles.buttons} onClick={handleBlockClick}>
+      BLOCK
     </button>
   );
 }

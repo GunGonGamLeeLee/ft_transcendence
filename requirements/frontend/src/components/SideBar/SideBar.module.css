@@ -113,7 +113,7 @@
 
 .sidebar__ul::-webkit-scrollbar-thumb {
   height: 30%; /* 스크롤바의 길이 */
-  background: var(--color-2); /* 스크롤바의 색상 */
+  background: var(--color-7); /* 스크롤바의 색상 */
   border-radius: 10px;
 }
 
