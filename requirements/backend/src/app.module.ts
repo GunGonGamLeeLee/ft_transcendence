@@ -15,6 +15,7 @@ import { UsersModule } from './users/users.module';
 import { MatchHistoryEntity } from './database/entity/entity.matchhistory.list';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ChatModule } from './chat/chat.module';
 
 dotenv.config({
   path: '/backend.env',
@@ -41,13 +42,14 @@ const dbOptions: TypeOrmModuleOptions = {
 
 @Module({
   imports: [
-    LoginModule,
-    DatabaseModule,
-    TypeOrmModule.forRoot(dbOptions),
+    ChatModule,
     UsersModule,
+    LoginModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    TypeOrmModule.forRoot(dbOptions),
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

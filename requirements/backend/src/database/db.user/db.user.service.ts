@@ -70,13 +70,14 @@ export class DbUserService {
     });
   }
 
-  async saveOne(userDto: UserDto | UserEntity): Promise<void> {
+  async saveOne(userDto: UserDto | UserEntity): Promise<UserEntity> {
     const user = this.userRepo.create({
       ...userDto,
       status: UserStatus.OFFLINE,
+      gameRoom: '',
     });
     try {
-      await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
+      return await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
     } catch (err) {
       throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
     }

@@ -12,7 +12,7 @@ import { DmLogDto } from './dto/dm.log.dto';
 import { MatchHistoryDto } from './dto/match.history.dto';
 import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
-import { ChannelEntity } from './entity/entity.channel';
+import { ChannelEntity, ChannelMode } from './entity/entity.channel';
 import { UserEntity, UserStatus } from './entity/entity.user';
 import { UserRoleInChannel } from './entity/entity.user.in.channel';
 
@@ -48,6 +48,13 @@ export class DatabaseService {
     return await this.dbChannelService.findAll();
   }
 
+  async listAllChannelPubPro() {
+    return await this.dbChannelService.findAllPubPro();
+  }
+  // async listChannelOfUserDm(uid) {
+  //   return await this.dbChannelService.findChannelOfUserDm(uid);
+  // }
+
   async listAllUserInChannel() {
     return await this.dbUserInChannelService.findAll();
   }
@@ -58,6 +65,12 @@ export class DatabaseService {
 
   async listAllMatchHistory() {
     return await this.dbMatchHistoryService.findAll();
+  }
+
+  async listUserDmChannel(uid: number) {
+    return await this.dbUserInChannelService.findDmChannelsOfUserWithChannelInfo(
+      uid,
+    );
   }
 
   async listUserFriend(uid: number) {
@@ -78,6 +91,10 @@ export class DatabaseService {
 
   async listUserInChannel(chid: number) {
     return await this.dbUserInChannelService.findUsersInChannel(chid);
+  }
+
+  async CountUserInChannel(chid: number) {
+    return await this.dbUserInChannelService.CountUsersInChannel(chid);
   }
 
   async listUserInChannelWithUserInfo(chid: number) {
@@ -151,15 +168,26 @@ export class DatabaseService {
     return await this.dbMatchHistoryService.findAllListOfUserWithInfo(uid);
   }
 
-  async addUser(userDto: UserDto) {
-    return await this.dbUserService.saveOne(userDto);
-  }
-
   async updateUser(uid: number, userDto: ProfileUpdateDto) {
     return await this.dbUserService.updateUser(uid, userDto);
   }
 
   // NOTE add
+
+  async addUser(userDto: UserDto): Promise<void> {
+    // TODO transaction
+    const user = await this.dbUserService.saveOne(userDto);
+    await this.dbChannelService.saveOne(
+      {
+        chName: `dm${user.uid}`,
+        chOwnerId: user.uid,
+        mode: ChannelMode.dm,
+        password: '',
+      },
+      user,
+    );
+  }
+
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
@@ -268,13 +296,12 @@ export class DatabaseService {
     return await this.dbChannelService.findOne(chid);
   }
 
-  async isExistedName(displayName: string) {
-    return await this.dbUserService.isExistedName(displayName);
+  async findOneChannelByOwnerId(chOwnerId: number) {
+    return await this.dbChannelService.findOneByOwnerId(chOwnerId);
   }
 
-  // NOTE save
-  async saveOneUser(userDto: UserDto): Promise<void> {
-    await await this.dbUserService.saveOne(userDto);
+  async isExistedName(displayName: string) {
+    return await this.dbUserService.isExistedName(displayName);
   }
 
   // NOTE update
@@ -304,13 +331,13 @@ export class DatabaseService {
     return await this.dbChannelService.updateChName(chid, chName);
   }
 
-  async updateChDisplay(uid: number, chid: number, display: boolean) {
+  async updateChDisplay(uid: number, chid: number, mode: ChannelMode) {
     await this.checkPermissionInChannel(
       uid,
       chid,
       'you can`t edit channel display state.',
     );
-    return await this.dbChannelService.updateDisplay(chid, display);
+    return await this.dbChannelService.updateDisplay(chid, mode);
   }
 
   async updateChRemovePassword(uid: number, chid: number) {

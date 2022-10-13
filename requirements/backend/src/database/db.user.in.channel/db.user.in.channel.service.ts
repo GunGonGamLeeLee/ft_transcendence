@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserInChannelDto } from '../dto/user.in.channel.dto';
-import { ChannelEntity } from '../entity/entity.channel';
+import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
 import {
   UserInChannelEntity,
@@ -26,6 +26,10 @@ export class DbUserInChannelService {
 
   async findUsersInChannel(chid: number) {
     return await this.userInChannelRepo.findBy({ chid });
+  }
+
+  async CountUsersInChannel(chid: number) {
+    return (await this.userInChannelRepo.findBy({ chid })).length;
   }
 
   async findUsersInChannelWithUserInfo(chid: number) {
@@ -80,19 +84,67 @@ export class DbUserInChannelService {
   async findChannelsOfUserWithChannelInfo(uid: number) {
     return await this.userInChannelRepo.find({
       select: {
-        index: true,
         channel: {
+          chid: true,
+          chOwner: {
+            uid: true,
+            displayName: true,
+          },
           chName: true,
-          display: true,
-          isLocked: true,
+          mode: true,
         },
       },
       relations: {
-        channel: true,
+        channel: {
+          chOwner: true,
+        },
       },
       where: { uid },
     });
   }
+
+  async findDmChannelsOfUserWithChannelInfo(uid: number) {
+    return await this.userInChannelRepo.find({
+      select: {
+        channel: {
+          chid: true,
+          chOwner: {
+            uid: true,
+            displayName: true,
+          },
+          chName: true,
+          mode: true,
+        },
+      },
+      relations: {
+        channel: {
+          chOwner: true,
+        },
+      },
+      where: {
+        uid,
+        channel: {
+          mode: ChannelMode.dm,
+        },
+      },
+    });
+  }
+
+  // async findChannelsOfUserDm(uid: number) {
+  //   return await this.userInChannelRepo.find({
+  //     select: {
+  //       channel: {
+  //         chOwner: {
+  //           uid: true,
+  //           displayName: true,
+
+  //         }
+  //       }
+  //     },
+  //     relations: { channel: true },
+  //     where: {},
+  //   });
+  // }
 
   async saveOne(
     userInChannel: UserInChannelDto | UserInChannelEntity,

@@ -35,6 +35,9 @@ export class UserEntity {
   @Column()
   status: UserStatus;
 
+  @Column({ nullable: true })
+  gameRoom: string;
+
   @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
   friendList: FriendListEntity[];
 
