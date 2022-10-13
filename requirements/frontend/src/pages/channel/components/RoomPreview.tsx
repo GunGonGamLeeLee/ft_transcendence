@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { currRoomState } from '../../../atoms/currRoomState';
+import { currRoomState, RoomModeType } from '../../../atoms/currRoomState';
 import { RoomType } from '../../../atoms/currRoomState';
 import styles from './RoomPreview.module.css';
 
@@ -14,7 +14,7 @@ export function RoomPreview({ room }: { room: RoomType }) {
 
     setCurrRoom(room);
 
-    if (room.lock) {
+    if (room.mode === RoomModeType.PROTECTED) {
       navigator('/channel/roomChecker');
       return;
     }
@@ -28,9 +28,9 @@ export function RoomPreview({ room }: { room: RoomType }) {
       <div className={`${styles.li__mode}`}>
         <img
           src={
-            room.private
+            room.mode === RoomModeType.PRIVATE
               ? '/private.png'
-              : room.lock
+              : room.mode === RoomModeType.PROTECTED
               ? '/lock.png'
               : '/unlock.png'
           }
@@ -39,7 +39,7 @@ export function RoomPreview({ room }: { room: RoomType }) {
       </div>
       <div className={`${styles.li__title}`}>{room.title}</div>
       <div className={`${styles.li__count}`}>{room.userCount}</div>
-      <div className={`${styles.li__owner}`}>{room.ownerName}</div>
+      <div className={`${styles.li__owner}`}>{room.ownerDisplayName}</div>
     </li>
   );
 }

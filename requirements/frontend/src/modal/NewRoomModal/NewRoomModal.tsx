@@ -8,9 +8,10 @@ import {
 } from '../../atoms/roomListState';
 import styles from './NewRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
-import { RoomType } from '../../atoms/currRoomState';
+import { RoomModeType, RoomType } from '../../atoms/currRoomState';
 import { RedCross } from '../buttons/RedCross';
 import { userProfileState } from '../../atoms/userProfileState';
+import { sortRoomByTitle } from '../../utils/sortRoomByTitle';
 
 export function NewRoomModal() {
   const NewRoomModal = useRecoilValue(newRoomModalState);
@@ -50,23 +51,25 @@ function NewRoom() {
     const roomTitle = title;
     const roomPassword = password;
     const mode = isPrivate
-      ? 'private'
+      ? RoomModeType.PRIVATE
       : password !== null
-      ? 'protected'
-      : 'public';
+      ? RoomModeType.PROTECTED
+      : RoomModeType.PUBLIC;
 
     await requestCreateRoom(roomTitle, mode, roomPassword);
   };
 
   const requestCreateRoom = async (
     roomName: string,
-    mode: string,
+    mode: RoomModeType,
     password: string,
   ) => {
     const room = {
       title: roomName,
       mode,
       password,
+      ownerId: userProfile.uid,
+      ownerDisplayName: userProfile.displayName,
     };
 
     const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/channel`, {
@@ -81,8 +84,8 @@ function NewRoom() {
     if (response.status === 201) {
       const data: RoomType = await response.json();
 
-      setAllRoomList([...allRoomList, data]);
-      setJoinedRoomList([...joinedRoomList, data]);
+      setAllRoomList([...allRoomList, data].sort(sortRoomByTitle));
+      setJoinedRoomList([...joinedRoomList, data].sort(sortRoomByTitle));
       setNewRoomModal(false);
       return;
     }

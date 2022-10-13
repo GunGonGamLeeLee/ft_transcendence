@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { RoomType } from './currRoomState';
+import { DmRoomType, RoomType } from './currRoomState';
 
 export const allRoomListState = atom<RoomType[]>({
   key: 'allRoomList',
@@ -11,7 +11,7 @@ export const joinedRoomListState = atom<RoomType[]>({
   default: [],
 });
 
-export const dmRoomListState = atom<RoomType[]>({
+export const dmRoomListState = atom<DmRoomType[]>({
   key: 'dmRoomList',
   default: [],
 });
