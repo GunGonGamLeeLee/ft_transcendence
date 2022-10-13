@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Equal, Not, Repository } from 'typeorm';
 import { UserInChannelDto } from '../dto/user.in.channel.dto';
 import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
@@ -99,7 +99,12 @@ export class DbUserInChannelService {
           chOwner: true,
         },
       },
-      where: { uid },
+      where: {
+        uid,
+        channel: {
+          mode: Not(Equal(ChannelMode.dm)),
+        },
+      },
     });
   }
 

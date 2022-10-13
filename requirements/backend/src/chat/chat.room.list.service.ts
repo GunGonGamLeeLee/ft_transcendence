@@ -11,6 +11,12 @@ export class ChatRoomType {
   userCount: number;
 }
 
+export interface DmRoomType {
+  roomId: string;
+  userId: number;
+  userDisplayName: string;
+}
+
 @Injectable()
 export class ChatRoomListService {
   constructor(private readonly database: DatabaseService) {}
@@ -23,11 +29,11 @@ export class ChatRoomListService {
     };
   }
 
-  async getDmRoomList(uid: number): Promise<ChatRoomType[]> {
+  async getDmRoomList(uid: number): Promise<DmRoomType[]> {
     const channels = await this.database.listUserDmChannel(uid);
-    const roomList: ChatRoomType[] = [];
+    const roomList: DmRoomType[] = [];
     for (const uic of channels) {
-      const chatRoom = await this.makeChatRoom(uic.channel);
+      const chatRoom = this.makeDmRoom(uic.channel);
       roomList.push(chatRoom);
     }
     return roomList;
@@ -63,6 +69,14 @@ export class ChatRoomListService {
       roomId: 'channel' + channel.chid,
       mode: channel.mode,
       userCount: await this.database.CountUserInChannel(channel.chid),
+    };
+  }
+
+  private makeDmRoom(channel: ChannelEntity): DmRoomType {
+    return {
+      roomId: 'channel' + channel.chid,
+      userId: channel.chOwner.uid,
+      userDisplayName: channel.chOwner.displayName,
     };
   }
 }
