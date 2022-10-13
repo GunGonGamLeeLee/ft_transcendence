@@ -92,3 +92,18 @@
   width: 30px;
   height: 30px;
 }
+
+.li__dm {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 820px;
+  height: 50px;
+  padding: 0px 5px;
+  box-sizing: border-box;
+  border-left: 2px solid var(--color-2);
+  font-size: 20px;
+  font-weight: 500;
+  color: inherit;
+}

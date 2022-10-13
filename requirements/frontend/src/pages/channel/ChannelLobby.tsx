@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
-import { Link } from 'react-router-dom';
 import { FilterButton } from './components/FilterButton';
 import { filterState } from '../../atoms/filterState';
 import { RoomList } from './components/RoomList';
-import { RoomType } from '../../atoms/currRoomState';
+import { DmRoomType, RoomType } from '../../atoms/currRoomState';
 import { newRoomModalState } from '../../atoms/modals/newRoomModalState';
 import {
   allRoomListState,
@@ -15,6 +14,10 @@ import {
 import styles from './ChannelLobby.module.css';
 import pagestyles from '../pages.module.css';
 import { BackButton } from '../../components/BackButton';
+import { DmList } from './components/DmList';
+import { useInterval } from '../../hooks/useInterval';
+import { sortRoomByTitle } from '../../utils/sortRoomByTitle';
+import { sortRoomByUser } from '../../utils/sortRoomByUser';
 
 export function ChannelLobby() {
   const [allRoomList, setAllRoomList] = useRecoilState(allRoomListState);
@@ -47,12 +50,12 @@ export function ChannelLobby() {
 
     if (!response.ok) throw new Error();
 
-    const data: { all: RoomType[]; joined: RoomType[]; dm: RoomType[] } =
+    const data: { all: RoomType[]; joined: RoomType[]; dm: DmRoomType[] } =
       await response.json();
 
-    setAllRoomList(data.all);
-    setJoinedRoomList(data.joined);
-    setDmRoomList(data.dm);
+    setAllRoomList(data.all.sort(sortRoomByTitle));
+    setJoinedRoomList(data.joined.sort(sortRoomByTitle));
+    setDmRoomList(data.dm.sort(sortRoomByUser));
   };
 
   React.useEffect(() => {
@@ -61,6 +64,26 @@ export function ChannelLobby() {
     useSetChatRooms();
     setIsRefresh(false);
   }, [isRefresh]);
+
+  useInterval(async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) throw new Error();
+
+    const data: { all: RoomType[]; joined: RoomType[]; dm: DmRoomType[] } =
+      await response.json();
+
+    setAllRoomList(data.all.sort(sortRoomByTitle));
+    setJoinedRoomList(data.joined.sort(sortRoomByTitle));
+    setDmRoomList(data.dm.sort(sortRoomByUser));
+  }, 5000);
 
   return (
     <>
@@ -98,7 +121,7 @@ export function ChannelLobby() {
           </div>
           <RoomList roomList={allRoomList} isActive={filter === 'all'} />
           <RoomList roomList={joinedRoomList} isActive={filter === 'joined'} />
-          <RoomList roomList={dmRoomList} isActive={filter === 'dm'} />
+          <DmList dmRoomList={dmRoomList} isActive={filter === 'dm'} />
         </div>
         <div className={pagestyles.page__footer}>
           <div className={styles.channel__newdiv}>

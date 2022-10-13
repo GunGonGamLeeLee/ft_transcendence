@@ -29,13 +29,13 @@ export function RoomChecker() {
     if (currRoom === null) throw new Error();
 
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/channel/auth?roomId=${
-        currRoom.roomId
-      }&password=${password}`,
+      `${import.meta.env.VITE_BACKEND_EP}/channel/auth`,
       {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({ roomId: currRoom.roomId, password }),
       },
     );
 
