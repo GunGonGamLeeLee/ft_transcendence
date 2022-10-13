@@ -1,3 +1,4 @@
+import { a } from 'msw/lib/glossary-dc3fd077';
 import { atom, selector } from 'recoil';
 import { authState } from './authState';
 import { UserDataType } from './userDataType';
@@ -27,6 +28,16 @@ const requestFriendList = async (token: string): Promise<UserDataType[]> => {
 
   if (!response.ok) throw new Error();
 
-  const data = await response.json();
-  return data;
+  const data: UserDataType[] = await response.json();
+  return data.sort((first, second) => {
+    if (first.uid < second.uid) {
+      return -1;
+    }
+
+    if (first.uid > second.uid) {
+      return 1;
+    }
+
+    return 0;
+  });
 };
