@@ -97,6 +97,21 @@ export class DbUserInChannelService {
     });
   }
 
+  async findAdminInChannel(chid: number) {
+    return await this.userInChannelRepo.find({
+      select: {
+        role: true,
+        user: {
+          uid: true,
+          displayName: true,
+          imgUri: true,
+        },
+      },
+      relations: { user: true },
+      where: { chid, role: UserRoleInChannel.ADMIN },
+    });
+  }
+
   async findChannelsOfUser(uid: number) {
     return await this.userInChannelRepo.findBy({ uid });
   }
