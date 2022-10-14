@@ -4,25 +4,23 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Namespace } from 'socket.io';
-import { ChatMassageDto } from './chat.massage.dto';
+import { Server } from 'socket.io';
 import { DatabaseService } from 'src/database/database.service';
 import { UserRoleInChannel } from 'src/database/entity/entity.user.in.channel';
+import { ChatMassageDto } from './chat.massage.dto';
 import { ChatDto } from './chat.dto';
 
 @WebSocketGateway({
-  namespace: 'chat',
   cors: {
     origin: ['http://localhost:4242'],
   },
 })
 export class ChatGateway {
   constructor(
-    // private readonly socketService: SocketService,
     private readonly database: DatabaseService,
   ) {}
   @WebSocketServer()
-  chat: Namespace;
+  chat: Server;
 
   afterInit() {}
   handleConnection() {} //소켓 연결 (접속)
@@ -31,13 +29,6 @@ export class ChatGateway {
   //msg, msg: string - send message
   @SubscribeMessage('chatMsg')
   chatHandleChatMessage(@MessageBody() data: ChatDto) {
-    // console.log('data ' + data);
-    // console.log('data.roomName ' + data.roomName);
-    // console.log('data.roomId ' + data.roomId);
-    // console.log('data.myUid ' + data.myUid);
-    // console.log('data.targetUid ' + data.targetUid);
-    // console.log('data.password ' + data.password);
-    // console.log('data.msg ' + data.msg);
     const msg = data.msg;
     const uid = data.myUid;
     this.chat.to(data.roomName).emit('chatMsg', <ChatMassageDto>{ msg, uid });
