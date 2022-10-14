@@ -7,6 +7,7 @@ import { isString } from 'class-validator';
 import { string } from 'joi';
 import { Server, Socket } from 'socket.io';
 import { FriendListEntity } from './database/entity/entity.friend.list';
+import { UserStatus } from './database/entity/entity.user';
 import { DmGateway } from './dm/dm.gateway';
 import { DmService } from './dm/dm.service';
 
@@ -16,7 +17,10 @@ import { DmService } from './dm/dm.service';
   },
 })
 export class AppGateway {
-  constructor(private readonly dmService: DmService) {}
+  constructor(
+    private readonly dmService: DmService,
+    private readonly dmGateway: DmGateway,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -39,18 +43,18 @@ export class AppGateway {
     client.join(`dm${client.data.uid}`);
     console.log(this.server.of('/').adapter.sids); // key로 socket.id, value로 들어가있는 방 정보 확인
 
+    // 친구들의 상태 가져오기
     const friendList = await this.dmService.getFriendList(client.data.uid);
     this.server.to(client.id).emit('dm/status', friendList);
-    console.log(friendList);
 
-    // 친구들에게 현재 상태(online) 보내기 (dm + uid로 보내기)
-    const { uid, displayName, imgUri, rating, status } = user;
-    friendList.forEach((friend) => {
-      this.server
-        .to(`dm${friend.user.uid}`)
-        .emit('dm/status', { uid, displayName, imgUri, rating, status });
-    });
+    // follower에게 현재 상태(online) 보내기 (dm + uid로 보내기)
+    await this.dmGateway.updateUserStatus(client.data.uid, user);
   }
 
-  async handleDisconnect(client: Socket) {}
+  async handleDisconnect(client: Socket) {
+    await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
+    const user = await this.dmService.getUser(client.data.uid);
+    await this.dmGateway.updateUserStatus(client.data.uid, user);
+    console.log(this.server.of('/').adapter.sids);
+  }
 }

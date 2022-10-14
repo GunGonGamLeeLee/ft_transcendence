@@ -38,8 +38,11 @@ export class UserEntity {
   @Column({ nullable: true })
   gameRoom: string;
 
-  @OneToMany(() => FriendListEntity, (friendList) => friendList.user)
+  @OneToMany(() => FriendListEntity, (friendList) => friendList.friend)
   friendList: FriendListEntity[];
+
+  @OneToMany(() => FriendListEntity, (friendList) => friendList.follower)
+  followerList: FriendListEntity[];
 
   @OneToMany(() => BlockListEntity, (blockList) => blockList.user)
   blockList: BlockListEntity[];

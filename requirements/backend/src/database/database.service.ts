@@ -78,6 +78,14 @@ export class DatabaseService {
     return await this.dbFriendListService.findListOfUserWithInfo(uid);
   }
 
+  async listUserFollower(uid: number) {
+    return await this.dbFriendListService.findFollwerOfUser(uid);
+  }
+
+  async listUserFollowerWithInfo(uid: number) {
+    return await this.dbFriendListService.findFollwerOfUserWithInfo(uid);
+  }
+
   async listUserBlock(uid: number) {
     return await this.dbBlockListService.findListOfUser(uid);
   }
