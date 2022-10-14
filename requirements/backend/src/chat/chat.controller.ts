@@ -35,7 +35,7 @@ export class ChatController {
 
   //NOTE - GET
   @ApiOperation({ summary: '방 정보 가져오기' })
-  @Get('roomlist')
+  @Get('channel')
   async roomlist(@MyUid() uid) {
     const ret = await this.chatRoomListService.getRoomList(uid);
     return ret;
@@ -43,7 +43,7 @@ export class ChatController {
 
   @ApiOperation({ summary: '방의 유저 정보 가져오기' })
   @ApiQuery({ name: 'chid' })
-  @Get('roomusers')
+  @Get('channelusers')
   async roomusers(@Query('chid', ParseIntPipe) chid) {
     const ret = await this.chatRoomUsersService.getRoomUsers(chid);
     return ret;
@@ -52,7 +52,7 @@ export class ChatController {
   // NOTE - Post
 
   @ApiOperation({ summary: '채팅방 비밀번호 인증하기' })
-  @Post('roomusers')
+  @Post('pwd')
   async verifyPassword(@Body() body: ChannelPasswordDto) {
     const ret = await this.chatRoomListService.verifyPassword(body);
     if (ret === false) {
@@ -62,7 +62,7 @@ export class ChatController {
   }
 
   @ApiOperation({ summary: '방 생성하기' })
-  @Post('newroom')
+  @Post('channel')
   async newroom(@MyUid() uid, @Body() body: ChannelCreateDto) {
     if (body.mode === ChannelMode.protected && body.password.length !== 4) {
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
