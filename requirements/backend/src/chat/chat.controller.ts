@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
   ParseIntPipe,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { MyUid } from 'src/users/decorator/uid.decorator';
 import { ChatRoomListService } from './chat.room.list.service';
 import { ChatRoomUsersService } from './chat.room.users.service';
+import { ChannelPasswordDto } from './dto/channel.password.dto';
 
 @UseGuards(AuthGuard)
 @ApiTags('Chat')
@@ -35,10 +38,22 @@ export class ChatController {
   }
 
   @ApiOperation({ summary: '방의 유저 정보 가져오기' })
-  @Get('roomusers')
   @ApiQuery({ name: 'chid' })
+  @Get('roomusers')
   async roomusers(@Query('chid', ParseIntPipe) chid) {
     const ret = await this.chatRoomUsersService.getRoomUsers(chid);
+    return ret;
+  }
+
+  // NOTE - Post
+
+  @ApiOperation({ summary: '채팅방 비밀번호 인증하기' })
+  @Post('roomusers')
+  async verifyPassword(@Body() body: ChannelPasswordDto) {
+    const ret = await this.chatRoomListService.verifyPassword(
+      body.chid,
+      body.password,
+    );
     return ret;
   }
 }

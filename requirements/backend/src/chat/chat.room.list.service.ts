@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { ChannelEntity, ChannelMode } from 'src/database/entity/entity.channel';
 
@@ -20,6 +20,12 @@ export interface DmRoomType {
 @Injectable()
 export class ChatRoomListService {
   constructor(private readonly database: DatabaseService) {}
+
+  async verifyPassword(chid: number, password: string) {
+    const channel = await this.database.findOneChannel(chid);
+    if (channel.password != password)
+      throw new HttpException('일치하지 않습니다.', HttpStatus.FORBIDDEN);
+  }
 
   async getRoomList(uid: number) {
     return {
