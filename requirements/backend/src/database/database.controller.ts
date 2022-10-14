@@ -94,6 +94,21 @@ export class DatabaseController {
     return await this.databaseService.listUserFriendWithInfo(header.uid);
   }
 
+  @ApiTags('database/FriendList')
+  @ApiOperation({ summary: '유저의 팔로워 목록 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('list-user-follower')
+  async listUserFollower(@Headers() header) {
+    return await this.databaseService.listUserFollower(header.uid);
+  }
+  @ApiTags('database/FriendList')
+  @ApiOperation({ summary: '유저의 팔로워 목록 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('list-user-follower-with-info')
+  async listUserFollowerWithInfo(@Headers() header) {
+    return await this.databaseService.listUserFollowerWithInfo(header.uid);
+  }
+
   @ApiTags('database/BlockList')
   @ApiOperation({ summary: '유저의 차단 목록 보기' })
   @ApiHeader({ name: 'uid' })

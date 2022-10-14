@@ -13,15 +13,27 @@ export class DmService {
   async validateUser(token: string) {
     try {
       const { id } = this.authService.verify(token);
-      this.database.updateUserStatus(id, UserStatus.ONLINE);
-      return { user: await this.database.findOneUser(id) };
+      await this.updateUserStatus(id, UserStatus.ONLINE);
+      return { user: await this.getUser(id) };
     } catch (e) {
       console.log(e);
       return { user: null };
     }
   }
 
+  async getUser(uid: number) {
+    return await this.database.findOneUser(uid);
+  }
+
+  async updateUserStatus(uid: number, status: UserStatus) {
+    return await this.database.updateUserStatus(uid, status);
+  }
+
   async getFriendList(uid: number) {
     return await this.database.listUserFriendWithInfo(uid);
+  }
+
+  async getFollowerList(uid: number) {
+    return await this.database.listUserFollowerWithInfo(uid);
   }
 }
