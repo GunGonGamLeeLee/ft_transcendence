@@ -40,7 +40,7 @@ export function ChannelLobby() {
 
   const useSetChatRooms = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,
+      `${import.meta.env.VITE_BACKEND_EP}/chat/roomlist`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,12 +50,15 @@ export function ChannelLobby() {
 
     if (!response.ok) throw new Error();
 
-    const data: { all: RoomType[]; joined: RoomType[]; dm: DmRoomType[] } =
-      await response.json();
+    const data: {
+      allRoom: RoomType[];
+      inRoom: RoomType[];
+      dmRoom: DmRoomType[];
+    } = await response.json();
 
-    setAllRoomList(data.all.sort(sortRoomByTitle));
-    setJoinedRoomList(data.joined.sort(sortRoomByTitle));
-    setDmRoomList(data.dm.sort(sortRoomByUser));
+    setAllRoomList(data.allRoom.sort(sortRoomByTitle));
+    setJoinedRoomList(data.inRoom.sort(sortRoomByTitle));
+    setDmRoomList(data.dmRoom.sort(sortRoomByUser));
   };
 
   React.useEffect(() => {
@@ -67,7 +70,7 @@ export function ChannelLobby() {
 
   useInterval(async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/channel/totalList`,
+      `${import.meta.env.VITE_BACKEND_EP}/chat/roomlist`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,12 +80,15 @@ export function ChannelLobby() {
 
     if (!response.ok) throw new Error();
 
-    const data: { all: RoomType[]; joined: RoomType[]; dm: DmRoomType[] } =
-      await response.json();
+    const data: {
+      allRoom: RoomType[];
+      inRoom: RoomType[];
+      dmRoom: DmRoomType[];
+    } = await response.json();
 
-    setAllRoomList(data.all.sort(sortRoomByTitle));
-    setJoinedRoomList(data.joined.sort(sortRoomByTitle));
-    setDmRoomList(data.dm.sort(sortRoomByUser));
+    setAllRoomList(data.allRoom.sort(sortRoomByTitle));
+    setJoinedRoomList(data.inRoom.sort(sortRoomByTitle));
+    setDmRoomList(data.dmRoom.sort(sortRoomByUser));
   }, 5000);
 
   return (
