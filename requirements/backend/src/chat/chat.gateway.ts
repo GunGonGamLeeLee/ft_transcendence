@@ -1,10 +1,11 @@
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { DatabaseService } from 'src/database/database.service';
 import { UserRoleInChannel } from 'src/database/entity/entity.user.in.channel';
 import { ChatMassageDto } from './chat.massage.dto';
@@ -16,15 +17,29 @@ import { ChatDto } from './chat.dto';
   },
 })
 export class ChatGateway {
-  constructor(
-    private readonly database: DatabaseService,
-  ) {}
+  constructor(private readonly database: DatabaseService) {}
   @WebSocketServer()
   chat: Server;
 
   afterInit() {}
-  handleConnection() {} //소켓 연결 (접속)
-  handleDisconnect() {} //소켓 끊김
+
+  handleConnection(
+    // @ConnectedSocket() client: Socket,
+    // @MessageBody() roomName: string,
+  ) {
+    // console.log(`id: ${client.id} 입장 📥`);
+    // client.join(roomName);
+    // client.broadcast.to(roomName).emit('enter user', client.id);
+  } //소켓 연결 (접속)
+
+  handleDisconnect(
+    // @ConnectedSocket() client: Socket,
+    // @MessageBody() roomName: string,
+  ) {
+    // console.log(`id: ${client.id} 퇴장 📤`);
+    // client.leave(roomName);
+    // client.broadcast.to(roomName).emit('leave user', client.id);
+  } //소켓 끊김
 
   //msg, msg: string - send message
   @SubscribeMessage('chatMsg')
