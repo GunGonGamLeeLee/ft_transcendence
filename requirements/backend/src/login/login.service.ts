@@ -103,7 +103,7 @@ export class LoginService {
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
       };
-      this.database.saveOneUser(newUser);
+      this.database.addUser(newUser);
       await this.downloadProfileImg(intraInfo);
       user = newUser;
     }

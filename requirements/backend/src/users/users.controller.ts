@@ -23,7 +23,7 @@ import { namecheckDto } from './dto/namecheck.dto';
 import { ProfileUpdateDto } from './dto/profile.update.dto';
 
 @UseGuards(AuthGuard)
-@ApiTags('users')
+@ApiTags('Users')
 @ApiBearerAuth('access-token')
 @Controller('users')
 export class UsersController {

@@ -9,6 +9,13 @@ import {
 import { UserEntity } from './entity.user';
 import { UserInChannelEntity } from './entity.user.in.channel';
 
+export enum ChannelMode {
+  public,
+  protected,
+  private,
+  dm,
+}
+
 @Entity()
 export class ChannelEntity {
   @PrimaryGeneratedColumn({ type: 'integer' })
@@ -20,11 +27,8 @@ export class ChannelEntity {
   @Column({ unique: false })
   chOwnerId: number;
 
-  @Column({ default: true })
-  display: boolean;
-
-  @Column({ default: false })
-  isLocked: boolean;
+  @Column({ default: 0 })
+  mode: ChannelMode;
 
   @Column()
   password: string;

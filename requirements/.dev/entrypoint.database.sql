@@ -63,8 +63,7 @@ CREATE TABLE public.channel_entity (
     chid integer NOT NULL,
     "chName" character varying NOT NULL,
     "chOwnerId" integer NOT NULL,
-    display boolean DEFAULT true NOT NULL,
-    "isLocked" boolean DEFAULT false NOT NULL,
+    mode integer DEFAULT 0 NOT NULL,
     password character varying NOT NULL
 );
 
@@ -212,7 +211,8 @@ CREATE TABLE public.user_entity (
     rating integer NOT NULL,
     "mfaNeed" boolean DEFAULT false NOT NULL,
     "qrSecret" character varying NOT NULL,
-    status integer NOT NULL
+    status integer NOT NULL,
+    "gameRoom" character varying
 );
 
 
@@ -303,19 +303,6 @@ ALTER TABLE ONLY public.user_in_channel_entity ALTER COLUMN index SET DEFAULT ne
 --
 
 COPY public.block_list_entity (index, "fromUid", "toUid") FROM stdin;
-1	99857	0
-2	99857	1
-3	99857	2
-4	99857	3
-5	99857	5
-6	0	5
-7	1	4
-8	99947	0
-9	99947	3
-10	99947	5
-11	112230	5
-12	112230	4
-13	112230	6
 \.
 
 
@@ -323,12 +310,24 @@ COPY public.block_list_entity (index, "fromUid", "toUid") FROM stdin;
 -- Data for Name: channel_entity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.channel_entity (chid, "chName", "chOwnerId", display, "isLocked", password) FROM stdin;
-2	보컬 회의	4	t	t	01234
-3	효제킴의 깃 강의	85355	t	f	
-4	찬파의 알고리즘 - 찬파해버렸다!	99909	t	f	
-5	예주의 42 인싸 비결 공개	81730	t	t	1234
-6	자함의 트센열차	99947	t	f	
+COPY public.channel_entity (chid, "chName", "chOwnerId", mode, password) FROM stdin;
+1	dm85355	85355	3	
+2	dm81730	81730	3	
+3	dm99857	99857	3	
+4	dm1	1	3	
+5	dm2	2	3	
+6	dm3	3	3	
+7	dm4	4	3	
+8	42GunGonGamLeeLee	1	0	
+9	42GunGonGamLeeLee1	1	0	
+10	42GunGonGamLeeLee2	2	0	
+11	42GunGonGamLeeLee3	3	0	
+12	protected1	1	1	1234
+13	protected2	2	1	1234
+14	protected3	3	1	1234
+15	private1	1	2	
+16	private2	2	2	
+17	dm99947	99947	3	
 \.
 
 
@@ -345,40 +344,6 @@ COPY public.dm_log_entity (index, "time", content, "fromUid", "toUid") FROM stdi
 --
 
 COPY public.friend_list_entity (index, "fromUid", "toUid") FROM stdin;
-1	81730	0
-2	81730	1
-4	81730	2
-5	81730	3
-6	81730	4
-7	81730	5
-8	81730	99857
-9	81730	85355
-10	99857	0
-11	2	0
-12	3	5
-15	81730	99909
-16	81730	99947
-17	99947	0
-18	99947	1
-19	99947	2
-20	99947	3
-21	99947	4
-22	99947	5
-23	99947	6
-24	99947	99909
-25	99947	81730
-26	99947	85355
-27	99947	99857
-28	112230	99857
-29	112230	81730
-30	112230	0
-31	112230	1
-32	112230	2
-33	112230	3
-34	112230	4
-35	112230	5
-36	112230	6
-37	112230	85355
 \.
 
 
@@ -387,29 +352,6 @@ COPY public.friend_list_entity (index, "fromUid", "toUid") FROM stdin;
 --
 
 COPY public.match_history_entity (index, "isRank", "winnerUid", "loserUid") FROM stdin;
-1	t	0	1
-2	t	1	0
-3	t	99909	0
-4	t	99909	1
-5	t	99909	2
-6	t	99909	3
-7	t	99909	4
-8	t	99909	5
-9	t	99909	85355
-10	t	99909	81730
-11	t	99909	112230
-12	f	112230	99909
-13	f	112230	99857
-14	f	112230	85355
-15	f	112230	2
-16	f	3	2
-17	f	5	2
-18	t	81730	0
-19	t	81730	2
-20	f	81730	99909
-21	f	81730	85355
-22	f	81730	3
-23	f	81730	1
 \.
 
 
@@ -417,21 +359,15 @@ COPY public.match_history_entity (index, "isRank", "winnerUid", "loserUid") FROM
 -- Data for Name: user_entity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSecret", status) FROM stdin;
-81730	yeju	http://localhost:4243/img/81730.png	4244	f	KAHBK63XHN6SYMJV	0
-99857	mypark	http://localhost:4243/img/99857.png	4245	f	PZSQCFRPDERRSMIZ	0
-85355	hyojekim	http://localhost:4243/img/85355.png	4243	t	OQ2XQJSDKMFS2A2B	0
-0	dummy0	http://localhost:4243/img/81730.png	0	f	string	0
-1	dummy1	http://localhost:4243/img/81730.png	20	f	string	0
-2	dummy2	http://localhost:4243/img/81730.png	2	f	string	0
-3	dummy3	http://localhost:4243/img/81730.png	200	f	string	0
-4	dummy4	http://localhost:4243/img/81730.png	200	f	string	0
-5	dummy5	http://localhost:4243/img/81730.png	4242	f	string	0
-99947	jaham	http://localhost:4243/img/99947.png	4244	f	O4TX43QVPVNFQOSP	0
-6	dummy6	http://localhost:4243/img/81730.png	2020	f	string	0
-99909	chanhpar	http://localhost:4243/img/99909.png	4442	f	LZHV6YQHNVTVA4RW	0
-112230	9ey7a3gdu	http://localhost:4243/img/112230.png	42	f	M5NA6HJHAMXQKQIH	0
-99778	qm3tc7kxp	http://localhost:4243/img/99778.png	4732	f	KVFGW6TMD5UHGMJ5	0
+COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSecret", status, "gameRoom") FROM stdin;
+85355	s2x3m83f9	http://localhost:4243/img/85355.png	42	f	JVGQGCRBIAMDKIBL	0	
+81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	0	
+99857	6g635chah	http://localhost:4243/img/99857.png	42	f	GALREZZVPRNECPQA	0	
+1	dummy1	http://localhost:4243/img/99857.png	0	f	string	0	
+2	dummy2	http://localhost:4243/img/99857.png	0	f	string	0	
+3	dummy3	http://localhost:4243/img/99857.png	1000	f	string	0	
+4	dummy4	http://localhost:4243/img/99857.png	200	f	string	0	
+99947	jaham	http://localhost:4243/img/81730.png	200	f	string	0	
 \.
 
 
@@ -440,23 +376,27 @@ COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSec
 --
 
 COPY public.user_in_channel_entity (index, uid, chid, "userRole", "isMute", "isBan") FROM stdin;
-2	4	2	0	f	f
-3	85355	3	0	f	f
-4	99909	4	0	f	f
-5	81730	5	0	f	f
-6	99947	6	0	f	f
-7	0	2	2	f	f
-8	1	2	2	f	f
-9	2	2	2	f	f
-10	3	2	2	f	f
-12	5	2	2	f	f
-13	6	2	2	f	f
-14	99857	4	2	f	f
-16	85355	4	2	f	f
-17	112230	6	2	f	f
-18	81730	6	2	f	f
-19	99857	6	2	f	f
-20	85355	6	2	f	f
+1	1	8	0	f	f
+2	1	9	0	f	f
+3	2	10	0	f	f
+4	3	11	0	f	f
+5	1	12	0	f	f
+6	2	13	0	f	f
+7	3	14	0	f	f
+8	1	15	0	f	f
+9	2	16	0	f	f
+10	99947	8	2	f	f
+11	99947	9	2	f	f
+12	99947	10	2	f	f
+13	99947	11	2	f	f
+14	99947	12	2	f	f
+15	99947	13	2	f	f
+16	99947	14	2	f	f
+17	99947	15	2	f	f
+18	99947	16	2	f	f
+19	99947	17	2	f	f
+20	99947	3	2	f	f
+21	99947	1	2	f	f
 \.
 
 
@@ -464,14 +404,14 @@ COPY public.user_in_channel_entity (index, uid, chid, "userRole", "isMute", "isB
 -- Name: block_list_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.block_list_entity_index_seq', 13, true);
+SELECT pg_catalog.setval('public.block_list_entity_index_seq', 1, false);
 
 
 --
 -- Name: channel_entity_chid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.channel_entity_chid_seq', 6, true);
+SELECT pg_catalog.setval('public.channel_entity_chid_seq', 17, true);
 
 
 --
@@ -485,14 +425,14 @@ SELECT pg_catalog.setval('public.dm_log_entity_index_seq', 1, false);
 -- Name: friend_list_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 37, true);
+SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 1, false);
 
 
 --
 -- Name: match_history_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.match_history_entity_index_seq', 23, true);
+SELECT pg_catalog.setval('public.match_history_entity_index_seq', 1, false);
 
 
 --

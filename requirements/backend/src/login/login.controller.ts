@@ -24,10 +24,10 @@ import { apiUid, LoginService, redirectUri } from './login.service';
 import { optDto } from './otp.dto';
 
 @Controller('login')
+@ApiTags('Login')
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}
 
-  @ApiTags('login')
   @Get('oauth')
   @Redirect(
     `https://api.intra.42.fr/oauth/authorize?client_id=${apiUid}&redirect_uri=${redirectUri}&response_type=code`,
@@ -37,7 +37,6 @@ export class LoginController {
     return;
   }
 
-  @ApiTags('login')
   @ApiQuery({
     name: 'code',
     required: true,
@@ -53,7 +52,6 @@ export class LoginController {
     return res.redirect(301, 'http://localhost:4242/login');
   }
 
-  @ApiTags('login')
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @Get('qr')
@@ -61,7 +59,6 @@ export class LoginController {
     return this.loginService.createQrCode(uid);
   }
 
-  @ApiTags('login')
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   @Post('otp')

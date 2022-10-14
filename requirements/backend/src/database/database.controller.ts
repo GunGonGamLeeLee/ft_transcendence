@@ -370,17 +370,20 @@ export class DatabaseController {
     );
   }
 
-  @ApiTags('database/Channel')
-  @ApiOperation({ summary: '채널 공개 여부 바꾸기' })
-  @ApiHeader({ name: 'display' })
+  @ApiTags('database/Channel') // TODO 수정?
+  @ApiOperation({ summary: '채널 모드 바꾸기' })
+  @ApiHeader({
+    name: 'mode',
+    description: 'public: 0, protected: 1, private: 2, dm: 3',
+  })
   @ApiHeader({ name: 'chid' })
   @ApiHeader({ name: 'uid' })
-  @Put('update-ch-display')
+  @Put('update-ch-mode')
   async updateChDisplay(@Headers() header) {
     return await this.databaseService.updateChDisplay(
-      header.uid,
-      header.chid,
-      header.display === 'true',
+      +header.uid,
+      +header.chid,
+      +header.mode,
     );
   }
 
