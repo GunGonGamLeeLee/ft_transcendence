@@ -5,8 +5,10 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { UserEntity } from 'src/database/entity/entity.user';
 import { AuthService } from '../auth/auth.service';
 import { DatabaseService } from '../database/database.service';
+import { DmService } from './dm.service';
 
 interface testType {
   one: string;
@@ -19,10 +21,7 @@ interface testType {
   },
 })
 export class DmGateway {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly database: DatabaseService,
-  ) {}
+  constructor(private readonly dmService: DmService) {}
 
   @WebSocketServer()
   server: Server;
@@ -33,5 +32,15 @@ export class DmGateway {
     console.log(data);
     console.log(data.one);
     // console.log(data.two);
+  }
+
+  async updateUserStatus(uid: number, user: UserEntity) {
+    const followerList = await this.dmService.getFollowerList(uid);
+    followerList.forEach((follower) => {
+      const { uid, displayName, imgUri, rating, status } = user;
+      this.server
+        .to(`dm${follower.follower.uid}`)
+        .emit('dm/status', { uid, displayName, imgUri, rating, status });
+    });
   }
 }

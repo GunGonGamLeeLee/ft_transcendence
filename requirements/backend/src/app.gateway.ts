@@ -17,7 +17,10 @@ import { DmService } from './dm/dm.service';
   },
 })
 export class AppGateway {
-  constructor(private readonly dmService: DmService) {}
+  constructor(
+    private readonly dmService: DmService,
+    private readonly dmGateway: DmGateway,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -45,25 +48,13 @@ export class AppGateway {
     this.server.to(client.id).emit('dm/status', friendList);
 
     // follower에게 현재 상태(online) 보내기 (dm + uid로 보내기)
-    const followerList = await this.dmService.getFollowerList(client.data.uid);
-    followerList.forEach((follower) => {
-      const { uid, displayName, imgUri, rating, status } = user;
-      this.server
-        .to(`dm${follower.follower.uid}`)
-        .emit('dm/status', { uid, displayName, imgUri, rating, status });
-    });
+    await this.dmGateway.updateUserStatus(client.data.uid, user);
   }
 
   async handleDisconnect(client: Socket) {
     await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     const user = await this.dmService.getUser(client.data.uid);
-    const followerList = await this.dmService.getFollowerList(client.data.uid);
-    followerList.forEach((follower) => {
-      const { uid, displayName, imgUri, rating, status } = user;
-      this.server
-        .to(`dm${follower.follower.uid}`)
-        .emit('dm/status', { uid, displayName, imgUri, rating, status });
-    });
+    await this.dmGateway.updateUserStatus(client.data.uid, user);
     console.log(this.server.of('/').adapter.sids);
   }
 }
