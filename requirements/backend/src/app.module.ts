@@ -16,6 +16,8 @@ import { MatchHistoryEntity } from './database/entity/entity.matchhistory.list';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
+import { DmModule } from './dm/dm.module';
+import { AppGateway } from './app.gateway';
 
 dotenv.config({
   path: '/backend.env',
@@ -50,8 +52,9 @@ const dbOptions: TypeOrmModuleOptions = {
     }),
     TypeOrmModule.forRoot(dbOptions),
     DatabaseModule,
+    DmModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}
