@@ -51,9 +51,6 @@ export class DatabaseService {
   async listAllChannelPubPro() {
     return await this.dbChannelService.findAllPubPro();
   }
-  // async listChannelOfUserDm(uid) {
-  //   return await this.dbChannelService.findChannelOfUserDm(uid);
-  // }
 
   async listAllUserInChannel() {
     return await this.dbUserInChannelService.findAll();
@@ -111,6 +108,13 @@ export class DatabaseService {
     return await this.dbUserInChannelService.findChannelsOfUserWithChannelInfo(
       uid,
     );
+  }
+
+  async listMuteUserInChannel(chid: number) {
+    return await this.dbUserInChannelService.findMuteUsersInChannel(chid);
+  }
+  async listBanUserInChannel(chid: number) {
+    return await this.dbUserInChannelService.findBanUsersInChannel(chid);
   }
 
   async listMuteUserInChannelWithUserInfo(chid: number) {
