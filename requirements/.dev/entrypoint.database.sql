@@ -328,6 +328,9 @@ COPY public.channel_entity (chid, "chName", "chOwnerId", mode, password) FROM st
 15	private1	1	2	
 16	private2	2	2	
 17	dm99947	99947	3	
+18	자함 채널, public	99947	0	
+20	자함 채널, protected 비밀번호 1234	99947	1	1234
+21	자함 채널, private	99947	2	
 \.
 
 
@@ -400,6 +403,30 @@ COPY public.user_in_channel_entity (index, uid, chid, "userRole", "isMute", "isB
 27	81730	11	2	f	f
 26	85355	11	2	t	f
 29	99857	11	2	f	t
+30	99947	18	0	f	f
+32	99947	20	0	f	f
+33	99947	21	0	f	f
+34	99857	18	2	f	f
+35	81730	18	2	f	f
+36	85355	18	2	f	f
+37	85355	20	2	f	f
+38	85355	21	2	f	f
+40	81730	21	2	f	f
+41	99857	21	2	f	f
+42	99857	20	2	t	f
+45	81730	20	2	f	t
+49	4	20	2	f	t
+51	1	18	2	f	t
+53	3	18	2	f	t
+59	4	21	2	f	t
+46	1	20	2	f	f
+47	2	20	2	f	f
+48	3	20	2	f	f
+58	3	21	2	f	f
+56	1	21	2	f	f
+57	2	21	2	f	f
+52	2	18	2	t	f
+54	4	18	2	t	f
 \.
 
 
@@ -414,7 +441,7 @@ SELECT pg_catalog.setval('public.block_list_entity_index_seq', 1, false);
 -- Name: channel_entity_chid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.channel_entity_chid_seq', 17, true);
+SELECT pg_catalog.setval('public.channel_entity_chid_seq', 21, true);
 
 
 --
@@ -442,7 +469,7 @@ SELECT pg_catalog.setval('public.match_history_entity_index_seq', 1, false);
 -- Name: user_in_channel_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_in_channel_entity_index_seq', 29, true);
+SELECT pg_catalog.setval('public.user_in_channel_entity_index_seq', 59, true);
 
 
 --
