@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   ParseIntPipe,
   Post,
   Query,
@@ -14,9 +16,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ChannelMode } from 'src/database/entity/entity.channel';
 import { MyUid } from 'src/users/decorator/uid.decorator';
 import { ChatRoomListService } from './chat.room.list.service';
 import { ChatRoomUsersService } from './chat.room.users.service';
+import { ChannelCreateDto } from './dto/channel.create.dto';
 import { ChannelPasswordDto } from './dto/channel.password.dto';
 
 @UseGuards(AuthGuard)
@@ -50,10 +54,27 @@ export class ChatController {
   @ApiOperation({ summary: '채팅방 비밀번호 인증하기' })
   @Post('roomusers')
   async verifyPassword(@Body() body: ChannelPasswordDto) {
-    const ret = await this.chatRoomListService.verifyPassword(
-      body.chid,
+    const ret = await this.chatRoomListService.verifyPassword(body);
+    if (ret === false) {
+      throw new HttpException('일치하지 않습니다.', HttpStatus.FORBIDDEN);
+    }
+    return ret;
+  }
+
+  @ApiOperation({ summary: '방 생성하기' })
+  @Post('newroom')
+  async newroom(@MyUid() uid, @Body() body: ChannelCreateDto) {
+    if (body.mode === ChannelMode.protected && body.password.length !== 4) {
+      throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
+    }
+    if (body.mode !== ChannelMode.protected && body.password.length !== 0) {
+      throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
+    }
+    await this.chatRoomListService.createRoom(
+      uid,
+      body.title,
+      body.mode,
       body.password,
     );
-    return ret;
   }
 }

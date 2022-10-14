@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { ChannelEntity, ChannelMode } from 'src/database/entity/entity.channel';
+import { ChannelPasswordDto } from './dto/channel.password.dto';
 
 export class ChatRoomType {
   ownerId: number;
@@ -21,10 +22,25 @@ export interface DmRoomType {
 export class ChatRoomListService {
   constructor(private readonly database: DatabaseService) {}
 
-  async verifyPassword(chid: number, password: string) {
+  async createRoom(
+    chOwnerId: number,
+    chName: string,
+    mode: ChannelMode,
+    password: string,
+  ) {
+    password = password === undefined ? '' : password;
+    this.database.addChannel({
+      chName,
+      chOwnerId,
+      mode,
+      password,
+    });
+  }
+
+  async verifyPassword(body: ChannelPasswordDto) {
+    const { chid, password } = body;
     const channel = await this.database.findOneChannel(chid);
-    if (channel.password != password)
-      throw new HttpException('일치하지 않습니다.', HttpStatus.FORBIDDEN);
+    return channel.password === password;
   }
 
   async getRoomList(uid: number) {
@@ -39,7 +55,7 @@ export class ChatRoomListService {
     const channels = await this.database.listUserDmChannel(uid);
     const roomList: DmRoomType[] = [];
     for (const uic of channels) {
-      const chatRoom = this.makeDmRoom(uic.channel);
+      const chatRoom = this.makeDmRoomType(uic.channel);
       roomList.push(chatRoom);
     }
     return roomList;
@@ -49,7 +65,7 @@ export class ChatRoomListService {
     const channels = await this.database.listAllChannelPubPro();
     const roomList: ChatRoomType[] = [];
     for (const channel of channels) {
-      const chatRoom = await this.makeChatRoom(channel);
+      const chatRoom = await this.makeChatRoomType(channel);
       roomList.push(chatRoom);
     }
     return roomList;
@@ -61,13 +77,13 @@ export class ChatRoomListService {
     );
     const roomList: ChatRoomType[] = [];
     for (const uic of userInChannels) {
-      const chatRoom = await this.makeChatRoom(uic.channel);
+      const chatRoom = await this.makeChatRoomType(uic.channel);
       roomList.push(chatRoom);
     }
     return roomList;
   }
 
-  private async makeChatRoom(channel: ChannelEntity) {
+  private async makeChatRoomType(channel: ChannelEntity) {
     return {
       ownerId: channel.chOwner.uid,
       onwerDisplayName: channel.chOwner.displayName,
@@ -78,7 +94,7 @@ export class ChatRoomListService {
     };
   }
 
-  private makeDmRoom(channel: ChannelEntity): DmRoomType {
+  private makeDmRoomType(channel: ChannelEntity): DmRoomType {
     return {
       roomId: 'channel' + channel.chid,
       userId: channel.chOwner.uid,
