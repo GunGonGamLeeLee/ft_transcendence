@@ -397,6 +397,9 @@ COPY public.user_in_channel_entity (index, uid, chid, "userRole", "isMute", "isB
 19	99947	17	2	f	f
 20	99947	3	2	f	f
 21	99947	1	2	f	f
+27	81730	11	2	f	f
+26	85355	11	2	t	f
+29	99857	11	2	f	t
 \.
 
 
@@ -439,7 +442,7 @@ SELECT pg_catalog.setval('public.match_history_entity_index_seq', 1, false);
 -- Name: user_in_channel_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_in_channel_entity_index_seq', 21, true);
+SELECT pg_catalog.setval('public.user_in_channel_entity_index_seq', 29, true);
 
 
 --

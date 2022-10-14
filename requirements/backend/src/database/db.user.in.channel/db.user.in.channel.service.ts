@@ -40,10 +40,30 @@ export class DbUserInChannelService {
           uid: true,
           displayName: true,
           imgUri: true,
+          rating: true,
+          status: true,
         },
       },
       relations: { user: true },
-      where: { chid },
+      where: { chid, isBan: false },
+    });
+  }
+
+  async findMuteUsersInChannel(chid: number) {
+    return await this.userInChannelRepo.find({
+      select: {
+        uid: true,
+      },
+      where: { chid, isMute: true },
+    });
+  }
+
+  async findBanUsersInChannel(chid: number) {
+    return await this.userInChannelRepo.find({
+      select: {
+        uid: true,
+      },
+      where: { chid, isBan: true },
     });
   }
 
