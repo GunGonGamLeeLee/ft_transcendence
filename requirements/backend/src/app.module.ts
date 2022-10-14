@@ -17,6 +17,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
 import { DmModule } from './dm/dm.module';
+import { AppGateway } from './app.gateway';
 
 dotenv.config({
   path: '/backend.env',
@@ -54,6 +55,6 @@ const dbOptions: TypeOrmModuleOptions = {
     DmModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}

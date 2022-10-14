@@ -9,5 +9,6 @@ import { DatabaseModule } from '../database/database.module';
   imports: [AuthModule, DatabaseModule],
   controllers: [DmController],
   providers: [DmService, DmGateway],
+  exports: [DmService, DmGateway],
 })
 export class DmModule {}
