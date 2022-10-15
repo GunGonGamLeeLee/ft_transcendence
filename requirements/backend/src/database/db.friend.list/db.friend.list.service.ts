@@ -54,13 +54,7 @@ export class DbFriendListService {
     const user = await this.firendListRepo.find({
       select: {
         index: true,
-        follower: {
-          uid: true,
-          displayName: true,
-          imgUri: true,
-          status: true,
-          rating: true,
-        },
+        fromUid: true,
       },
       relations: {
         follower: true,

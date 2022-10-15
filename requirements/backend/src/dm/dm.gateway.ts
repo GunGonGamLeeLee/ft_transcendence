@@ -1,46 +1,29 @@
-import {
-  MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { UserEntity } from 'src/database/entity/entity.user';
-import { AuthService } from '../auth/auth.service';
-import { DatabaseService } from '../database/database.service';
+import { UserDataType } from 'src/users/dto/user.data.type.dto';
 import { DmService } from './dm.service';
-
-interface testType {
-  one: string;
-  two?: string;
-}
 
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost:4242',
   },
 })
+@UsePipes(new ValidationPipe())
 export class DmGateway {
   constructor(private readonly dmService: DmService) {}
 
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('test')
-  handleTest(@MessageBody() data: testType): void {
-    this.server.emit('test');
-    console.log(data);
-    console.log(data.one);
-    // console.log(data.two);
-  }
-
   async updateUserStatus(uid: number, user: UserEntity) {
     const followerList = await this.dmService.getFollowerList(uid);
-    followerList.forEach((follower) => {
+    for (const follower of followerList) {
       const { uid, displayName, imgUri, rating, status } = user;
       this.server
-        .to(`dm${follower.follower.uid}`)
+        .to(`dm${follower.fromUid}`)
         .emit('dm/status', { uid, displayName, imgUri, rating, status });
-    });
+    }
   }
 }

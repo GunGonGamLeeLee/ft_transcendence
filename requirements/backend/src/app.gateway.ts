@@ -35,17 +35,12 @@ export class AppGateway {
     // const { token } = client.handshake.auth; // 실제 사용
 
     const { user } = await this.dmService.validateUser(token);
-    // console.log(user);
     if (!user) client.disconnect();
     client.data = { uid: user.uid, status: user.status };
 
     // dm + uid 방에 자동 입장
     client.join(`dm${client.data.uid}`);
-    console.log(this.server.of('/').adapter.sids); // key로 socket.id, value로 들어가있는 방 정보 확인
-
-    // 친구들의 상태 가져오기
-    const friendList = await this.dmService.getFriendList(client.data.uid);
-    this.server.to(client.id).emit('dm/status', friendList);
+    // console.log(this.server.of('/').adapter.sids); // key로 socket.id, value로 들어가있는 방 정보 확인
 
     // follower에게 현재 상태(online) 보내기 (dm + uid로 보내기)
     await this.dmGateway.updateUserStatus(client.data.uid, user);
