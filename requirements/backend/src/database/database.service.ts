@@ -268,11 +268,6 @@ export class DatabaseService {
         '존재하지 않는 유저입니다.',
         HttpStatus.NOT_FOUND,
       );
-    if (dmLog.content.length > MAX_DM_SIZE)
-      throw new HttpException(
-        '메시지의 내용이 너무 많습니다.',
-        HttpStatus.PAYLOAD_TOO_LARGE,
-      );
     if (fromUser.uid === toUser.uid)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
     this.dbDmLogsService.saveOne(dmLog, fromUser, toUser);

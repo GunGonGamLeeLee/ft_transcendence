@@ -6,7 +6,7 @@ export class DmLogDto {
   @ApiProperty({ example: '1' })
   toUid: number;
   @ApiProperty({ example: new Date() })
-  time: string;
+  time: Date;
   @ApiProperty({ example: '행복한 클러스터 코딩!' })
   content: string;
 }
