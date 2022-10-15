@@ -24,7 +24,7 @@ export class UsersService {
     const friendsInDb = await this.database.listUserFriendWithInfo(uid);
     const friends: UserDataType[] = [];
     for (const f of friendsInDb) {
-      friends.push(f.user);
+      friends.push(f.friend);
     }
     return friends;
   }

@@ -51,9 +51,6 @@ export class DatabaseService {
   async listAllChannelPubPro() {
     return await this.dbChannelService.findAllPubPro();
   }
-  // async listChannelOfUserDm(uid) {
-  //   return await this.dbChannelService.findChannelOfUserDm(uid);
-  // }
 
   async listAllUserInChannel() {
     return await this.dbUserInChannelService.findAll();
@@ -79,6 +76,14 @@ export class DatabaseService {
 
   async listUserFriendWithInfo(uid: number) {
     return await this.dbFriendListService.findListOfUserWithInfo(uid);
+  }
+
+  async listUserFollower(uid: number) {
+    return await this.dbFriendListService.findFollwerOfUser(uid);
+  }
+
+  async listUserFollowerWithInfo(uid: number) {
+    return await this.dbFriendListService.findFollwerOfUserWithInfo(uid);
   }
 
   async listUserBlock(uid: number) {
@@ -111,6 +116,13 @@ export class DatabaseService {
     return await this.dbUserInChannelService.findChannelsOfUserWithChannelInfo(
       uid,
     );
+  }
+
+  async listMuteUserInChannel(chid: number) {
+    return await this.dbUserInChannelService.findMuteUsersInChannel(chid);
+  }
+  async listBanUserInChannel(chid: number) {
+    return await this.dbUserInChannelService.findBanUsersInChannel(chid);
   }
 
   async listMuteUserInChannelWithUserInfo(chid: number) {

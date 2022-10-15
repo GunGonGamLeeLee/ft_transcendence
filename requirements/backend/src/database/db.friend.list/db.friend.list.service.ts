@@ -27,7 +27,7 @@ export class DbFriendListService {
     const user = await this.firendListRepo.find({
       select: {
         index: true,
-        user: {
+        friend: {
           uid: true,
           displayName: true,
           imgUri: true,
@@ -36,9 +36,36 @@ export class DbFriendListService {
         },
       },
       relations: {
-        user: true,
+        friend: true,
       },
       where: { fromUid: uid },
+    });
+    return user;
+  }
+
+  async findFollwerOfUser(uid: number) {
+    const user = await this.firendListRepo.find({
+      where: { toUid: uid },
+    });
+    return user;
+  }
+
+  async findFollwerOfUserWithInfo(uid: number) {
+    const user = await this.firendListRepo.find({
+      select: {
+        index: true,
+        follower: {
+          uid: true,
+          displayName: true,
+          imgUri: true,
+          status: true,
+          rating: true,
+        },
+      },
+      relations: {
+        follower: true,
+      },
+      where: { toUid: uid },
     });
     return user;
   }
@@ -47,7 +74,7 @@ export class DbFriendListService {
     friendRelation: RelationListDto,
     user: UserEntity,
   ): Promise<void> {
-    const rel = this.firendListRepo.create({ ...friendRelation, user });
+    const rel = this.firendListRepo.create({ ...friendRelation, friend: user });
     try {
       await this.firendListRepo.save(rel);
     } catch (err) {

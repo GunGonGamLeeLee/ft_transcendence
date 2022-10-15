@@ -9,5 +9,12 @@ export class FriendListEntity extends RelationListEntity {
     name: 'toUid',
     referencedColumnName: 'uid',
   })
-  user: UserEntity;
+  friend: UserEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.followerList)
+  @JoinColumn({
+    name: 'fromUid',
+    referencedColumnName: 'uid',
+  })
+  follower: UserEntity;
 }

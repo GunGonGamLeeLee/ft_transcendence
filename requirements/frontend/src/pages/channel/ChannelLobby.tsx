@@ -40,12 +40,12 @@ export function ChannelLobby() {
 
   const useSetChatRooms = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/chat/roomlist`,
+      `${import.meta.env.VITE_BACKEND_EP}/chat/channel`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) throw new Error();
@@ -70,12 +70,12 @@ export function ChannelLobby() {
 
   useInterval(async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/chat/roomlist`,
+      `${import.meta.env.VITE_BACKEND_EP}/chat/channel`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) throw new Error();
