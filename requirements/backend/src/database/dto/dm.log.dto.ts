@@ -8,5 +8,5 @@ export class DmLogDto {
   @ApiProperty({ example: new Date() })
   time: Date;
   @ApiProperty({ example: '행복한 클러스터 코딩!' })
-  content: string;
+  msg: string;
 }

@@ -19,7 +19,7 @@ import { UserDataType } from 'src/users/dto/user.data.type.dto';
 export interface DmLogType {
   fromUid: number;
   toUid: number;
-  content: string;
+  msg: string;
   time: Date;
 }
 

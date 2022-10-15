@@ -14,7 +14,7 @@ export class DmService {
     await this.database.addDmLog({
       fromUid,
       toUid,
-      content: msg,
+      msg,
       time: new Date(),
     });
   }

@@ -21,7 +21,7 @@ export class DbDmLogService {
       select: {
         fromUid: true,
         toUid: true,
-        content: true,
+        msg: true,
         time: true,
       },
       where: [

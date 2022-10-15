@@ -22,7 +22,7 @@ export class DmLogEntity {
   time: Date;
 
   @Column()
-  content: string;
+  msg: string;
 
   @ManyToOne(() => UserEntity, (user) => user.uid)
   @JoinColumn({

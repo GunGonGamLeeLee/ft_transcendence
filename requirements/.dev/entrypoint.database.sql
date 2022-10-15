@@ -99,7 +99,7 @@ ALTER SEQUENCE public.channel_entity_chid_seq OWNED BY public.channel_entity.chi
 CREATE TABLE public.dm_log_entity (
     index integer NOT NULL,
     "time" timestamp with time zone NOT NULL,
-    content character varying NOT NULL,
+    msg character varying NOT NULL,
     "fromUid" integer NOT NULL,
     "toUid" integer NOT NULL
 );
@@ -338,31 +338,14 @@ COPY public.channel_entity (chid, "chName", "chOwnerId", mode, password) FROM st
 -- Data for Name: dm_log_entity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.dm_log_entity (index, "time", content, "fromUid", "toUid") FROM stdin;
-1	2022-10-15 16:59:29.534+00	asdf	1	99857
-2	2022-10-15 16:59:59.032+00	asdf	99857	81730
-4	2022-10-15 16:59:59.035+00	asdf	99857	81730
-3	2022-10-15 16:59:59.033+00	asdf	99857	81730
-5	2022-10-15 16:59:59.036+00	asdf	99857	81730
-6	2022-10-15 16:59:59.037+00	asdf	99857	81730
-7	2022-10-15 16:59:59.037+00	asdf	99857	81730
-8	2022-10-15 16:59:58.989+00	asdf	99857	81730
-9	2022-10-15 16:59:59.016+00	asdf	99857	81730
-10	2022-10-15 16:59:59.019+00	asdf	99857	81730
-11	2022-10-15 16:59:59.017+00	asdf	99857	81730
-12	2022-10-15 16:59:59.05+00	asdf	99857	81730
-13	2022-10-15 16:59:59.051+00	asdf	99857	81730
-14	2022-10-15 16:59:59.052+00	asdf	99857	81730
-15	2022-10-15 16:59:59.052+00	asdf	99857	81730
-16	2022-10-15 16:59:59.027+00	asdf	99857	81730
-17	2022-10-15 16:59:59.025+00	asdf	99857	81730
-18	2022-10-15 16:59:59.426+00	asdf	99857	81730
-19	2022-10-15 16:59:59.021+00	asdf	99857	81730
-20	2022-10-15 16:59:59.022+00	asdf	99857	81730
-21	2022-10-15 16:59:59.03+00	asdf	99857	81730
-22	2022-10-15 17:00:02.779+00	asdf	99857	81730
-23	2022-10-15 17:00:42.707+00	12345678901234567890	99857	81730
-24	2022-10-15 17:01:26.607+00	12345678901234567890	99857	81730
+COPY public.dm_log_entity (index, "time", msg, "fromUid", "toUid") FROM stdin;
+1	2022-10-15 20:15:00.733+00	123456789012345678	99857	81730
+2	2022-10-15 20:15:02.626+00	123456789012345678	99857	81730
+3	2022-10-15 20:15:03.317+00	123456789012345678	99857	81730
+4	2022-10-15 20:15:03.921+00	123456789012345678	99857	81730
+5	2022-10-15 20:16:03.582+00	123456789012345678	99857	81730
+6	2022-10-15 20:16:04.654+00	123456789012345678	99857	81730
+7	2022-10-15 20:16:05.247+00	123456789012345678	99857	81730
 \.
 
 
@@ -371,6 +354,7 @@ COPY public.dm_log_entity (index, "time", content, "fromUid", "toUid") FROM stdi
 --
 
 COPY public.friend_list_entity (index, "fromUid", "toUid") FROM stdin;
+1	99857	81730
 \.
 
 
@@ -393,7 +377,7 @@ COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSec
 4	dummy4	http://localhost:4243/img/99857.png	200	f	string	0	
 99947	jaham	http://localhost:4243/img/81730.png	200	f	string	0	
 85355	s2x3m83f9	http://localhost:4243/img/85355.png	42	f	JVGQGCRBIAMDKIBL	1	
-81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	1	
+81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	0	
 99857	6g635chah	http://localhost:4243/img/99857.png	42	f	GALREZZVPRNECPQA	1	
 \.
 
@@ -472,14 +456,14 @@ SELECT pg_catalog.setval('public.channel_entity_chid_seq', 21, true);
 -- Name: dm_log_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.dm_log_entity_index_seq', 24, true);
+SELECT pg_catalog.setval('public.dm_log_entity_index_seq', 7, true);
 
 
 --
 -- Name: friend_list_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 1, false);
+SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 1, true);
 
 
 --
