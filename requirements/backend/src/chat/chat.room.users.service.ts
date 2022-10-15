@@ -24,15 +24,11 @@ export class ChatRoomUsersService {
     const users: UserDataChatType[] = [];
 
     for (const uic of uicInDb) {
-      const user: UserDataChatType = {
-        uid: uic.user.uid,
-        displayName: uic.user.displayName,
-        imgUri: uic.user.imgUri,
-        rating: uic.user.rating,
-        status: uic.user.status,
-        role: uic.userRole,
-      };
-      users.push(user);
+      const { user } = uic;
+      users.push({
+        ...user,
+        role: uic.role,
+      });
     }
     return users;
   }

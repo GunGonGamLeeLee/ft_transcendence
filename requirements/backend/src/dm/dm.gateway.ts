@@ -35,7 +35,7 @@ export class DmGateway {
   @SubscribeMessage('dm/msg')
   async msg(client: Socket, payload: DmChatDto) {
     await client.join(`dm${payload.targetUid}`);
-    this.server.to(`dm${payload.targetUid}`).emit('dm/msg');
+    this.server.to(`dm${payload.targetUid}`).emit('dm/msg', payload.msg);
     await client.leave(`dm${payload.targetUid}`);
     await this.dmService.addDmLog(
       client.data.uid,
@@ -48,6 +48,7 @@ export class DmGateway {
     const followerList = await this.dmService.getFollowerList(uid);
     for (const follower of followerList) {
       const { uid, displayName, imgUri, rating, status } = user;
+      // const userData: UserDataType = { ...user }; // FIXME 이거 왜 안될까?
       this.server
         .to(`dm${follower.fromUid}`)
         .emit('dm/status', { uid, displayName, imgUri, rating, status });

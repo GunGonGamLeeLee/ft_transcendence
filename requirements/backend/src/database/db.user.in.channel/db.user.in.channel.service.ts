@@ -35,7 +35,7 @@ export class DbUserInChannelService {
   async findUsersInChannelWithUserInfo(chid: number) {
     return await this.userInChannelRepo.find({
       select: {
-        userRole: true,
+        role: true,
         user: {
           uid: true,
           displayName: true,
@@ -70,7 +70,7 @@ export class DbUserInChannelService {
   async findMuteUsersInChannelWithUserInfo(chid: number) {
     return await this.userInChannelRepo.find({
       select: {
-        userRole: true,
+        role: true,
         user: {
           uid: true,
           displayName: true,
@@ -85,7 +85,7 @@ export class DbUserInChannelService {
   async findBanUsersInChannelWithUserInfo(chid: number) {
     return await this.userInChannelRepo.find({
       select: {
-        userRole: true,
+        role: true,
         user: {
           uid: true,
           displayName: true,
@@ -155,22 +155,6 @@ export class DbUserInChannelService {
     });
   }
 
-  // async findChannelsOfUserDm(uid: number) {
-  //   return await this.userInChannelRepo.find({
-  //     select: {
-  //       channel: {
-  //         chOwner: {
-  //           uid: true,
-  //           displayName: true,
-
-  //         }
-  //       }
-  //     },
-  //     relations: { channel: true },
-  //     where: {},
-  //   });
-  // }
-
   async saveOne(
     userInChannel: UserInChannelDto | UserInChannelEntity,
     user: UserEntity,
@@ -211,10 +195,7 @@ export class DbUserInChannelService {
   }
 
   async changeRole(uid: number, chid: number, role: UserRoleInChannel) {
-    return await this.userInChannelRepo.update(
-      { uid, chid },
-      { userRole: role },
-    );
+    return await this.userInChannelRepo.update({ uid, chid }, { role });
   }
 
   async deleteOne(uid: number, chid: number) {
