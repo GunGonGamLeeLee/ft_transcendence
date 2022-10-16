@@ -380,11 +380,6 @@ export class DatabaseService {
       chid,
       'you can`t ban user in channel.',
     );
-
-    // const banUsers: Promise<UserInChannelEntity[]> = this.listBanUserInChannelWithUserInfo(chid);
-    // const user = this.dbUserInChannelService.findOne(targetUid, chid);
-    // if ((await banUsers).find(user)) throw new HttpException(`already ban`, HttpStatus.FORBIDDEN);
-
     return await this.dbUserInChannelService.banOne(targetUid, chid);
   }
 

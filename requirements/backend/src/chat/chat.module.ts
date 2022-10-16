@@ -11,6 +11,5 @@ import { ChatRoomUsersService } from './chat.room.users.service';
   imports: [DatabaseModule, AuthModule],
   controllers: [ChatController],
   providers: [ChatRoomListService, ChatRoomUsersService, ChatService, ChatGateway],
-  exports: [ChatGateway]
 })
 export class ChatModule {}

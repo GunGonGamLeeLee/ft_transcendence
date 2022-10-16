@@ -82,7 +82,7 @@ export class DbChannelService {
 
   async setPassword(chid: number, password: string) {
     
-    if (!(password.length !== 4 && password.length !== 0))
+    if (password.length !== 4 && password.length !== 0)
       throw new HttpException('비밀번호는 4글자이어야 합니다.', HttpStatus.FORBIDDEN);
     return await this.channelRepo.update(
       { chid },
