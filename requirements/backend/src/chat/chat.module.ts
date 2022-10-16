@@ -10,6 +10,11 @@ import { ChatRoomUsersService } from './chat.room.users.service';
 @Module({
   imports: [DatabaseModule, AuthModule],
   controllers: [ChatController],
-  providers: [ChatRoomListService, ChatRoomUsersService, ChatService, ChatGateway],
+  providers: [
+    ChatRoomListService,
+    ChatRoomUsersService,
+    ChatService,
+    ChatGateway,
+  ],
 })
 export class ChatModule {}

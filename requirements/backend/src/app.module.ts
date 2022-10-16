@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,6 +18,7 @@ import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
 import { DmModule } from './dm/dm.module';
 import { AppGateway } from './app.gateway';
+import { LoggerMiddleware } from './logger.middleware';
 
 dotenv.config({
   path: '/backend.env',
@@ -57,4 +58,8 @@ const dbOptions: TypeOrmModuleOptions = {
   controllers: [AppController],
   providers: [AppService, AppGateway],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('/chat/pwdd');
+  }
+}
