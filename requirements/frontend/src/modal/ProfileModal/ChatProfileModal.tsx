@@ -7,7 +7,6 @@ import { friendListState } from '../../atoms/friendListState';
 import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
 import { userProfileState } from '../../atoms/userProfileState';
 import { Follow } from './buttons/Follow';
-import { Unfollow } from './buttons/Unfollow';
 import { Block } from './buttons/Block';
 import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
@@ -36,7 +35,6 @@ function ChatProfile({ user }: { user: ChatUserType }) {
   const userProfile = useRecoilValue(userProfileState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
-  const [isFriend, setIsFriend] = React.useState<boolean>(false);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
 
   const onClick = () => {
@@ -44,7 +42,6 @@ function ChatProfile({ user }: { user: ChatUserType }) {
   };
 
   React.useEffect(() => {
-    setIsFriend(friendList.find((curr) => curr.uid === user.uid) !== undefined);
     setIsBlocked(
       blockedList.find((curr) => curr.uid === user.uid) !== undefined,
     );
@@ -92,7 +89,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
                 )}
               </div>
               <div className={styles.profile__buttons}>
-                {!isFriend ? <Follow /> : <Unfollow />}
+                <Follow />
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
               <div className={styles.profile__buttons}>

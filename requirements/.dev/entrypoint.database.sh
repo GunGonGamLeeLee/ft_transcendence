@@ -8,4 +8,4 @@ ALTER USER postgres WITH PASSWORD '1234';
 GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;
 eof
 
-psql Transcendence --port 4245 < /entrypoint.database.sql
+# psql Transcendence --port 4245 < /entrypoint.database.sql

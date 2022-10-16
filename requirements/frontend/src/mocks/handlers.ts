@@ -197,24 +197,24 @@ export const handlers = [
       return res(ctx.status(200));
     },
   ),
-  rest.post(`${import.meta.env.VITE_BACKEND_EP}/channel`, (req, res, ctx) => {
-    req.json().then((data) => {
-      const { title, mode, password } = data;
-      console.log(
-        `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`,
-      );
-    });
+  // rest.post(`${import.meta.env.VITE_BACKEND_EP}/channel`, (req, res, ctx) => {
+  //   req.json().then((data) => {
+  //     const { title, mode, password } = data;
+  //     console.log(
+  //       `[MSW] request create room, title: ${title}, mdoe: ${mode}, password: ${password}`,
+  //     );
+  //   });
 
-    return res(
-      ctx.status(201),
-      ctx.json({
-        roomId: 10,
-        title: 'title',
-        ownerId: 99945,
-        ownerDisplayName: 'jaham',
-        userCount: 1,
-        lock: false,
-      }),
-    );
-  }),
+  //   return res(
+  //     ctx.status(201),
+  //     ctx.json({
+  //       roomId: 10,
+  //       title: 'title',
+  //       ownerId: 99945,
+  //       ownerDisplayName: 'jaham',
+  //       userCount: 1,
+  //       lock: false,
+  //     }),
+  //   );
+  // }),
 ];

@@ -109,7 +109,7 @@ export class DbUserService {
     if (body.displayName !== '') {
       user.displayName = body.displayName;
     }
-    user.mfaNeed = user.mfaNeed;
+    user.mfaNeed = body.mfaNeed;
     try {
       await this.userRepo.update({ uid }, user);
     } catch (err) {

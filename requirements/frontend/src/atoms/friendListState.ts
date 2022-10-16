@@ -1,9 +1,20 @@
-import { a } from 'msw/lib/glossary-dc3fd077';
 import { atom, selector } from 'recoil';
 import { authState } from './authState';
 import { UserDataType } from './userDataType';
 
-export const friendListState = atom<UserDataType[]>({
+export type UserDataMap = Map<number, UserDataType>;
+
+interface pendingFriendType {
+  data: UserDataType;
+  isAdd: boolean;
+}
+
+export const pendingFriendState = atom<pendingFriendType[]>({
+  key: 'pendingFriend',
+  default: [],
+});
+
+export const friendListState = atom<UserDataMap>({
   key: 'friendList',
   default: selector({
     key: 'friendList/default',
@@ -16,7 +27,7 @@ export const friendListState = atom<UserDataType[]>({
   }),
 });
 
-const requestFriendList = async (token: string): Promise<UserDataType[]> => {
+const requestFriendList = async (token: string): Promise<UserDataMap> => {
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_EP}/users/friend`,
     {
@@ -29,15 +40,12 @@ const requestFriendList = async (token: string): Promise<UserDataType[]> => {
   if (!response.ok) throw new Error();
 
   const data: UserDataType[] = await response.json();
-  return data.sort((first, second) => {
-    if (first.uid < second.uid) {
-      return -1;
-    }
 
-    if (first.uid > second.uid) {
-      return 1;
-    }
+  const ret: UserDataMap = new Map<number, UserDataType>();
 
-    return 0;
-  });
+  for (let value of data) {
+    ret.set(value.uid, value);
+  }
+
+  return ret;
 };
