@@ -29,7 +29,7 @@ export class ChatRoomListService {
     password: string,
   ) {
     password = password === undefined ? '' : password;
-    this.database.addChannel({
+    return await this.database.addChannel({
       chName,
       chOwnerId,
       mode,
@@ -81,6 +81,10 @@ export class ChatRoomListService {
       roomList.push(chatRoom);
     }
     return roomList;
+  }
+
+  async getCreatedRoom(channel: ChannelEntity): Promise<ChatRoomType> {
+    return await this.makeChatRoomType(channel);
   }
 
   private async makeChatRoomType(channel: ChannelEntity) {

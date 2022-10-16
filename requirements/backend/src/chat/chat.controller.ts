@@ -70,11 +70,12 @@ export class ChatController {
     if (body.mode !== ChannelMode.protected && body.password.length !== 0) {
       throw new HttpException('비밀번호는 4글자이어야 합니다.', HttpStatus.FORBIDDEN);
     }
-    await this.chatRoomListService.createRoom(
+    const ret = await this.chatRoomListService.createRoom(
       uid,
       body.title,
       body.mode,
       body.password,
     );
+    return this.chatRoomListService.getCreatedRoom(ret);
   }
 }
