@@ -21,13 +21,17 @@ import { UidDto } from './dto/uid.dto';
 import { UsersService } from './users.service';
 import { namecheckDto } from './dto/namecheck.dto';
 import { ProfileUpdateDto } from './dto/profile.update.dto';
+import { DmGateway } from 'src/dm/dm.gateway';
 
 @UseGuards(AuthGuard)
 @ApiTags('Users')
 @ApiBearerAuth('access-token')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly dmGateway: DmGateway,
+  ) {}
 
   //NOTE - GET
   @ApiOperation({ summary: '내 프로필 가져오기' })
@@ -72,7 +76,9 @@ export class UsersController {
   @ApiResponse({ status: 409, description: '중복된 닉네임' })
   @Post('me')
   async updateprofile(@MyUid() uid: number, @Body() body: ProfileUpdateDto) {
-    return await this.usersService.updateme(uid, body);
+    const user = await this.usersService.updateme(uid, body);
+    this.dmGateway.updateUser(uid);
+    return user;
   }
 
   @ApiOperation({ summary: '닉네임 중복 조회' })
