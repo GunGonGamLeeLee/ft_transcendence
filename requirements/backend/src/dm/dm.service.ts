@@ -20,14 +20,9 @@ export class DmService {
   }
 
   async validateUser(token: string) {
-    try {
-      const { id } = this.authService.verify(token);
-      await this.updateUserStatus(id, UserStatus.ONLINE);
-      return { user: await this.getUser(id) };
-    } catch (e) {
-      console.log(e);
-      return { user: null };
-    }
+    const { id } = this.authService.verify(token);
+    await this.updateUserStatus(id, UserStatus.ONLINE);
+    return await this.getUser(id);
   }
 
   async getUser(uid: number) {
@@ -38,11 +33,19 @@ export class DmService {
     return await this.database.updateUserStatus(uid, status);
   }
 
+  async updateUserRating(uid: number, rating: number) {
+    return await this.database.updateUserRating(uid, rating);
+  }
+
   async getFriendList(uid: number) {
     return await this.database.listUserFriendWithInfo(uid);
   }
 
   async getFollowerList(uid: number) {
     return await this.database.listUserFollowerWithInfo(uid);
+  }
+
+  async getChannelsOfUser(uid: number) {
+    return await this.database.listChannelOfUser(uid);
   }
 }
