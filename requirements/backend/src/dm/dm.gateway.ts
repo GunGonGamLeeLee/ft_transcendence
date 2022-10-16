@@ -7,11 +7,11 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { UserEntity } from 'src/database/entity/entity.user';
 import { DmChatDto } from './dm.chat.dto';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { DmService } from './dm.service';
 import { WsValidationPipe } from '../ws.validation.pipe';
+import { UserEntity } from 'src/database/entity/entity.user';
 
 @WebSocketGateway({
   cors: {
@@ -44,13 +44,30 @@ export class DmGateway {
     );
   }
 
-  async updateUserStatus(uid: number, user: UserEntity) {
+  async updateUser(uid: number) {
+    const user = await this.dmService.getUser(uid);
+    this.updateUserToFriends(user);
+    this.updateUserToChannels(user);
+  }
+
+  private async updateUserToFriends(user: UserEntity) {
+    const { uid, displayName, imgUri, rating, status } = user;
     const followerList = await this.dmService.getFollowerList(uid);
-    for (const follower of followerList) {
-      const { uid, displayName, imgUri, rating, status } = user;
-      // const userData: UserDataType = { ...user }; // FIXME 이거 왜 안될까?
+    for (const f of followerList) {
+      console.log(`dm/status: ${uid} send status to dm${f.fromUid}`);
       this.server
-        .to(`dm${follower.fromUid}`)
+        .to(`dm${f.fromUid}`)
+        .emit('dm/status', { uid, displayName, imgUri, rating, status });
+    }
+  }
+
+  private async updateUserToChannels(user: UserEntity) {
+    const { uid, displayName, imgUri, rating, status } = user;
+    const channels = await this.dmService.getChannelsOfUser(uid);
+    for (const ch of channels) {
+      console.log(`dm/status: ${uid} send status to channel${ch.chid}`);
+      this.server
+        .to(`channel${ch.chid}`)
         .emit('dm/status', { uid, displayName, imgUri, rating, status });
     }
   }
