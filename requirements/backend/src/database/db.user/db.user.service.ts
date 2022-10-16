@@ -25,6 +25,19 @@ export class DbUserService {
     return await this.userRepo.findOneBy({ displayName });
   }
 
+  async findOneData(uid: number): Promise<UserEntity> {
+    return await this.userRepo.findOne({
+      select: {
+        uid: true,
+        displayName: true,
+        imgUri: true,
+        rating: true,
+        status: true,
+      },
+      where: { uid },
+    });
+  }
+
   async findOneProfile(uid: number): Promise<UserEntity> {
     return await this.userRepo.findOne({
       select: {

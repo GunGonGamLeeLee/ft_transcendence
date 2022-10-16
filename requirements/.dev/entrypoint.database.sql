@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.5
--- Dumped by pg_dump version 14.5
+-- Dumped from database version 15.0
+-- Dumped by pg_dump version 15.0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -99,9 +99,9 @@ ALTER SEQUENCE public.channel_entity_chid_seq OWNED BY public.channel_entity.chi
 CREATE TABLE public.dm_log_entity (
     index integer NOT NULL,
     "time" timestamp with time zone NOT NULL,
-    content character varying NOT NULL,
-    "fromUid" integer,
-    "toUid" integer
+    msg character varying NOT NULL,
+    "fromUid" integer NOT NULL,
+    "toUid" integer NOT NULL
 );
 
 
@@ -226,7 +226,7 @@ CREATE TABLE public.user_in_channel_entity (
     index integer NOT NULL,
     uid integer NOT NULL,
     chid integer NOT NULL,
-    "userRole" integer NOT NULL,
+    role integer NOT NULL,
     "isMute" boolean DEFAULT false NOT NULL,
     "isBan" boolean DEFAULT false NOT NULL
 );
@@ -338,7 +338,14 @@ COPY public.channel_entity (chid, "chName", "chOwnerId", mode, password) FROM st
 -- Data for Name: dm_log_entity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.dm_log_entity (index, "time", content, "fromUid", "toUid") FROM stdin;
+COPY public.dm_log_entity (index, "time", msg, "fromUid", "toUid") FROM stdin;
+1	2022-10-15 20:15:00.733+00	123456789012345678	99857	81730
+2	2022-10-15 20:15:02.626+00	123456789012345678	99857	81730
+3	2022-10-15 20:15:03.317+00	123456789012345678	99857	81730
+4	2022-10-15 20:15:03.921+00	123456789012345678	99857	81730
+5	2022-10-15 20:16:03.582+00	123456789012345678	99857	81730
+6	2022-10-15 20:16:04.654+00	123456789012345678	99857	81730
+7	2022-10-15 20:16:05.247+00	123456789012345678	99857	81730
 \.
 
 
@@ -347,6 +354,7 @@ COPY public.dm_log_entity (index, "time", content, "fromUid", "toUid") FROM stdi
 --
 
 COPY public.friend_list_entity (index, "fromUid", "toUid") FROM stdin;
+1	99857	81730
 \.
 
 
@@ -363,14 +371,14 @@ COPY public.match_history_entity (index, "isRank", "winnerUid", "loserUid") FROM
 --
 
 COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSecret", status, "gameRoom") FROM stdin;
-85355	s2x3m83f9	http://localhost:4243/img/85355.png	42	f	JVGQGCRBIAMDKIBL	0	
-81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	0	
-99857	6g635chah	http://localhost:4243/img/99857.png	42	f	GALREZZVPRNECPQA	0	
 1	dummy1	http://localhost:4243/img/99857.png	0	f	string	0	
 2	dummy2	http://localhost:4243/img/99857.png	0	f	string	0	
 3	dummy3	http://localhost:4243/img/99857.png	1000	f	string	0	
 4	dummy4	http://localhost:4243/img/99857.png	200	f	string	0	
 99947	jaham	http://localhost:4243/img/81730.png	200	f	string	0	
+85355	s2x3m83f9	http://localhost:4243/img/85355.png	42	f	JVGQGCRBIAMDKIBL	1	
+81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	0	
+99857	6g635chah	http://localhost:4243/img/99857.png	42	f	GALREZZVPRNECPQA	1	
 \.
 
 
@@ -378,7 +386,7 @@ COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSec
 -- Data for Name: user_in_channel_entity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_in_channel_entity (index, uid, chid, "userRole", "isMute", "isBan") FROM stdin;
+COPY public.user_in_channel_entity (index, uid, chid, role, "isMute", "isBan") FROM stdin;
 1	1	8	0	f	f
 2	1	9	0	f	f
 3	2	10	0	f	f
@@ -448,14 +456,14 @@ SELECT pg_catalog.setval('public.channel_entity_chid_seq', 21, true);
 -- Name: dm_log_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.dm_log_entity_index_seq', 1, false);
+SELECT pg_catalog.setval('public.dm_log_entity_index_seq', 7, true);
 
 
 --
 -- Name: friend_list_entity_index_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 1, false);
+SELECT pg_catalog.setval('public.friend_list_entity_index_seq', 1, true);
 
 
 --
@@ -606,6 +614,14 @@ ALTER TABLE ONLY public.friend_list_entity
 
 ALTER TABLE ONLY public.match_history_entity
     ADD CONSTRAINT "FK_78057088d054b99b6cabc852639" FOREIGN KEY ("winnerUid") REFERENCES public.user_entity(uid);
+
+
+--
+-- Name: friend_list_entity FK_c37132869b4ee298c89601dd186; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.friend_list_entity
+    ADD CONSTRAINT "FK_c37132869b4ee298c89601dd186" FOREIGN KEY ("fromUid") REFERENCES public.user_entity(uid);
 
 
 --

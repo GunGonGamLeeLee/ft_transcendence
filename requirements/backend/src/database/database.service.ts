@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
+import { UserDataType } from 'src/users/dto/user.data.type.dto';
 import { DbBlockListService } from './db.block.list/db.block.list.service';
 import { DbChannelService } from './db.channel/db.channel.service';
 import { DbDmLogService } from './db.dm.log/db.dm.log.service';
@@ -17,7 +19,7 @@ import { UserEntity, UserStatus } from './entity/entity.user';
 import { UserRoleInChannel } from './entity/entity.user.in.channel';
 
 const MAX_CHANNEL_COUNT = 10; // ANCHOR 여기 있는게 맞나..?
-const MAX_DM_SIZE = 200;
+// const MAX_DM_SIZE = 200;
 
 @Injectable()
 export class DatabaseService {
@@ -235,7 +237,7 @@ export class DatabaseService {
     const userInChannelDto: UserInChannelDto = {
       uid: channelDto.chOwnerId,
       chid: channel.chid,
-      userRole: UserRoleInChannel.OWNER,
+      role: UserRoleInChannel.OWNER,
       isMute: false,
       isBan: false,
     };
@@ -250,7 +252,7 @@ export class DatabaseService {
     const channel: ChannelEntity = await this.dbChannelService.findOne(
       userInChannelDto.chid,
     );
-    userInChannelDto.userRole = UserRoleInChannel.USER;
+    userInChannelDto.role = UserRoleInChannel.USER;
     return await this.dbUserInChannelService.saveOne(
       userInChannelDto,
       user,
@@ -267,11 +269,6 @@ export class DatabaseService {
       throw new HttpException(
         '존재하지 않는 유저입니다.',
         HttpStatus.NOT_FOUND,
-      );
-    if (dmLog.content.length > MAX_DM_SIZE)
-      throw new HttpException(
-        '메시지의 내용이 너무 많습니다.',
-        HttpStatus.PAYLOAD_TOO_LARGE,
       );
     if (fromUser.uid === toUser.uid)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
@@ -300,8 +297,11 @@ export class DatabaseService {
   async findOneUser(uid: number) {
     return await this.dbUserService.findOne(uid);
   }
-  async findOneUserProfile(uid: number) {
+  async findOneUserProfile(uid: number): Promise<ProfileType> {
     return await this.dbUserService.findOneProfile(uid);
+  }
+  async findOneUserData(uid: number): Promise<UserDataType> {
+    return await this.dbUserService.findOneData(uid);
   }
 
   async findOneChannel(chid: number) {
@@ -415,7 +415,7 @@ export class DatabaseService {
     await this.checkPermissionInChannel(
       myUid,
       chid,
-      'you can`t change userRole in channel.',
+      'you can`t change role in channel.',
     );
     if (role == UserRoleInChannel.OWNER)
       throw new HttpException('권한이 없습니다.', HttpStatus.FORBIDDEN);
@@ -481,7 +481,7 @@ export class DatabaseService {
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
     if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
-    if (uic.userRole == UserRoleInChannel.USER)
+    if (uic.role == UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
 }

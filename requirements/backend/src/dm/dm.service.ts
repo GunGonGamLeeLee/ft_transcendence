@@ -10,6 +10,15 @@ export class DmService {
     private readonly database: DatabaseService,
   ) {}
 
+  async addDmLog(fromUid: number, toUid: number, msg: string) {
+    await this.database.addDmLog({
+      fromUid,
+      toUid,
+      msg,
+      time: new Date(),
+    });
+  }
+
   async validateUser(token: string) {
     try {
       const { id } = this.authService.verify(token);

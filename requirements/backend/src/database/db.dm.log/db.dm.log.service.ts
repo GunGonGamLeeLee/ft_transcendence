@@ -19,34 +19,19 @@ export class DbDmLogService {
   async findDmLogsOfUser(fromUid: number, toUid: number) {
     const msg = await this.dmLogRepo.find({
       select: {
-        index: true,
-        content: true,
+        fromUid: true,
+        toUid: true,
+        msg: true,
         time: true,
-        fromUser: {
-          uid: true,
-          displayName: true,
-          imgUri: true,
-          status: true,
-        },
-        toUser: {
-          uid: true,
-          displayName: true,
-          imgUri: true,
-          status: true,
-        },
-      },
-      relations: {
-        fromUser: true,
-        toUser: true,
       },
       where: [
         {
-          fromUser: { uid: Equal(fromUid) },
-          toUser: { uid: Equal(toUid) },
+          fromUid,
+          toUid,
         },
         {
-          fromUser: { uid: Equal(toUid) },
-          toUser: { uid: Equal(fromUid) },
+          fromUid: toUid,
+          toUid: fromUid,
         },
       ],
     });

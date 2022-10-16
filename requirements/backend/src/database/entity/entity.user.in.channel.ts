@@ -28,7 +28,7 @@ export class UserInChannelEntity {
   chid: number;
 
   @Column()
-  userRole: UserRoleInChannel;
+  role: UserRoleInChannel;
 
   @Column({ default: false })
   isMute: boolean;

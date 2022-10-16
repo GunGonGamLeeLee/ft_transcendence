@@ -12,18 +12,17 @@ export class DmLogEntity {
   @PrimaryGeneratedColumn({ type: 'integer' })
   index: number;
 
-  //TODO - include uid?
-  // @Column({ type: 'integer' })
-  // fromUid: number;
+  @Column({ type: 'integer' })
+  fromUid: number;
 
-  // @Column({ type: 'integer' })
-  // toUid: number;
+  @Column({ type: 'integer' })
+  toUid: number;
 
   @Column({ type: 'timestamptz' })
   time: Date;
 
   @Column()
-  content: string;
+  msg: string;
 
   @ManyToOne(() => UserEntity, (user) => user.uid)
   @JoinColumn({

@@ -7,7 +7,7 @@ export class UserInChannelDto {
   @ApiProperty()
   chid: number;
   @ApiProperty()
-  userRole: UserRoleInChannel;
+  role: UserRoleInChannel;
   @ApiProperty({ default: false })
   isMute: boolean;
   @ApiProperty({ default: false })
