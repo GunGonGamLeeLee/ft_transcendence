@@ -54,7 +54,7 @@ const requestBody = async (
 
   if (response.status >= 400) throw new Error();
 
-  if (needResponse) return true;
+  if (needResponse === false) return true;
 
   const ret = await response.json();
   return ret;
