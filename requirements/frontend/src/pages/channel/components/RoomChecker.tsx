@@ -28,13 +28,7 @@ export function RoomChecker() {
 
     if (currRoom === null) throw new Error();
 
-    const a = parseInt(currRoom.roomId.substring(7));
-    console.log(typeof a);
-    console.log(a);
-    console.log(typeof password);
-    console.log(password);
-    const payload = { chid: parseInt(currRoom.roomId.substring(7)), password: '1234' }
-
+    const payload = { chid: parseInt(currRoom.roomId.substring(7)), password }
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_EP}/chat/pwd`,
       {
@@ -46,8 +40,6 @@ export function RoomChecker() {
         body: JSON.stringify(payload),
       },
     );
-
-    console.log(response)
 
     if (!response.ok) {
       alert('fail!');
