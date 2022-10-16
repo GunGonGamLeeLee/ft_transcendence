@@ -26,7 +26,7 @@ export function FriendList() {
         if (curr.isAdd === true) {
           friendList.set(curr.data.uid, curr.data);
         } else {
-          console.log(friendList.delete(curr.data.uid));
+          friendList.delete(curr.data.uid);
         }
       });
 

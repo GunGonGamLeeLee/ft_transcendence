@@ -23,7 +23,6 @@ export function SocketChecker() {
 
     socket.auth = { token };
     socket.connect();
-    console.debug('initial');
 
     return () => {
       socket.disconnect();
@@ -48,7 +47,6 @@ export function SocketChecker() {
     });
 
     socket.on('dm/status', (input) => {
-      console.debug(input);
       setPendingFriend((curr) => [
         ...curr,
         {

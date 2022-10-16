@@ -45,7 +45,12 @@ export class AppGateway {
   private async validateUser(client: Socket) {
     const token = this.getToken(client);
     const user = await this.dmService.validateUser(token);
-    if (!user) client.disconnect();
+
+    if (!user) {
+      client.disconnect();
+      return;
+    }
+
     client.data = { uid: user.uid, status: user.status };
   }
 
