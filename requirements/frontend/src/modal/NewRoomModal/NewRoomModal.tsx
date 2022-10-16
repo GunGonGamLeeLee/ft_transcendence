@@ -12,6 +12,7 @@ import { RoomModeType, RoomType } from '../../atoms/currRoomState';
 import { RedCross } from '../buttons/RedCross';
 import { userProfileState } from '../../atoms/userProfileState';
 import { sortRoomByTitle } from '../../utils/sortRoomByTitle';
+import { useFetch } from '../../hooks/useFetch';
 
 export function NewRoomModal() {
   const NewRoomModal = useRecoilValue(newRoomModalState);
@@ -20,8 +21,10 @@ export function NewRoomModal() {
 }
 
 function NewRoom() {
-  const userProfile = useRecoilValue(userProfileState);
   const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
+
+  const userProfile = useRecoilValue(userProfileState);
   const setNewRoomModal = useSetRecoilState(newRoomModalState);
   const [isPrivate, setIsPrivate] = React.useState(false);
   const [title, setTitle] = React.useState<string>('');
@@ -29,6 +32,7 @@ function NewRoom() {
   const [allRoomList, setAllRoomList] = useRecoilState(allRoomListState);
   const [joinedRoomList, setJoinedRoomList] =
     useRecoilState(joinedRoomListState);
+  const fetcher = useFetch();
 
   const onClick = () => {
     setNewRoomModal(false);
@@ -52,7 +56,7 @@ function NewRoom() {
     const roomPassword = password;
     const mode = isPrivate
       ? RoomModeType.PRIVATE
-      : password !== null
+      : password !== ''
       ? RoomModeType.PROTECTED
       : RoomModeType.PUBLIC;
 
@@ -68,30 +72,22 @@ function NewRoom() {
       title: roomName,
       mode,
       password,
-      ownerId: userProfile.uid,
-      ownerDisplayName: userProfile.displayName,
     };
 
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/channel`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(room),
-    });
-
-    if (response.status === 201) {
-      const data: RoomType = await response.json();
-
-      setAllRoomList([...allRoomList, data].sort(sortRoomByTitle));
-      setJoinedRoomList([...joinedRoomList, data].sort(sortRoomByTitle));
-      setNewRoomModal(false);
+    if (password.length !== 4 && password.length !== 0) {
+      alert('비밀번호는 4자리어야 합니다!');
       return;
     }
 
-    alert('Create room failed');
-    setNewRoomModal(false);
+    try {
+      const data = await fetcher(token, 'POST', 'chat/channel', room, true);
+      setAllRoomList([...allRoomList, data].sort(sortRoomByTitle));
+      setJoinedRoomList([...joinedRoomList, data].sort(sortRoomByTitle));
+    } catch (err) {
+      alert('방 생성 실패');
+    } finally {
+      setNewRoomModal(false);
+    }
   };
 
   return (

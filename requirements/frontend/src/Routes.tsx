@@ -14,6 +14,7 @@ import { Login } from './pages/login/Login';
 import { RoomChecker } from './pages/channel/components/RoomChecker';
 import { ErrorHandler } from './ErrorHandler';
 import { Modal } from './modal/Modal';
+import { SocketChecker } from './components/Socket/SocketChecker';
 
 export const Routes = createBrowserRouter(
   createRoutesFromElements(
@@ -26,14 +27,36 @@ export const Routes = createBrowserRouter(
       }
       errorElement={<ErrorHandler />}
     >
-      <Route index element={<Navigate to='/login' replace={true} />} />
-      <Route path='login' element={<Login />} />
-      <Route element={<LoginChecker />}>
-        <Route element={<Modal />}>
-          <Route path='lobby' element={<Lobby />} />
-          <Route path='channel' element={<Channel />} />
-          <Route path='channel/room' element={<Room />} />
-          <Route path='channel/roomChecker' element={<RoomChecker />} />
+      <Route
+        index
+        element={<Navigate to='/login' replace={true} />}
+        errorElement={<ErrorHandler />}
+      />
+      <Route path='login' element={<Login />} errorElement={<ErrorHandler />} />
+      <Route element={<LoginChecker />} errorElement={<ErrorHandler />}>
+        <Route element={<SocketChecker />} errorElement={<ErrorHandler />}>
+          <Route element={<Modal />} errorElement={<ErrorHandler />}>
+            <Route
+              path='lobby'
+              element={<Lobby />}
+              errorElement={<ErrorHandler />}
+            />
+            <Route
+              path='channel'
+              element={<Channel />}
+              errorElement={<ErrorHandler />}
+            />
+            <Route
+              path='channel/room'
+              element={<Room />}
+              errorElement={<ErrorHandler />}
+            />
+            <Route
+              path='channel/roomChecker'
+              element={<RoomChecker />}
+              errorElement={<ErrorHandler />}
+            />
+          </Route>
         </Route>
       </Route>
     </Route>,

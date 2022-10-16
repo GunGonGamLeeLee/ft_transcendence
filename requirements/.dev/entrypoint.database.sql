@@ -375,7 +375,7 @@ COPY public.user_entity (uid, "displayName", "imgUri", rating, "mfaNeed", "qrSec
 2	dummy2	http://localhost:4243/img/99857.png	0	f	string	0	
 3	dummy3	http://localhost:4243/img/99857.png	1000	f	string	0	
 4	dummy4	http://localhost:4243/img/99857.png	200	f	string	0	
-99947	jaham	http://localhost:4243/img/81730.png	200	f	string	0	
+99947	jaham	http://localhost:4243/img/99947.png	200	f	string	0	
 85355	s2x3m83f9	http://localhost:4243/img/85355.png	42	f	JVGQGCRBIAMDKIBL	1	
 81730	1sdwdwuwv	http://localhost:4243/img/81730.png	42	f	PVFWCRIBHNHTWNZ6	0	
 99857	6g635chah	http://localhost:4243/img/99857.png	42	f	GALREZZVPRNECPQA	1	

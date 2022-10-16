@@ -5,7 +5,6 @@ import { userProfileModalState } from '../../atoms/modals/userProfileModalState'
 import { userProfileState } from '../../atoms/userProfileState';
 import { friendListState } from '../../atoms/friendListState';
 import { Follow } from './buttons/Follow';
-import { Unfollow } from './buttons/Unfollow';
 import { blockedListState } from '../../atoms/blockedListState';
 import { Block } from './buttons/Block';
 import styles from './ProfileModal.module.css';
@@ -43,7 +42,6 @@ function UserProfile({ user }: { user: UserDataType }) {
   const currRoom = useRecoilValue(currRoomState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
-  const [isFriend, setIsFriend] = React.useState<boolean>(false);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
   const setMatchHistory = useSetRecoilState(matchHistoryListState);
 
@@ -55,7 +53,6 @@ function UserProfile({ user }: { user: UserDataType }) {
   };
 
   React.useEffect(() => {
-    setIsFriend(friendList.find((curr) => curr.uid === user.uid) !== undefined);
     setIsBlocked(
       blockedList.find((curr) => curr.uid === user.uid) !== undefined,
     );
@@ -101,7 +98,7 @@ function UserProfile({ user }: { user: UserDataType }) {
                 </div>
               ) : null}
               <div className={styles.profile__buttons}>
-                {!isFriend ? <Follow /> : <Unfollow />}
+                <Follow />
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
               <div className={styles.profile__buttons}>
