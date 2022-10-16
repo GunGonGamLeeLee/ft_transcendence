@@ -65,10 +65,10 @@ export class ChatController {
   @Post('channel')
   async newroom(@MyUid() uid, @Body() body: ChannelCreateDto) {
     if (body.mode === ChannelMode.protected && body.password.length !== 4) {
-      throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
+      throw new HttpException('비밀번호는 4글자이어야 합니다.', HttpStatus.FORBIDDEN);
     }
     if (body.mode !== ChannelMode.protected && body.password.length !== 0) {
-      throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
+      throw new HttpException('비밀번호는 4글자이어야 합니다.', HttpStatus.FORBIDDEN);
     }
     await this.chatRoomListService.createRoom(
       uid,

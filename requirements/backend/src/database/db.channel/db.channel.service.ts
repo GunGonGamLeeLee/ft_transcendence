@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChannelDto } from '../dto/channel.dto';
@@ -81,6 +81,9 @@ export class DbChannelService {
   }
 
   async setPassword(chid: number, password: string) {
+    
+    if (!(password.length !== 4 && password.length !== 0))
+      throw new HttpException('비밀번호는 4글자이어야 합니다.', HttpStatus.FORBIDDEN);
     return await this.channelRepo.update(
       { chid },
       { mode: ChannelMode.protected, password },

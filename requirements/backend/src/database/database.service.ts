@@ -137,7 +137,7 @@ export class DatabaseService {
       chid,
     );
   }
-  
+
   async listDmOfUser(user1: number, user2: number) {
     if (user1 === user2)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.BAD_REQUEST);
