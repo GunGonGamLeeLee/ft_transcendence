@@ -304,6 +304,10 @@ export class DatabaseService {
     return await this.dbUserService.findOneData(uid);
   }
 
+  async findUserByName(nickname: string) {
+    return await this.dbUserService.findUserByName(nickname);
+  }
+
   async findOneChannel(chid: number) {
     return await this.dbChannelService.findOne(chid);
   }
@@ -410,21 +414,28 @@ export class DatabaseService {
     myUid: number,
     targetUid: number,
     chid: number,
-    role: UserRoleInChannel,
+    roleTo: UserRoleInChannel,
   ) {
     await this.checkPermissionInChannel(
       myUid,
       chid,
       'you can`t change role in channel.',
     );
-    if (role == UserRoleInChannel.OWNER)
-      throw new HttpException('권한이 없습니다.', HttpStatus.FORBIDDEN);
-    if (role > UserRoleInChannel.USER || role < UserRoleInChannel.OWNER)
+    if (roleTo === UserRoleInChannel.OWNER)
+      throw new HttpException(
+        'OWNER로 변경할 수 없습니다.',
+        HttpStatus.FORBIDDEN,
+      );
+    if (roleTo > UserRoleInChannel.USER || roleTo < UserRoleInChannel.OWNER)
       throw new HttpException(
         '구현되지 않았습니다.',
         HttpStatus.NOT_IMPLEMENTED,
       );
-    return await this.dbUserInChannelService.changeRole(targetUid, chid, role);
+    return await this.dbUserInChannelService.changeRole(
+      targetUid,
+      chid,
+      roleTo,
+    );
   }
 
   // NOTE delete
@@ -481,7 +492,7 @@ export class DatabaseService {
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
     if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
-    if (uic.role == UserRoleInChannel.USER)
+    if (uic.role === UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
 }

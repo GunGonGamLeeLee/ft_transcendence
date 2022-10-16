@@ -17,10 +17,10 @@ export class DbFriendListService {
   }
 
   async findListOfUser(uid: number) {
-    const user = await this.firendListRepo.find({
+    const friends = await this.firendListRepo.find({
       where: { fromUid: uid },
     });
-    return user;
+    return friends;
   }
 
   async findListOfUserWithInfo(uid: number) {
