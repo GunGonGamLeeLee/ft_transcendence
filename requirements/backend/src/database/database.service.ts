@@ -313,6 +313,9 @@ export class DatabaseService {
   async findOneUserProfile(uid: number): Promise<ProfileType> {
     return await this.dbUserService.findOneProfile(uid);
   }
+  async findOneUserSmallProfile(uid: number): Promise<ProfileType> {
+    return await this.dbUserService.findOneSmallProfile(uid);
+  }
   async findOneUserData(uid: number): Promise<UserDataType> {
     return await this.dbUserService.findOneData(uid);
   }

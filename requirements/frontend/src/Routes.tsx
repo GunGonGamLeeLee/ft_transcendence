@@ -15,6 +15,7 @@ import { RoomChecker } from './pages/channel/components/RoomChecker';
 import { ErrorHandler } from './ErrorHandler';
 import { Modal } from './modal/Modal';
 import { SocketChecker } from './components/Socket/SocketChecker';
+import { Game } from './pages/game/Game';
 
 export const Routes = createBrowserRouter(
   createRoutesFromElements(
@@ -54,6 +55,11 @@ export const Routes = createBrowserRouter(
             <Route
               path='channel/roomChecker'
               element={<RoomChecker />}
+              errorElement={<ErrorHandler />}
+            />
+            <Route
+              path='game'
+              element={<Game />}
               errorElement={<ErrorHandler />}
             />
           </Route>
