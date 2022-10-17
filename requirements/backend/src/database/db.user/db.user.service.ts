@@ -52,6 +52,17 @@ export class DbUserService {
     });
   }
 
+  async findOneSmallProfile(uid: number): Promise<UserEntity> {
+    return await this.userRepo.findOne({
+      select: {
+        displayName: true,
+        imgUri: true,
+        rating: true,
+      },
+      where: { uid },
+    });
+  }
+
   async findUserRankList() {
     return await this.userRepo.find({
       select: {

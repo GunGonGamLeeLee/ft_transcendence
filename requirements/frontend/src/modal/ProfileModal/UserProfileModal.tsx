@@ -12,6 +12,7 @@ import modalstyles from '../Modal.module.css';
 import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState } from '../../atoms/currRoomState';
+import { currRoleState } from '../../atoms/currRoleState';
 import { MatchHistoryList } from './MatchHistoryList';
 import { authState } from '../../atoms/authState';
 import {
@@ -40,6 +41,7 @@ function UserProfile({ user }: { user: UserDataType }) {
   const setState = useSetRecoilState(userProfileModalState);
   const userProfile = useRecoilValue(userProfileState);
   const currRoom = useRecoilValue(currRoomState);
+  const currRole = useRecoilValue(currRoleState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);

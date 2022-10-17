@@ -19,7 +19,8 @@ import { ChatModule } from './chat/chat.module';
 import { DmModule } from './dm/dm.module';
 import { AppGateway } from './app.gateway';
 import { LoggerMiddleware } from './logger.middleware';
-import { GameModule } from './game/game.module';
+import { GameModule, GameRoomModule } from './game/game.module';
+import { MatchMakingModule } from './game/match.module';
 
 dotenv.config({
   path: '/backend.env',
@@ -56,6 +57,8 @@ const dbOptions: TypeOrmModuleOptions = {
     DatabaseModule,
     DmModule,
     GameModule,
+    GameRoomModule,
+    MatchMakingModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
