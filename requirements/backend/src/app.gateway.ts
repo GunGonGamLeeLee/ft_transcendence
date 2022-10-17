@@ -21,11 +21,13 @@ export class AppGateway {
     private readonly dmGateway: DmGateway,
   ) {}
 
+  private sockets = new Set();
   @WebSocketServer()
   server: Server;
 
   async handleConnection(client: Socket) {
     await this.validateUser(client);
+    if (client.data.uid === undefined) return;
     client.join(`dm${client.data.uid}`);
     // FIXME 테스트용.
     // if (client.data.uid === 99857) {
@@ -40,19 +42,22 @@ export class AppGateway {
     if (client.data.uid === undefined) return;
     await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     await this.dmGateway.updateUser(client.data.uid);
-    console.log(this.server.of('/').adapter.sids);
+    this.sockets.delete(client.data.uid);
+    // console.log(this.server.of('/').adapter.sids);
   }
 
   private async validateUser(client: Socket) {
     const token = this.getToken(client);
     const user = await this.dmService.validateUser(token);
+    const alreadyExist = this.sockets.has(user.uid);
 
-    if (!user) {
+    if (alreadyExist) client.emit('already-exist', 'hey'); // FIXME 프론트와 얘기 해보자.
+    if (!user || alreadyExist) {
       client.disconnect();
       return;
     }
-
-    client.data = { uid: user.uid, status: user.status };
+    this.sockets.add(user.uid);
+    client.data = { uid: user.uid };
   }
 
   private getToken(client: Socket) {
