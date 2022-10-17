@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { DmModule } from './dm/dm.module';
 import { AuthModule } from './auth/auth.module';
 import { LoginModule } from './login/login.module';
+import { GameModule } from './game/game.module';
 
 const configDb = new DocumentBuilder()
   .setTitle('db controller')
@@ -21,7 +22,7 @@ const configDb = new DocumentBuilder()
   .build();
 
 const optionDb: SwaggerDocumentOptions = {
-  include: [DatabaseModule],
+  include: [DatabaseModule, GameModule],
 };
 
 const configApi = new DocumentBuilder()
