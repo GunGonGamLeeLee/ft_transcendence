@@ -1,5 +1,9 @@
 import { UseFilters, UsePipes } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  WsException,
+} from '@nestjs/websockets';
 import { isString } from 'class-validator';
 import { Server, Socket } from 'socket.io';
 import { UserStatus } from './database/entity/entity.user';
@@ -26,7 +30,13 @@ export class AppGateway {
   server: Server;
 
   async handleConnection(client: Socket) {
-    await this.validateUser(client);
+    try {
+      await this.validateUser(client);
+    } catch (e) {
+      console.log(e.error);
+      client.disconnect();
+    }
+
     if (client.data.uid === undefined) return;
     client.join(`dm${client.data.uid}`);
     console.log(
@@ -46,6 +56,8 @@ export class AppGateway {
   private async validateUser(client: Socket) {
     const token = this.getToken(client);
     const user = await this.dmService.validateUser(token);
+    if (user == null || user == undefined)
+      throw new WsException('잘못된 사용자입니다.');
     const alreadyExist = this.sockets.has(user.uid);
 
     client.emit('login/dupCheck', !alreadyExist);

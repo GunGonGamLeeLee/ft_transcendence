@@ -1,4 +1,4 @@
-import { UseFilters, UsePipes } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -16,12 +16,14 @@ import { ChatMessageDto } from './dto/chat.message.dto';
 import { ChatPasswordDto } from './dto/chat.password.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @WebSocketGateway({
   cors: {
     origin: ['http://localhost:4242'],
   },
 })
+@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class ChatGateway {
