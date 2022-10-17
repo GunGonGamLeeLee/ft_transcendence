@@ -9,25 +9,37 @@ export class ChatService {
   async changeUserRoleInChannel(
     myUid: number,
     targetUid: number,
-    roomId: number,
+    chid: number,
     role: UserRoleInChannel,
   ) {
-    await this.database.changeUserRoleInChannel(myUid, targetUid, roomId, role);
+    await this.database.changeUserRoleInChannel(myUid, targetUid, chid, role);
   }
 
-  async muteUserInChannel(myUid: number, targetUid: number, roomId: number) {
-    await this.database.muteUserInChannel(myUid, targetUid, roomId);
+  async muteUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.database.muteUserInChannel(myUid, targetUid, chid);
   }
 
-  async banUserInChannel(myUid: number, targetUid: number, roomId: number) {
-    await this.database.banUserInChannel(myUid, targetUid, roomId);
+  async banUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.database.banUserInChannel(myUid, targetUid, chid);
   }
 
-  async updateChRemovePassword(myUid: number, roomId: number) {
-    await this.database.updateChRemovePassword(myUid, roomId);
+  async unmuteUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.database.unmuteUserInChannel(myUid, targetUid, chid);
   }
 
-  async updateChSetPassword(myUid: number, roomId: number, password: string) {
-    await this.database.updateChSetPassword(myUid, roomId, password);
+  async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
+    await this.database.unbanUserInChannel(myUid, targetUid, chid);
+  }
+
+  async updateChRemovePassword(myUid: number, chid: number) {
+    await this.database.updateChRemovePassword(myUid, chid);
+  }
+
+  async updateChSetPassword(myUid: number, chid: number, password: string) {
+    await this.database.updateChSetPassword(myUid, chid, password);
+  }
+
+  async deleteUserInChannel(targetUid: number, chid: number) {
+    await this.database.deleteUserInChannel(targetUid, chid);
   }
 }
