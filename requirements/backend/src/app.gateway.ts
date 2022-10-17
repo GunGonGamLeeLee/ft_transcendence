@@ -37,6 +37,7 @@ export class AppGateway {
   }
 
   async handleDisconnect(client: Socket) {
+    if (client.data.uid === undefined) return;
     await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     await this.dmGateway.updateUser(client.data.uid);
     console.log(this.server.of('/').adapter.sids);
