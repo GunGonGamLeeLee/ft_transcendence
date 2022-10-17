@@ -2,7 +2,7 @@ import { IsNumber } from 'class-validator';
 
 export class ChatDeleteStateDto {
   @IsNumber()
-  roomId: number;
+  chid: number;
   @IsNumber()
   targetUid: number;
 }

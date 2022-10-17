@@ -2,7 +2,7 @@ import { IsNumber, IsString, Length } from 'class-validator';
 
 export class ChatPasswordDto {
   @IsNumber()
-  roomId: number;
+  chid: number;
   @IsNumber()
   myUid: number;
   @IsString()
