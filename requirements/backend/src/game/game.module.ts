@@ -10,13 +10,3 @@ import { DmModule } from 'src/dm/dm.module';
   controllers: [GameController],
 })
 export class GameModule {}
-
-import { GameRoomGateway } from './game.gateway';
-import { GameRoomService } from './game.service';
-
-@Module({
-  imports: [DatabaseModule],
-  providers: [GameRoomService, GameRoomGateway],
-  exports: [GameRoomService],
-})
-export class GameRoomModule {}

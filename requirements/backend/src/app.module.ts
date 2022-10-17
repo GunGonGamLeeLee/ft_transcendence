@@ -19,7 +19,8 @@ import { ChatModule } from './chat/chat.module';
 import { DmModule } from './dm/dm.module';
 import { AppGateway } from './app.gateway';
 import { LoggerMiddleware } from './logger.middleware';
-import { GameModule, GameRoomModule } from './game/game.module';
+import { GameModule } from './game/game.module';
+import { GameRoomModule } from './game/game.room.module';
 import { MatchMakingModule } from './game/match.module';
 
 dotenv.config({
