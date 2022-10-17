@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { UserDataChatType } from 'src/chat/chat.room.users.service';
 import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
 import { UserDataType } from 'src/users/dto/user.data.type.dto';
@@ -16,7 +17,10 @@ import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
 import { ChannelEntity, ChannelMode } from './entity/entity.channel';
 import { UserEntity, UserStatus } from './entity/entity.user';
-import { UserRoleInChannel } from './entity/entity.user.in.channel';
+import {
+  UserInChannelEntity,
+  UserRoleInChannel,
+} from './entity/entity.user.in.channel';
 
 const MAX_CHANNEL_COUNT = 10; // ANCHOR 여기 있는게 맞나..?
 // const MAX_DM_SIZE = 200;
@@ -245,7 +249,7 @@ export class DatabaseService {
     return channel;
   }
 
-  async addUserInChannel(newUser: UserInChannelDto) {
+  async addUserInChannel(newUser: UserInChannelDto): Promise<UserDataChatType> {
     const userInfo: UserEntity = await this.dbUserService.findOne(newUser.uid);
     const channel: ChannelEntity = await this.dbChannelService.findOne(
       newUser.chid,
@@ -254,16 +258,19 @@ export class DatabaseService {
     if (userInfo == null || channel == null)
       throw new HttpException('존재하지 않는 값입니다.', HttpStatus.NOT_FOUND);
 
-    const usersInChannel =
-      await this.listUserInChannelWithUserInfo(newUser.chid);
+    const usersInChannel = await this.listUserInChannelWithUserInfo(
+      newUser.chid,
+    );
 
-    for (const user of usersInChannel) {
-      if (user.user.uid === newUser.uid) {
-        return await this.findOneUser(newUser.uid);
+    for (const userInChannel of usersInChannel) {
+      if (userInChannel.user.uid === newUser.uid) {
+        return { ...userInChannel.user, role: userInChannel.role };
       }
     }
 
-    return await this.dbUserInChannelService.saveOne(newUser, userInfo, channel);
+    const savedUser: UserInChannelEntity =
+      await this.dbUserInChannelService.saveOne(newUser, userInfo, channel);
+    return { ...savedUser.user, role: savedUser.role };
   }
 
   async addDmLog(dmLog: DmLogDto) {
@@ -479,10 +486,7 @@ export class DatabaseService {
     return await this.dbBlockListService.deleteAll(uid);
   }
 
-  async deleteUserInChannel(
-    uid: number,
-    chid: number,
-  ) {
+  async deleteUserInChannel(uid: number, chid: number) {
     const channel = await this.dbChannelService.findOne(chid);
     if (channel == null)
       throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);

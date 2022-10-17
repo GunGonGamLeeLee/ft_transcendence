@@ -1,5 +1,6 @@
 import { UseFilters, UsePipes } from '@nestjs/common';
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -67,6 +68,14 @@ export class ChatGateway {
   // addMute, uid - mute user
   @SubscribeMessage('chat/addMute')
   async handleAddMute(client: Socket, payload: ChatRoleDto) {
+    const muteUsers = await this.chatService.listMuteUserInChannel(
+      payload.chid,
+    );
+
+    for (const muteUser of muteUsers) {
+      if (muteUser.uid === payload.targetUid) return;
+    }
+
     await this.chatService.muteUserInChannel(
       payload.myUid,
       payload.targetUid,
@@ -85,6 +94,12 @@ export class ChatGateway {
   // addBan, uid - ban user
   @SubscribeMessage('chat/addBan')
   async handleAddBan(client: Socket, payload: ChatRoleDto) {
+    const banUsers = await this.chatService.listBanUserInChannel(payload.chid);
+
+    for (const banUser of banUsers) {
+      if (banUser.uid === payload.targetUid) return;
+    }
+
     await this.chatService.banUserInChannel(
       payload.myUid,
       payload.targetUid,
@@ -94,6 +109,15 @@ export class ChatGateway {
       .to(`channel${payload.chid}`)
       .emit('chat/addBan', payload.chid, payload.targetUid);
     console.log(`chat.gateway: handleAddBan: ban ${payload.targetUid}`);
+
+    const sockets = await this.server
+      .in(`channel${payload.chid}`)
+      .fetchSockets();
+    for (const socket of sockets) {
+      if (socket.data.uid === payload.targetUid)
+        socket.leave(`channel${payload.chid}`);
+    }
+
     setTimeout(this.handleDeleteBan.bind(this), 10000, client, {
       targetUid: payload.targetUid,
       chid: payload.chid,
@@ -159,7 +183,10 @@ export class ChatGateway {
 
   // chat/addUserInChannel - 채널에 들어가기
   @SubscribeMessage('chat/addUserInChannel')
-  async handleaddUserInChannel(@MessageBody() payload: UserInChannelDto) {
+  async handleaddUserInChannel(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: UserInChannelDto,
+  ) {
     const user: UserInChannelDto = {
       uid: payload.uid,
       chid: payload.chid,
@@ -167,13 +194,19 @@ export class ChatGateway {
       isMute: false,
       isBan: false,
     };
+
+    await client.join(`channel${payload.chid}`);
     const ret = await this.chatService.addUserInChannel(user);
     this.server.to(`channel${payload.chid}`).emit('chat/addUserInChannel', ret);
   }
 
   // chat/deleteUserInChannel - 채널에서 나가기
   @SubscribeMessage('chat/deleteUserInChannel')
-  async handledeleteUserInChannel(@MessageBody() payload: UserInChannelDto) {
+  async handledeleteUserInChannel(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: UserInChannelDto,
+  ) {
+    await client.leave(`channel${payload.chid}`);
     await this.chatService.deleteUserInChannel(payload.uid, payload.chid);
     this.server
       .to(`channel${payload.chid}`)
