@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { MatchHistoryDto } from 'src/database/dto/match.history.dto';
+import { DmGateway } from 'src/dm/dm.gateway';
 
 const K = 10; // Elo 가중치
 
 @Injectable()
 export class GameResultService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly dmGateway: DmGateway,
+  ) {}
+
   async saveResult(gameResult: MatchHistoryDto) {
     await this.database.addMatchHistory(gameResult); // TODO transaction
     if (gameResult.isRank) {
       await this.updateRating(gameResult);
     }
+    this.dmGateway.updateUser(gameResult.winnerUid);
+    this.dmGateway.updateUser(gameResult.loserUid);
   }
 
   async updateRating(gameResult: MatchHistoryDto) {

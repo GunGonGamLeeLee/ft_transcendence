@@ -28,9 +28,9 @@ export class AppGateway {
     await this.validateUser(client);
     client.join(`dm${client.data.uid}`);
     // FIXME 테스트용.
-    // if (client.data.uid === 85355) {
-    //   client.join(`channel20`);
-    //   console.log(`socketInit: ${client.data.uid} join channel20`);
+    // if (client.data.uid === 99857) {
+    //   client.join(`channel7`);
+    //   console.log(`socketInit: ${client.data.uid} join channel7`);
     // }
     console.log(`socketInit: ${client.data.uid} join dm${client.data.uid}`);
     await this.dmGateway.updateUser(client.data.uid);
