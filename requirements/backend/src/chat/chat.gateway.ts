@@ -14,6 +14,7 @@ import { ChatRoleDto } from './dto/chat.role.dto';
 import { ChatMessageDto } from './dto/chat.message.dto';
 import { ChatPasswordDto } from './dto/chat.password.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
+import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 
 @WebSocketGateway({
   cors: {
@@ -30,7 +31,9 @@ export class ChatGateway {
   //msg, msg: string - send message
   @SubscribeMessage('chat/msg')
   handleChatMessage(@MessageBody() payload: ChatMessageDto) {
-    this.server.emit('chat/msg', payload.chid, payload.msg, payload.myUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/msg', payload.chid, payload.msg, payload.myUid);
   }
 
   // addAdmin, uid: number - add admin
@@ -42,7 +45,9 @@ export class ChatGateway {
       payload.chid,
       UserRoleInChannel.ADMIN,
     );
-    this.server.emit('chat/addAdmin', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/addAdmin', payload.chid, payload.targetUid);
   }
 
   // deleteAdmin, uid - delete admin
@@ -54,7 +59,9 @@ export class ChatGateway {
       payload.chid,
       UserRoleInChannel.USER,
     );
-    this.server.emit('chat/deleteAdmin', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/deleteAdmin', payload.chid, payload.targetUid);
   }
 
   // addMute, uid - mute user
@@ -65,7 +72,9 @@ export class ChatGateway {
       payload.targetUid,
       payload.chid,
     );
-    this.server.emit('chat/addMute', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/addMute', payload.chid, payload.targetUid);
     console.log(`chat.gateway: handleAddMute: mute ${payload.targetUid}`);
     setTimeout(this.handleDeleteMute.bind(this), 10000, client, {
       targetUid: payload.targetUid,
@@ -81,7 +90,9 @@ export class ChatGateway {
       payload.targetUid,
       payload.chid,
     );
-    this.server.emit('chat/addBan', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/addBan', payload.chid, payload.targetUid);
     console.log(`chat.gateway: handleAddBan: ban ${payload.targetUid}`);
     setTimeout(this.handleDeleteBan.bind(this), 10000, client, {
       targetUid: payload.targetUid,
@@ -104,13 +115,17 @@ export class ChatGateway {
         payload.password,
       );
     }
-    this.server.emit('chat/password', payload.chid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/password', payload.chid);
   }
 
   // announce, msg: string - 공지
   @SubscribeMessage('chat/announce')
   handleAnnounce(@MessageBody() payload: ChatMessageDto) {
-    this.server.emit('chat/announce', payload.chid, payload.myUid, payload.msg);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/announce', payload.chid, payload.myUid, payload.msg);
   }
 
   // deleteMute, targetUid - unmute user, 채팅방 관리자들에게 전부 알려야함
@@ -122,7 +137,9 @@ export class ChatGateway {
       payload.chid,
     );
     console.log(`chat.gateway: handleDeleteMute: unmute ${payload.targetUid}`);
-    this.server.emit('chat/deleteMute', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/deleteMute', payload.chid, payload.targetUid);
   }
 
   // deleteBan, targetUid - unban user, 위와 같음
@@ -135,6 +152,36 @@ export class ChatGateway {
     );
     await this.chatService.deleteUserInChannel(payload.targetUid, payload.chid);
     console.log(`chat.gateway: handleDeleteBan: unban ${payload.targetUid}`);
-    this.server.emit('chat/deleteBan', payload.chid, payload.targetUid);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/deleteBan', payload.chid, payload.targetUid);
+  }
+
+  // chat/addUserInChannel - 채널에 들어가기
+  @SubscribeMessage('chat/addUserInChannel')
+  handleaddUserInChannel(@MessageBody() payload: UserInChannelDto) {
+    const user: UserInChannelDto = {
+      uid: payload.uid,
+      chid: payload.chid,
+      role: UserRoleInChannel.USER,
+      isMute: false,
+      isBan: false,
+    };
+    this.chatService.addUserInChannel(user);
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/addUserInChannel', payload.uid);
+  }
+
+  // chat/deleteUserInChannel - 채널에서 나가기
+  @SubscribeMessage('chat/deleteUserInChannel')
+  handledeleteUserInChannel(@MessageBody() payload: UserInChannelDto) {
+    this.chatService.deleteUserInChannel(
+      payload.uid,
+      payload.chid,
+    );
+    this.server
+      .to(`channel${payload.chid}`)
+      .emit('chat/addUserInChannel', payload.uid);
   }
 }

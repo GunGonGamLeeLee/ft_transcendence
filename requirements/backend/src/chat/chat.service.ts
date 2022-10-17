@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
+import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 import { UserRoleInChannel } from 'src/database/entity/entity.user.in.channel';
 
 @Injectable()
@@ -41,5 +42,9 @@ export class ChatService {
 
   async deleteUserInChannel(targetUid: number, chid: number) {
     await this.database.deleteUserInChannel(targetUid, chid);
+  }
+
+  async addUserInChannel(userInChannelDto: UserInChannelDto) {
+    await this.database.addUserInChannel(userInChannelDto);
   }
 }
