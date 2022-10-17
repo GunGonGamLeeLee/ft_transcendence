@@ -51,7 +51,7 @@ export function Game() {
 
     socket.emit('game/match');
 
-    socket.on('game-start', (payload) => {
+    socket.on('game/start', (payload) => {
       SetProfileState({
         profile1: payload.profile1,
         profile2: payload.profile2,
@@ -60,12 +60,12 @@ export function Game() {
       setOnGame(true);
     });
 
-    socket.on('game-end', (message) => {
+    socket.on('game/end', (message) => {
       setCanvasState((prev) => ({ ...prev, status: 2 }));
       setOnGame(false);
     });
 
-    socket.on('game-state', (payload) => {
+    socket.on('game/state', (payload) => {
       setCanvasState((prev) => ({ ...prev, gameRoomState: payload }));
     });
 
@@ -88,10 +88,10 @@ export function Game() {
     });
 
     return () => {
-      socket.emit('exit-room');
-      socket.off('game-start');
-      socket.off('game-end');
-      socket.off('game-start');
+      socket.emit('game/exit');
+      socket.off('game/start');
+      socket.off('game/end');
+      socket.off('game/state');
     };
   }, []);
 

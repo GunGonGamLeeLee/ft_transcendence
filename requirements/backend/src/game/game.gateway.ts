@@ -50,7 +50,7 @@ export class GameRoomGateway {
   //   this.gameRoomService.updateRoom(client, payload);
   // }
 
-  @SubscribeMessage('exit-room')
+  @SubscribeMessage('game/exit')
   exitRoom(client: Socket): void {
     this.gameRoomService.exitRoom(client);
   }

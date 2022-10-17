@@ -47,6 +47,14 @@ export class MatchMakingService {
   }
 
   inviteUser(client: Socket, payload: { uid: number; speed: number }) {
+    const idx = this.inviteQueue.findIndex(
+      (inqueue) => inqueue.player1 === client,
+    );
+
+    if (idx !== -1) {
+      // TO DO 중복 요청 처리
+    }
+
     this.inviteQueue.push({
       player1: client,
       uid1: client.data.uid,
@@ -70,7 +78,7 @@ export class MatchMakingService {
       );
       this.inviteQueue.splice(idx, 1);
     } else {
-      // throw error!!
+      // TO DO 초대 받았지만 방 없음. throw error?
     }
   }
 }

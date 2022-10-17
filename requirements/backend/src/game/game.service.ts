@@ -100,9 +100,9 @@ export class GameRoomService {
     player2.data = { ...player2.data, roomId: roomId };
 
     const startState = this.makeStartState(roomInfo);
-    player1.emit('game-start', startState);
-    player2.emit('game-start', startState);
-    // console.log('game-start ' + roomInfo.roomId);
+    player1.emit('game/start', startState);
+    player2.emit('game/start', startState);
+    // console.log('game/start ' + roomInfo.roomId);
 
     this.broadcastStateInRoom = this.broadcastStateInRoom.bind(this);
     this.roomInfos[roomId] = roomInfo;
@@ -116,11 +116,11 @@ export class GameRoomService {
 
   private sendEndingMessageToClient(gameEndInfo: GameEndInfo) {
     const { roomId, winer, loser, broadcast } = gameEndInfo;
-    winer.emit('game-end', 'YOU WIN  ^_^');
-    loser.emit('game-end', 'YOU LOSE T.T');
+    winer.emit('game/end', 'YOU WIN  ^_^');
+    loser.emit('game/end', 'YOU LOSE T.T');
     clearInterval(broadcast);
     this.roomInfos[roomId] = null;
-    // console.log('game-end');
+    // console.log('game/end');
   }
 
   broadcastStateInRoom(roomInfo: GameRoomInfo) {
@@ -128,8 +128,8 @@ export class GameRoomService {
       roomInfo;
 
     // move paddle
-    state.paddle1 += state.keyState1 * 4 * 4 * speed;
-    state.paddle2 += state.keyState2 * 4 * 4 * speed;
+    state.paddle1 += state.keyState1 * 4 * 2 * speed;
+    state.paddle2 += state.keyState2 * 4 * 2 * speed;
 
     if (state.paddle1 > GameInfo.maxy) state.paddle1 = GameInfo.maxy;
     else if (state.paddle1 < -GameInfo.maxy) state.paddle1 = -GameInfo.maxy;
@@ -137,8 +137,8 @@ export class GameRoomService {
     else if (state.paddle2 < -GameInfo.maxy) state.paddle2 = -GameInfo.maxy;
 
     // move ball
-    state.ball.x += state.ball.dx * 4 * speed;
-    state.ball.y += state.ball.dy * 4 * speed;
+    state.ball.x += state.ball.dx * 2 * speed;
+    state.ball.y += state.ball.dy * 2 * speed;
 
     // wall
     if (
@@ -205,14 +205,14 @@ export class GameRoomService {
     };
 
     if (state.score1 >= 3 || state.score2 >= 3) {
-      player1.emit('game-end', state);
+      player1.emit('game/end', state);
       player1.leave(roomId);
       player1.data.roomId = null;
-      player2.emit('game-end', state);
+      player2.emit('game/end', state);
       player2.leave(roomId);
       player2.data.roomId = null;
       for (const c of crowd) {
-        c.emit('game-end', state);
+        c.emit('game/end', state);
         c.leave(roomId);
         c.data.roomId = null;
       }
@@ -220,10 +220,10 @@ export class GameRoomService {
       this.roomInfos[roomId] = null;
     }
 
-    player1.emit('game-state', userGameRoomState);
-    player2.emit('game-state', userGameRoomState);
+    player1.emit('game/state', userGameRoomState);
+    player2.emit('game/state', userGameRoomState);
     for (const c of crowd) {
-      c.emit('game-state', userGameRoomState);
+      c.emit('game/state', userGameRoomState);
     }
   }
 
@@ -246,11 +246,20 @@ export class GameRoomService {
   }
 
   specStart(client: Socket, payload: { roomId: number }) {
-    const room = payload.roomId.toString();
-    client.join(room);
+    const roomId = payload.roomId.toString();
+
+    const idx = this.roomInfos[roomId].crowd.findIndex(
+      (inqueue) => inqueue === client,
+    );
+
+    if (idx !== -1) {
+      // TO DO 중복 요청
+    }
+
+    client.join(roomId);
     client.data = { ...client.data, payload };
-    client.emit('game-start', this.makeStartState(this.roomInfos[room]));
-    this.roomInfos[room].crowd.push(client);
+    client.emit('game/start', this.makeStartState(this.roomInfos[roomId]));
+    this.roomInfos[roomId].crowd.push(client);
   }
 
   loseByDisconnect(client: Socket) {
@@ -259,14 +268,14 @@ export class GameRoomService {
       const { roomId, player1, player2, crowd, state, broadcast } =
         this.roomInfos[room];
       if (player1 === client || player2 === client) {
-        player1.emit('game-end', state);
+        player1.emit('game/end', state);
         player1.leave(roomId);
         player1.data.roomId = null;
-        player2.emit('game-end', state);
+        player2.emit('game/end', state);
         player2.leave(roomId);
         player2.data.roomId = null;
         for (const c of crowd) {
-          c.emit('game-end', state);
+          c.emit('game/end', state);
           c.leave(roomId);
           c.data.roomId = null;
         }
