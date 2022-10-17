@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { ChannelEntity, ChannelMode } from 'src/database/entity/entity.channel';
 import { ChannelPasswordDto } from './dto/channel.password.dto';
+import * as bcrypt from 'bcrypt';
 
 export class ChatRoomType {
   ownerId: number;
@@ -40,7 +41,7 @@ export class ChatRoomListService {
   async verifyPassword(body: ChannelPasswordDto) {
     const { chid, password } = body;
     const channel = await this.database.findOneChannel(chid);
-    return channel.password === password;
+    return await bcrypt.compare(password, channel.password);
   }
 
   async getRoomList(uid: number) {

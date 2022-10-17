@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ChannelDto } from '../dto/channel.dto';
 import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class DbChannelService {
@@ -69,6 +70,8 @@ export class DbChannelService {
   }
 
   async saveOne(channel: ChannelDto | ChannelEntity, chOwner: UserEntity) {
+    if (channel.password !== '')
+      channel.password = await this.encryptedPassword(channel.password);
     const ch = this.channelRepo.create({ ...channel, chOwner });
     return await this.channelRepo.save(ch);
   }
@@ -87,6 +90,7 @@ export class DbChannelService {
         '비밀번호는 4글자이어야 합니다.',
         HttpStatus.FORBIDDEN,
       );
+    password = await this.encryptedPassword(password);
     return await this.channelRepo.update(
       { chid },
       { mode: ChannelMode.protected, password },
@@ -102,5 +106,9 @@ export class DbChannelService {
 
   async deleteOne(chid: number) {
     await this.channelRepo.delete({ chid });
+  }
+
+  private async encryptedPassword(password: string) {
+    return await bcrypt.hash(password, 10);
   }
 }
