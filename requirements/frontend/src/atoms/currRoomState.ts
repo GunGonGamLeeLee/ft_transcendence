@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { ChatUserType } from './chatUserType';
 
 export const enum RoomModeType {
   PUBLIC,
@@ -16,13 +17,22 @@ export interface RoomType {
   mode: RoomModeType;
 }
 
-export interface DmRoomType {
-  roomId: string;
-  userId: number;
-  userDisplayName: string;
-}
-
-export const currRoomState = atom<RoomType | DmRoomType | null>({
+export const currRoomState = atom<RoomType | null>({
   key: 'currRoom',
   default: null,
+});
+
+export const currUserListState = atom<ChatUserType[]>({
+  key: 'currUserList',
+  default: [],
+});
+
+export const currMuteListState = atom<number[]>({
+  key: 'currMuteList',
+  default: [],
+});
+
+export const currBanListState = atom<number[]>({
+  key: 'currBanList',
+  default: [],
 });

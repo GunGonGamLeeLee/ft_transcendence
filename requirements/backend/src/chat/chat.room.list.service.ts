@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 export class ChatRoomType {
   ownerId: number;
-  onwerDisplayName: string;
+  ownerDisplayName: string;
   title: string;
   roomId: string;
   mode: ChannelMode;
@@ -91,7 +91,7 @@ export class ChatRoomListService {
   private async makeChatRoomType(channel: ChannelEntity) {
     return {
       ownerId: channel.chOwner.uid,
-      onwerDisplayName: channel.chOwner.displayName,
+      ownerDisplayName: channel.chOwner.displayName,
       title: channel.chName,
       roomId: 'channel' + channel.chid,
       mode: channel.mode,

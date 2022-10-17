@@ -34,10 +34,14 @@ export class ChatRoomUsersService {
   }
 
   async getMuteUsersInChatRoom(chid: number) {
-    return await this.database.listMuteUserInChannel(chid);
+    const data = await this.database.listMuteUserInChannel(chid);
+    const uidArray: Array<number> = data.map((curr) => curr.uid);
+    return uidArray;
   }
 
   async getBanUsersInChatRoom(chid: number) {
-    return await this.database.listBanUserInChannel(chid);
+    const data = await this.database.listBanUserInChannel(chid);
+    const uidArray: Array<number> = data.map((curr) => curr.uid);
+    return uidArray;
   }
 }

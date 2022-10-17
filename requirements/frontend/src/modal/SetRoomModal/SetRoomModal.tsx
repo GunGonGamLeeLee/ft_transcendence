@@ -4,13 +4,14 @@ import { setRoomModalState } from '../../atoms/modals/setRoomModalState';
 import styles from './setRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { RedCross } from '../buttons/RedCross';
-import { currRoomState } from '../../atoms/currRoomState';
-import { userProfileState } from '../../atoms/userProfileState';
+import { currRoomState, RoomModeType } from '../../atoms/currRoomState';
 
 export default function SetRoom() {
   const setsetRoomModal = useSetRecoilState(setRoomModalState);
   const currRoom = useRecoilValue(currRoomState);
-  const [isPrivate, setIsPrivate] = useState(currRoom?.private);
+  const [isPrivate, setIsPrivate] = useState(
+    currRoom?.mode === RoomModeType.PRIVATE,
+  );
   const [title, setTitle] = useState(currRoom?.title);
   const [password, setPassword] = useState<string>('');
 
@@ -50,7 +51,7 @@ export default function SetRoom() {
                   type='text'
                   className={styles.set__input}
                   maxLength={20}
-                  placeholder={`${currRoom.ownerName}님의 방`}
+                  placeholder={`${currRoom.ownerDisplayName}님의 방`}
                   value={title}
                   onChange={onChangeTitle}
                 />

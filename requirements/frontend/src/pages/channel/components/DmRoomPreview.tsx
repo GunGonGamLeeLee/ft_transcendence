@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { currRoomState, DmRoomType } from '../../../atoms/currRoomState';
+import { currDmRoomState, DmRoomType } from '../../../atoms/currDmRoomState';
 import styles from './RoomPreview.module.css';
 
 export function DmRoomPreview({ room }: { room: DmRoomType }) {
-  const setCurrRoom = useSetRecoilState(currRoomState);
+  const setCurrDmRoom = useSetRecoilState(currDmRoomState);
   const navigator = useNavigate();
 
   const onClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
 
-    setCurrRoom(room);
+    setCurrDmRoom(room);
 
-    navigator('/channel/room');
+    navigator('/channel/dm');
   };
 
   return (

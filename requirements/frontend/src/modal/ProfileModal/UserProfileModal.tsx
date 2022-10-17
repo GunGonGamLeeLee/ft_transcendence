@@ -41,7 +41,6 @@ function UserProfile({ user }: { user: UserDataType }) {
   const setState = useSetRecoilState(userProfileModalState);
   const userProfile = useRecoilValue(userProfileState);
   const currRoom = useRecoilValue(currRoomState);
-  const currRole = useRecoilValue(currRoleState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
@@ -105,7 +104,7 @@ function UserProfile({ user }: { user: UserDataType }) {
               </div>
               <div className={styles.profile__buttons}>
                 <InviteGame />
-                <DM />
+                <DM user={user} />
               </div>
             </>
           )}

@@ -13,6 +13,7 @@ import { RedCross } from '../buttons/RedCross';
 import { userProfileState } from '../../atoms/userProfileState';
 import { sortRoomByTitle } from '../../utils/sortRoomByTitle';
 import { useFetch } from '../../hooks/useFetch';
+import { refreshChannelListState } from '../../atoms/refreshChannelListState';
 
 export function NewRoomModal() {
   const NewRoomModal = useRecoilValue(newRoomModalState);
@@ -22,8 +23,6 @@ export function NewRoomModal() {
 
 function NewRoom() {
   const { token } = useRecoilValue(authState);
-  if (token === null) throw new Error();
-
   const userProfile = useRecoilValue(userProfileState);
   const setNewRoomModal = useSetRecoilState(newRoomModalState);
   const [isPrivate, setIsPrivate] = React.useState(false);
@@ -33,6 +32,8 @@ function NewRoom() {
   const [joinedRoomList, setJoinedRoomList] =
     useRecoilState(joinedRoomListState);
   const fetcher = useFetch();
+  const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
+  if (token === null) throw new Error();
 
   const onClick = () => {
     setNewRoomModal(false);
@@ -80,9 +81,17 @@ function NewRoom() {
     }
 
     try {
-      const data = await fetcher(token, 'POST', 'chat/channel', room, true);
-      setAllRoomList([...allRoomList, data].sort(sortRoomByTitle));
+      const data: RoomType = await fetcher(
+        token,
+        'POST',
+        'chat/channel',
+        room,
+        true,
+      );
+      if (data.mode !== RoomModeType.PRIVATE)
+        setAllRoomList([...allRoomList, data].sort(sortRoomByTitle));
       setJoinedRoomList([...joinedRoomList, data].sort(sortRoomByTitle));
+      setRefreshChannelList(true);
     } catch (err) {
       alert('방 생성 실패');
     } finally {

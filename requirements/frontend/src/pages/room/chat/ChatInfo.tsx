@@ -1,9 +1,12 @@
 import styles from './ChatInfo.module.css';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { currRoomState } from '../../../atoms/currRoomState';
+import { useRecoilValue } from 'recoil';
+import { currRoomState, RoomModeType } from '../../../atoms/currRoomState';
+import { currUserCountState } from '../../../atoms/currUserCount';
 
 export function ChatInfo() {
   const currRoom = useRecoilValue(currRoomState);
+  const currUserCount = useRecoilValue(currUserCountState);
+
   return (
     <div className={styles.chat_info}>
       {currRoom !== null ? (
@@ -12,9 +15,9 @@ export function ChatInfo() {
           <div className={`${styles.chat_info__mode}`}>
             <img
               src={
-                currRoom.private
+                currRoom.mode === RoomModeType.PRIVATE
                   ? '/private.png'
-                  : currRoom.lock
+                  : currRoom.mode === RoomModeType.PROTECTED
                   ? '/lock.png'
                   : '/unlock.png'
               }
@@ -22,11 +25,9 @@ export function ChatInfo() {
             />
           </div>
           <div className={`${styles.chat_info__title}`}>{currRoom.title}</div>
-          <div className={`${styles.chat_info__count}`}>
-            {currRoom.userCount}
-          </div>
+          <div className={`${styles.chat_info__count}`}>{currUserCount}</div>
           <div className={`${styles.chat_info__owner}`}>
-            {currRoom.ownerName}
+            {currRoom.ownerDisplayName}
           </div>
         </>
       ) : null}

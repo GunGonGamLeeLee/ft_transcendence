@@ -1,15 +1,25 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { authState } from '../../../atoms/authState';
+import { ChatUserType } from '../../../atoms/chatUserType';
 import { currRoomState, RoomModeType } from '../../../atoms/currRoomState';
 import { RoomType } from '../../../atoms/currRoomState';
 import styles from './RoomPreview.module.css';
 
-export function RoomPreview({ room }: { room: RoomType }) {
-  const setCurrRoom = useSetRecoilState(currRoomState);
-  const navigator = useNavigate();
+interface RoomPayloadType {
+  inChatRoom: ChatUserType[];
+  muteList: number[];
+  banList: number[];
+}
 
-  const onClick = (e: React.MouseEvent<HTMLLIElement>) => {
+export function RoomPreview({ room }: { room: RoomType }) {
+  const navigator = useNavigate();
+  const setCurrRoom = useSetRecoilState(currRoomState);
+  const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
+
+  const onClick = async (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
 
     setCurrRoom(room);

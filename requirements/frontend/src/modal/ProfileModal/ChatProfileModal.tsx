@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { blockedListState } from '../../atoms/blockedListState';
-import { ChatUserType } from '../../atoms/chatUserType';
+import { ChatUserType, RoleType } from '../../atoms/chatUserType';
 import { currRoleState } from '../../atoms/currRoleState';
 import { friendListState } from '../../atoms/friendListState';
 import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
@@ -14,6 +14,15 @@ import styles from './ProfileModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { InviteGame } from './buttons/InviteGame';
 import { DM } from './buttons/DirectMessage';
+import { socket } from '../../components/Socket/SocketChecker';
+import {
+  currBanListState,
+  currMuteListState,
+  currRoomState,
+  RoomType,
+} from '../../atoms/currRoomState';
+import { getChId } from '../../utils/getChId';
+import { UserDataType } from '../../atoms/userDataType';
 
 export function ChatProfileModal() {
   const chatProfileModal = useRecoilValue(chatProfileModalState);
@@ -32,10 +41,16 @@ export function ChatProfileModal() {
 function ChatProfile({ user }: { user: ChatUserType }) {
   const setChatProfileModal = useSetRecoilState(chatProfileModalState);
   const currRole = useRecoilValue(currRoleState);
+  const currRoom = useRecoilValue(currRoomState);
+  const currBanList = useRecoilValue(currBanListState);
+  const currMuteList = useRecoilValue(currMuteListState);
   const userProfile = useRecoilValue(userProfileState);
   const friendList = useRecoilValue(friendListState);
   const blockedList = useRecoilValue(blockedListState);
   const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(
+    user.role === RoleType.ADMIN,
+  );
 
   const onClick = () => {
     setChatProfileModal(undefined);
@@ -71,18 +86,70 @@ function ChatProfile({ user }: { user: ChatUserType }) {
           ) : (
             <>
               <div className={styles.profile__buttons}>
-                {currRole === 'owner' ? (
-                  <ProfileButton text='임명/해임' />
+                {currRole === RoleType.OWNER ? (
+                  isAdmin === false ? (
+                    <ProfileButton
+                      text='임명'
+                      onClick={() => {
+                        socket.emit(
+                          'chat/addAdmin',
+                          makeSocketPayload(currRoom, userProfile, user),
+                        );
+
+                        setIsAdmin(true);
+                      }}
+                    />
+                  ) : (
+                    <ProfileButton
+                      text='해임'
+                      onClick={() => {
+                        socket.emit(
+                          'chat/deleteAdmin',
+                          makeSocketPayload(currRoom, userProfile, user),
+                        );
+
+                        setIsAdmin(false);
+                      }}
+                    />
+                  )
                 ) : (
                   <></>
                 )}
               </div>
               <div className={styles.profile__buttons}>
-                {currRole === 'owner' ||
-                (currRole === 'admin' && user.role === 'user') ? (
+                {currRole === RoleType.OWNER ||
+                (currRole === RoleType.ADMIN && user.role === RoleType.USER) ? (
                   <>
-                    <ProfileButton text='BAN' />
-                    <ProfileButton text='MUTE' />
+                    {currBanList.find((uid) => uid === user.uid) ===
+                    undefined ? (
+                      <ProfileButton
+                        text='BAN'
+                        onClick={() => {
+                          socket.emit(
+                            'chat/addBan',
+                            makeSocketPayload(currRoom, userProfile, user),
+                          );
+
+                          setChatProfileModal(undefined);
+                        }}
+                      />
+                    ) : (
+                      <ProfileButtonDisabled text='BAN' />
+                    )}
+                    {currMuteList.find((uid) => uid === user.uid) ===
+                    undefined ? (
+                      <ProfileButton
+                        text='MUTE'
+                        onClick={() => {
+                          socket.emit(
+                            'chat/addMute',
+                            makeSocketPayload(currRoom, userProfile, user),
+                          );
+                        }}
+                      />
+                    ) : (
+                      <ProfileButtonDisabled text='MUTE' />
+                    )}
                   </>
                 ) : (
                   <></>
@@ -94,7 +161,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
               </div>
               <div className={styles.profile__buttons}>
                 <InviteGame />
-                <DM />
+                <DM user={user} />
               </div>
             </>
           )}
@@ -104,6 +171,36 @@ function ChatProfile({ user }: { user: ChatUserType }) {
   );
 }
 
-function ProfileButton({ text }: { text: string }) {
-  return <button className={styles.buttons}>{text}</button>;
+function ProfileButton({
+  text,
+  onClick,
+}: {
+  text: string;
+  onClick: () => void;
+}) {
+  return (
+    <button className={styles.profile__buttons} onClick={onClick}>
+      {text}
+    </button>
+  );
+}
+
+function ProfileButtonDisabled({ text }: { text: string }) {
+  return (
+    <button className={styles.profile__buttons} disabled={true}>
+      {text}
+    </button>
+  );
+}
+
+function makeSocketPayload(
+  currRoom: RoomType | null,
+  me: UserDataType,
+  other: ChatUserType,
+) {
+  return {
+    chid: getChId(currRoom?.roomId),
+    myUid: me.uid,
+    targetUid: other.uid,
+  };
 }

@@ -10,6 +10,7 @@ import { userProfileModalState } from '../../atoms/modals/userProfileModalState'
 export function RankList() {
   const { token } = useRecoilValue(authState);
   const [rankList, setRankList] = useRecoilState(rankListState);
+  if (token === null) throw new Error();
 
   useInterval(async () => {
     const response = await fetch(

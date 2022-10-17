@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../atoms/authState';
 import { currRoomState } from '../../../atoms/currRoomState';
+import { useFetch } from '../../../hooks/useFetch';
 import styles from './RoomChecker.module.css';
 
 export function RoomChecker() {
   const { token } = useRecoilValue(authState);
   const currRoom = useRecoilValue(currRoomState);
   const navigator = useNavigate();
+  const fetcher = useFetch();
+
+  if (token === null) throw new Error();
 
   React.useEffect(() => {
-    if (token === null) throw new Error();
     if (currRoom === null) navigator('/channel', { replace: true });
   }, [token, currRoom]);
 
@@ -28,26 +31,20 @@ export function RoomChecker() {
 
     if (currRoom === null) throw new Error();
 
-    const payload = { chid: parseInt(currRoom.roomId.substring(7)), password }
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_EP}/chat/pwd`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      },
-    );
+    try {
+      await fetcher(
+        token,
+        'POST',
+        'chat/pwd',
+        { chid: parseInt(currRoom.roomId.substring(7)), password },
+        false,
+      );
 
-    if (!response.ok) {
-      alert('fail!');
+      navigator('/channel/room', { replace: true });
+    } catch {
+      alert('입장 실패!');
       navigator('/channel');
-      return;
     }
-
-    navigator('/channel/room', { replace: true });
   };
 
   const handleCancelClick = (e: React.MouseEvent<HTMLButtonElement>) => {

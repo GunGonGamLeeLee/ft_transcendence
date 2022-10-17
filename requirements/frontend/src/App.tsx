@@ -19,7 +19,7 @@ function DebugObserver(): JSX.Element {
 function App() {
   return (
     <RecoilRoot>
-      {import.meta.env.DEV ? <DebugObserver /> : null}
+      {/* {import.meta.env.DEV === true ? <DebugObserver /> : null} */}
       <RouterProvider router={Routes} />
     </RecoilRoot>
   );

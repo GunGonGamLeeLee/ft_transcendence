@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
-import { DmRoomType, RoomType } from './currRoomState';
+import { RoomType } from './currRoomState';
+import { DmRoomType } from './currDmRoomState';
 
 export const allRoomListState = atom<RoomType[]>({
   key: 'allRoomList',

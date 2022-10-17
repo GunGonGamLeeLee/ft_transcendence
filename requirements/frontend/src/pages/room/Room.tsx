@@ -1,49 +1,115 @@
 import * as React from 'react';
 import ChatSideBar from '../../components/SideBar/ChatSideBar';
-import { CharMain } from './chat/ChatMain';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { currRoomState } from '../../atoms/currRoomState';
+import { ChatMain } from './chat/ChatMain';
+import { useNavigate } from 'react-router-dom';
+import {
+  currBanListState,
+  currMuteListState,
+  currRoomState,
+  currUserListState,
+} from '../../atoms/currRoomState';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { RoomSocket } from './RoomSocket';
+import { useFetch } from '../../hooks/useFetch';
 import { authState } from '../../atoms/authState';
+import { getChId } from '../../utils/getChId';
+import { ChatUserType, RoleType } from '../../atoms/chatUserType';
+import { userProfileState } from '../../atoms/userProfileState';
+import { currRoleState } from '../../atoms/currRoleState';
+import { currUserCountState } from '../../atoms/currUserCount';
+import { refreshChannelListState } from '../../atoms/refreshChannelListState';
 
 export function Room() {
   const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
-  const [isEnter, setIsEnter] = React.useState<boolean>(true);
-  const { token } = useRecoilValue(authState);
+  const [isFirstRender, setIsFirstRender] = React.useState<boolean>(true);
   const navigator = useNavigate();
-
-  if (currRoom === null) {
-    return <Navigate to='/channel' replace={true} />;
-  }
+  const fetcher = useFetch();
+  const userProfile = useRecoilValue(userProfileState);
+  const setCurrUserList = useSetRecoilState(currUserListState);
+  const setCurrBanList = useSetRecoilState(currBanListState);
+  const setCurrMuteList = useSetRecoilState(currMuteListState);
+  const setCurrRole = useSetRecoilState(currRoleState);
+  const setCurrUserCount = useSetRecoilState(currUserCountState);
+  const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
+  const { token } = useRecoilValue(authState);
+  const [isFetchDone, setIsFetchDone] = React.useState<boolean>(false);
+  if (token === null) throw new Error();
 
   React.useEffect(() => {
-    const requestConnectRoom = async () => {
-      // todo: socket
-      // maybe need token, currRoom info
-      return true;
+    const setDefaultInfo = async () => {
+      const payload: {
+        inChatRoom: ChatUserType[];
+        muteList: number[];
+        banList: number[];
+      } = await fetcher(
+        token,
+        'GET',
+        `chat/channelusers?chid=${getChId(currRoom?.roomId)}`,
+      );
+
+      if (
+        payload.banList.find((uid) => uid === userProfile.uid) !== undefined
+      ) {
+        alert('이 방에서 밴 당했습니다!');
+        setCurrRoom(null);
+        navigator('/channel', { replace: true });
+        return;
+      }
+
+      setCurrUserList(payload.inChatRoom);
+      setCurrBanList(payload.banList);
+      setCurrMuteList(payload.muteList);
+      setCurrRole(
+        payload.inChatRoom.find((user) => user.uid === userProfile.uid)?.role ??
+          RoleType.USER,
+      );
+      if (currRoom) setCurrUserCount(currRoom.userCount);
+      setIsFetchDone(true);
     };
 
-    if (isEnter === true) {
-      requestConnectRoom().then((res) => {
-        if (res === false) navigator('/channel');
-      });
+    if (currRoom === null) {
+      navigator('/channel', { replace: true });
+      return;
     }
 
+    try {
+      setDefaultInfo();
+    } catch {
+      alert('불러오기 오류!');
+    }
+  }, [currRoom, setCurrRoom]);
+
+  React.useEffect(() => {
     return () => {
-      if (isEnter === true) {
-        setIsEnter(false);
+      if (isFirstRender === true && import.meta.env.DEV === true) {
+        setIsFirstRender(false);
         return;
       }
 
       setCurrRoom(null);
-      console.log('clean connection here'); // todo
+      setCurrUserList([]);
+      setCurrBanList([]);
+      setCurrMuteList([]);
+      setCurrRole(null);
+      setRefreshChannelList(true);
     };
-  }, [currRoom, isEnter]);
+  }, [
+    isFirstRender,
+    setIsFirstRender,
+    setCurrRoom,
+    setCurrUserList,
+    setCurrBanList,
+    setCurrMuteList,
+    setCurrRole,
+    setRefreshChannelList,
+  ]);
 
-  return (
-    <>
-      <CharMain />
+  return isFetchDone ? (
+    <RoomSocket>
+      <ChatMain />
       <ChatSideBar />
-    </>
+    </RoomSocket>
+  ) : (
+    <div>Loading...</div>
   );
 }

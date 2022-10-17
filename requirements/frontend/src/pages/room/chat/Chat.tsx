@@ -1,48 +1,7 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { currChatState } from '../../../atoms/currChatState';
 import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './Chat.module.css';
-
-interface ChatType {
-  uid: number;
-  displayName: string;
-  imgUri: string;
-  msg: string;
-}
-
-const array1: Array<ChatType> = [
-  {
-    uid: 112230,
-    displayName: 'jeongble',
-    imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-    msg: 'hi',
-  },
-  {
-    uid: 112230,
-    displayName: 'jeongble',
-    imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-    msg: 'hi',
-  },
-  {
-    uid: 3,
-    displayName: 'yeju',
-    imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-    msg: 'hihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihihi',
-  },
-  {
-    uid: 99945,
-    displayName: 'jaham',
-    imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-    msg: 'hi',
-  },
-  {
-    uid: 99945,
-    displayName: 'jaham',
-    imgUri: 'https://ca.slack-edge.com/T039P7U66-U01GAGE28SE-4b0009a95b5a-512',
-    msg: '안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. 안녕하세요. 이자함입니다. ',
-  },
-];
-
-const array2: Array<ChatType> = [...array1, ...array1, ...array1, ...array1];
 
 function LeftChat({
   info,
@@ -82,11 +41,14 @@ function RightChat({ info }: { info: ChatType }) {
 
 export function Chat() {
   const userProfile = useRecoilValue(userProfileState);
+  const currChat = useRecoilState(currChatState);
+  // 백엔드에서 어떻게 관리하냐에 따라 다르게 처리해야함... 내가 보낸 메세지를 바로 띄울것인지 / 받아와서 띄울것인지
+
   let lastId: number | undefined;
   let tempId: number | undefined;
   return (
     <div className={styles.chatbox}>
-      {array2.map((info, key) => {
+      {/* {array2.map((info, key) => {
         tempId = lastId;
         lastId = info.uid;
         return info.uid === userProfile.uid ? (
@@ -94,7 +56,7 @@ export function Chat() {
         ) : (
           <LeftChat info={info} lastId={tempId} key={key} />
         );
-      })}
+      })} */}
     </div>
   );
 }
