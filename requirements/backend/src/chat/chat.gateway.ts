@@ -159,7 +159,7 @@ export class ChatGateway {
 
   // chat/addUserInChannel - 채널에 들어가기
   @SubscribeMessage('chat/addUserInChannel')
-  handleaddUserInChannel(@MessageBody() payload: UserInChannelDto) {
+  async handleaddUserInChannel(@MessageBody() payload: UserInChannelDto) {
     const user: UserInChannelDto = {
       uid: payload.uid,
       chid: payload.chid,
@@ -167,21 +167,16 @@ export class ChatGateway {
       isMute: false,
       isBan: false,
     };
-    this.chatService.addUserInChannel(user);
-    this.server
-      .to(`channel${payload.chid}`)
-      .emit('chat/addUserInChannel', payload.uid);
+    const ret = await this.chatService.addUserInChannel(user);
+    this.server.to(`channel${payload.chid}`).emit('chat/addUserInChannel', ret);
   }
 
   // chat/deleteUserInChannel - 채널에서 나가기
   @SubscribeMessage('chat/deleteUserInChannel')
-  handledeleteUserInChannel(@MessageBody() payload: UserInChannelDto) {
-    this.chatService.deleteUserInChannel(
-      payload.uid,
-      payload.chid,
-    );
+  async handledeleteUserInChannel(@MessageBody() payload: UserInChannelDto) {
+    await this.chatService.deleteUserInChannel(payload.uid, payload.chid);
     this.server
       .to(`channel${payload.chid}`)
-      .emit('chat/addUserInChannel', payload.uid);
+      .emit('chat/deleteUserInChannel', payload.uid);
   }
 }
