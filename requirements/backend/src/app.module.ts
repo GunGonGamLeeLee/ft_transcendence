@@ -60,6 +60,6 @@ const dbOptions: TypeOrmModuleOptions = {
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('/chat/pwdd');
+    consumer.apply(LoggerMiddleware).forRoutes('/chat/pwd');
   }
 }
