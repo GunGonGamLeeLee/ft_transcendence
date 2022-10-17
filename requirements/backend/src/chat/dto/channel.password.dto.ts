@@ -6,7 +6,7 @@ export class ChannelPasswordDto {
   @IsNumber()
   chid: number;
   @ApiProperty()
-  @Length(4, 4)
+  @Length(0, 4)
   @IsString()
-  password: string;
+  password?: string;
 }

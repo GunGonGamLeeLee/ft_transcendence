@@ -2,7 +2,7 @@ import { IsNumber } from 'class-validator';
 
 export class ChatRoleDto {
   @IsNumber()
-  roomId: number;
+  chid: number;
   @IsNumber()
   myUid: number;
   @IsNumber()
