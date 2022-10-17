@@ -5,7 +5,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { WsExceptionFilter } from 'src/ws.exception.filter';
 import { WsValidationPipe } from 'src/ws.validation.pipe';
@@ -29,13 +29,13 @@ export class ChatGateway {
 
   //msg, msg: string - send message
   @SubscribeMessage('chat/msg')
-  chatHandleChatMessage(@MessageBody() payload: ChatMessageDto) {
+  handleChatMessage(@MessageBody() payload: ChatMessageDto) {
     this.server.emit('chat/msg', payload.chid, payload.msg, payload.myUid);
   }
 
   // addAdmin, uid: number - add admin
   @SubscribeMessage('chat/addAdmin')
-  async chatHandleAddAdmin(@MessageBody() payload: ChatRoleDto) {
+  async handleAddAdmin(@MessageBody() payload: ChatRoleDto) {
     await this.chatService.changeUserRoleInChannel(
       payload.myUid,
       payload.targetUid,
@@ -47,7 +47,7 @@ export class ChatGateway {
 
   // deleteAdmin, uid - delete admin
   @SubscribeMessage('chat/deleteAdmin')
-  async chatHandleDeleteAdmin(@MessageBody() payload: ChatRoleDto) {
+  async handleDeleteAdmin(@MessageBody() payload: ChatRoleDto) {
     await this.chatService.changeUserRoleInChannel(
       payload.myUid,
       payload.targetUid,
@@ -59,31 +59,44 @@ export class ChatGateway {
 
   // addMute, uid - mute user
   @SubscribeMessage('chat/addMute')
-  async chatHandleAddMute(@MessageBody() payload: ChatRoleDto) {
+  async handleAddMute(client: Socket, payload: ChatRoleDto) {
     await this.chatService.muteUserInChannel(
       payload.myUid,
       payload.targetUid,
       payload.chid,
     );
     this.server.emit('chat/addMute', payload.chid, payload.targetUid);
+    console.log(`chat.gateway: handleAddMute: mute ${payload.targetUid}`);
+    setTimeout(this.handleDeleteMute.bind(this), 10000, client, {
+      targetUid: payload.targetUid,
+      chid: payload.chid,
+    }); // FIXME 시간.
   }
 
   // addBan, uid - ban user
   @SubscribeMessage('chat/addBan')
-  async chatHandleAddBan(@MessageBody() payload: ChatRoleDto) {
+  async handleAddBan(client: Socket, payload: ChatRoleDto) {
     await this.chatService.banUserInChannel(
       payload.myUid,
       payload.targetUid,
       payload.chid,
     );
     this.server.emit('chat/addBan', payload.chid, payload.targetUid);
+    console.log(`chat.gateway: handleAddBan: ban ${payload.targetUid}`);
+    setTimeout(this.handleDeleteBan.bind(this), 10000, client, {
+      targetUid: payload.targetUid,
+      chid: payload.chid,
+    }); // FIXME 시간.
   }
 
   // password, 4글자 스트링 | 빈 스트링 - 4글자 스트링이면 비밀번호 추가, 반대의 경우 삭제
   @SubscribeMessage('chat/password')
-  async chatHandlePassword(@MessageBody() payload: ChatPasswordDto) {
+  async handlePassword(@MessageBody() payload: ChatPasswordDto) {
     if (payload.password === '') {
-      await this.chatService.updateChRemovePassword(payload.myUid, payload.chid);
+      await this.chatService.updateChRemovePassword(
+        payload.myUid,
+        payload.chid,
+      );
     } else {
       await this.chatService.updateChSetPassword(
         payload.myUid,
@@ -102,13 +115,26 @@ export class ChatGateway {
 
   // deleteMute, targetUid - unmute user, 채팅방 관리자들에게 전부 알려야함
   @SubscribeMessage('chat/deleteMute')
-  handleDeleteMute(@MessageBody() payload: ChatDeleteStateDto) {
+  async handleDeleteMute(client: Socket, payload: ChatDeleteStateDto) {
+    await this.chatService.unmuteUserInChannel(
+      client.data.uid,
+      payload.targetUid,
+      payload.chid,
+    );
+    console.log(`chat.gateway: handleDeleteMute: unmute ${payload.targetUid}`);
     this.server.emit('chat/deleteMute', payload.chid, payload.targetUid);
   }
 
   // deleteBan, targetUid - unban user, 위와 같음
   @SubscribeMessage('chat/deleteBan')
-  handleDeleteBan(@MessageBody() payload: ChatDeleteStateDto) {
+  async handleDeleteBan(client: Socket, payload: ChatDeleteStateDto) {
+    await this.chatService.unbanUserInChannel(
+      client.data.uid,
+      payload.targetUid,
+      payload.chid,
+    );
+    await this.chatService.deleteUserInChannel(payload.targetUid, payload.chid);
+    console.log(`chat.gateway: handleDeleteBan: unban ${payload.targetUid}`);
     this.server.emit('chat/deleteBan', payload.chid, payload.targetUid);
   }
 }
