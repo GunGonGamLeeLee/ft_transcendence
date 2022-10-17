@@ -14,6 +14,7 @@ import { DmLogDto } from './dto/dm.log.dto';
 import { MatchHistoryDto } from './dto/match.history.dto';
 import { UserDto } from './dto/user.dto';
 import { UserInChannelDto } from './dto/user.in.channel.dto';
+import { UserRoleInChannel } from './entity/entity.user.in.channel';
 
 // 데이터베이스 테스트 용도로 작성된 파일입니다.
 
@@ -296,7 +297,7 @@ export class DatabaseController {
   })
   @Post('add-user-in-channel')
   async addUserInChannel(@Body() body: UserInChannelDto) {
-    return await this.databaseService.addUerInChannel(body);
+    return await this.databaseService.addUserInChannel(body);
   }
 
   @ApiTags('database/Dm')

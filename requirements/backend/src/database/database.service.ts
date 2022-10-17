@@ -245,19 +245,25 @@ export class DatabaseService {
     return channel;
   }
 
-  async addUerInChannel(userInChannelDto: UserInChannelDto) {
-    const user: UserEntity = await this.dbUserService.findOne(
-      userInChannelDto.uid,
-    );
+  async addUserInChannel(newUser: UserInChannelDto) {
+    const userInfo: UserEntity = await this.dbUserService.findOne(newUser.uid);
     const channel: ChannelEntity = await this.dbChannelService.findOne(
-      userInChannelDto.chid,
+      newUser.chid,
     );
-    userInChannelDto.role = UserRoleInChannel.USER;
-    return await this.dbUserInChannelService.saveOne(
-      userInChannelDto,
-      user,
-      channel,
-    );
+
+    if (userInfo == null || channel == null)
+      throw new HttpException('존재하지 않는 값입니다.', HttpStatus.NOT_FOUND);
+
+    const usersInChannel =
+      await this.listUserInChannelWithUserInfo(newUser.chid);
+
+    for (const user of usersInChannel) {
+      if (user.user.uid === newUser.uid) {
+        return await this.findOneUser(newUser.uid);
+      }
+    }
+
+    return await this.dbUserInChannelService.saveOne(newUser, userInfo, channel);
   }
 
   async addDmLog(dmLog: DmLogDto) {
@@ -473,10 +479,14 @@ export class DatabaseService {
     return await this.dbBlockListService.deleteAll(uid);
   }
 
-  async deleteUserInChannel(uid: number, chid: number) {
+  async deleteUserInChannel(
+    uid: number,
+    chid: number,
+  ) {
     const channel = await this.dbChannelService.findOne(chid);
     if (channel == null)
       throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);
+
     if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
     return await this.dbUserInChannelService.deleteOne(uid, chid);
   }
