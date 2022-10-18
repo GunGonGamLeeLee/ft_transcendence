@@ -11,10 +11,10 @@ import { SetRoomModal } from './SetRoomModal/SetRoomModal';
 export function Modal() {
   return (
     <>
-      <React.Suspense fallback={<h1>Loading...</h1>}>
+      <React.Suspense fallback={<div>Loading...</div>}>
         <UserProfileModal />
       </React.Suspense>
-      <React.Suspense fallback={<h1>Loading...</h1>}>
+      <React.Suspense fallback={<div>Loading...</div>}>
         <ChatProfileModal />
       </React.Suspense>
       <ChatInviteModal />

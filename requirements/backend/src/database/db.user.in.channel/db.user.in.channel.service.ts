@@ -180,7 +180,11 @@ export class DbUserInChannelService {
   }
 
   async banOne(uid: number, chid: number) {
-    return await this.userInChannelRepo.update({ uid, chid }, { isBan: true });
+    const data = await this.userInChannelRepo.update(
+      { uid, chid },
+      { isBan: true },
+    );
+    return data;
   }
 
   async unmuteOne(uid: number, chid: number) {

@@ -44,7 +44,7 @@ export function SideBar() {
       >
         <Index index1='RANK' index2='NAME' index3='RATING' />
         <ul className={styles.sidebar__ul}>
-          <React.Suspense fallback={<h1>Loading ...</h1>}>
+          <React.Suspense fallback={<div>Loading ...</div>}>
             <RankList />
           </React.Suspense>
         </ul>
@@ -54,12 +54,12 @@ export function SideBar() {
       >
         <Index index1='' index2='NAME' index3='STATUS' />
         <ul className={styles.sidebar__ul}>
-          <React.Suspense fallback={<h1>Loading ...</h1>}>
+          <React.Suspense fallback={<div>Loading ...</div>}>
             <FriendList />
           </React.Suspense>
         </ul>
       </div>
-      <React.Suspense fallback={<h1>Loading ...</h1>}>
+      <React.Suspense fallback={<div>Loading ...</div>}>
         <MyProfile />
       </React.Suspense>
     </div>

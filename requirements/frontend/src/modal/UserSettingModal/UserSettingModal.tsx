@@ -28,6 +28,7 @@ function UserSetting() {
   const [qrCheckStatus, setQrCheckStatus] = React.useState<string>('');
   const [qrPin, setQrPin] = React.useState<string>('');
   const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
 
   const onClick = () => {
     setUserSettingModal(false);

@@ -1,8 +1,7 @@
 import { atom } from 'recoil';
+import { RoleType } from './chatUserType';
 
-type roleType = 'owner' | 'admin' | 'user'; // todo
-
-export const currRoleState = atom<roleType | null>({
+export const currRoleState = atom<RoleType | null>({
   key: 'currRole',
   default: null,
 });

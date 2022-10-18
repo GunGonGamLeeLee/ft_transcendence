@@ -42,9 +42,9 @@ export default function ChatSideBar() {
       <div
         className={`${styles.sidebar__list} ${isLeft ? '' : styles.inactive}`}
       >
-        <Index index1='RANK' index2='NAME' index3='ROLE' />
+        <Index index1='' index2='NAME' index3='ROLE' />
         <ul className={styles.sidebar__ul}>
-          <React.Suspense fallback={<h1>Loading ...</h1>}>
+          <React.Suspense fallback={<div>Loading...</div>}>
             <ChatUserList />
           </React.Suspense>
         </ul>
@@ -54,12 +54,12 @@ export default function ChatSideBar() {
       >
         <Index index1='' index2='NAME' index3='STATUS' />
         <ul className={styles.sidebar__ul}>
-          <React.Suspense fallback={<h1>Loading ...</h1>}>
+          <React.Suspense fallback={<div>Loading...</div>}>
             <FriendList />
           </React.Suspense>
         </ul>
       </div>
-      <React.Suspense fallback={<h1>Loading</h1>}>
+      <React.Suspense fallback={<div>Loading...</div>}>
         <MyProfile />
       </React.Suspense>
     </div>

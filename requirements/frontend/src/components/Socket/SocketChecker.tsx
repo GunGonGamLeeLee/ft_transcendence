@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Outlet } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { io } from 'socket.io-client';
 import { authState } from '../../atoms/authState';
 import { pendingFriendState } from '../../atoms/friendListState';
@@ -10,13 +10,14 @@ export const socket = io(`${import.meta.env.VITE_BACKEND_EP}`, {
 });
 
 export function SocketChecker() {
+  const navigator = useNavigate();
   const { token } = useRecoilValue(authState);
-  if (token === null) throw new Error();
-
   const [isConnect, setIsConnect] = React.useState<boolean>(
     socket.connected === true,
   );
   const setPendingFriend = useSetRecoilState(pendingFriendState);
+  const resetToken = useResetRecoilState(authState);
+  if (token === null) throw new Error();
 
   React.useEffect(() => {
     if (socket.connected === true) return;
@@ -37,6 +38,16 @@ export function SocketChecker() {
     socket.on('disconnect', (reason) => {
       console.debug(`disconnect reason: ${reason}`);
       setIsConnect(false);
+    });
+
+    socket.on('login/dupCheck', (isSuccess: boolean) => {
+      if (isSuccess === true) return;
+
+      socket.disconnect();
+      setIsConnect(false);
+      resetToken();
+      alert('중복 로그인 감지됨!');
+      navigator('/login');
     });
 
     socket.onAny((event, ...args) => {
@@ -64,9 +75,9 @@ export function SocketChecker() {
 
     return () => {
       socket.off('dm/status');
-      socket.off('test');
       socket.off('connect');
       socket.off('disconnect');
+      socket.off('login/dupCheck');
     };
   }, [setPendingFriend, setIsConnect]);
 

@@ -5,7 +5,7 @@ import { ChannelLobby } from './ChannelLobby';
 export function Channel() {
   return (
     <>
-      <React.Suspense fallback={<h1>Loading</h1>}>
+      <React.Suspense fallback={<div>Loading</div>}>
         <ChannelLobby />
       </React.Suspense>
       <SideBar />
