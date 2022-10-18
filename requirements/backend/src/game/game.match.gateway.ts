@@ -42,6 +42,9 @@ export class GameMatchGateway {
 
   @SubscribeMessage('game/invite')
   async inviteUser(client: Socket, payload: { uid: number; speed: number }) {
+    if (payload.speed < 0.49 || payload.speed > 4.1) {
+      client.emit('game/error');
+    }
     console.log(`game/invite ${client.id}`);
     const sockets = await this.server.in(`dm${payload.uid}`).fetchSockets();
     for (const sock of sockets) {
