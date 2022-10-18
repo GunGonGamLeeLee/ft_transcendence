@@ -1,18 +1,12 @@
 import { atom } from 'recoil';
 
 export interface ChatLogType {
+  index: number;
   uid: number;
-  displayName: string;
-  imgUri: string;
   msg: string;
 }
 
-export interface ChatType {
-  me: ChatLogType[];
-  other: ChatLogType[];
-}
-
-export const currChatState = atom<ChatType>({
+export const currChatState = atom<ChatLogType[]>({
   key: 'currChat',
-  default: { me: [], other: [] },
+  default: [],
 });

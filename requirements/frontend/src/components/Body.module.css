@@ -6,4 +6,5 @@
   width: 1280px;
   height: 720px;
   background-color: var(--color-1);
+  position: fixed;
 }
