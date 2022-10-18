@@ -10,6 +10,7 @@ import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
 import { GameMatchService } from './game.match.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @WebSocketGateway({
   cors: {
@@ -22,7 +23,10 @@ export class GameMatchGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private gameMatchService: GameMatchService) {}
+  constructor(
+    private gameMatchService: GameMatchService,
+    private readonly database: DatabaseService,
+  ) {}
 
   @SubscribeMessage('game/match')
   match(client: Socket, payload: any) {
@@ -43,7 +47,11 @@ export class GameMatchGateway {
     for (const sock of sockets) {
       if (sock.data.uid == payload.uid) {
         this.gameMatchService.inviteUser(client, payload);
-        sock.emit('invite/game', { uid: client.data.uid });
+        const user = await this.database.findOneUser(client.data.uid);
+        sock.emit('invite/game', {
+          uid: client.data.uid,
+          displayName: user.displayName,
+        });
         return;
       }
     }

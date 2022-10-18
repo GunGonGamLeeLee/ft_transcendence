@@ -76,7 +76,7 @@ export function SocketChecker() {
     });
 
     socket.on('invite/game', (payload) => {
-      setGameInviteModal(payload.uid);
+      setGameInviteModal(payload);
     });
 
     return () => {
