@@ -158,6 +158,20 @@ export class DbUserService {
     await this.userRepo.update({ uid }, { status });
   }
 
+  async updateUserGameRoom(uid: number, gameRoom: string) {
+    await this.userRepo.update(
+      { uid },
+      { gameRoom, status: UserStatus.INGAME },
+    );
+  }
+
+  async updateUserExitGameRoom(uid: number) {
+    await this.userRepo.update(
+      { uid },
+      { gameRoom: '', status: UserStatus.ONLINE },
+    );
+  }
+
   async deleteOne(uid: number) {
     return await this.userRepo.delete({ uid });
   }

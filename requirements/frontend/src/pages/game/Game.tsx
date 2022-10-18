@@ -7,9 +7,11 @@ import { GameCanvas } from './GameCanvas';
 import styles from './Game.module.css';
 import { BackButton } from '../../components/BackButton';
 import { DefaultProfile, DefaultProfile2, GameProfile } from './GameProfile';
+import { useNavigate } from 'react-router-dom';
 
 export function Game() {
   const [game, SetGame] = useRecoilState(gameState);
+  const navigator = useNavigate();
   const [profileState, SetProfileState] = useState<ProfileStateType | null>(
     null,
   );
@@ -22,10 +24,10 @@ export function Game() {
   const [downState, setDownState] = useState<Boolean>(false);
 
   useEffect(() => {
-    // setCanvasState({
-    //   status: 0,
-    //   gameRoomState: undefined,
-    // });
+    setCanvasState({
+      status: 0,
+      gameRoomState: undefined,
+    });
 
     console.log(game);
     if (game === null) {
@@ -86,6 +88,11 @@ export function Game() {
       setCanvasState((prev) => ({ ...prev, gameRoomState: payload }));
     });
 
+    socket.on('game/error', (payload) => {
+      alert('상대를 찾을 수 없습니다.');
+      navigator('/lobby');
+    });
+
     return () => {
       SetGame(null);
       socket.emit('game/unmatch');
@@ -93,6 +100,7 @@ export function Game() {
       socket.off('game/start');
       socket.off('game/end');
       socket.off('game/state');
+      socket.off('game/error');
     };
   }, []);
 

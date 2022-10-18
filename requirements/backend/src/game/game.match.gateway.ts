@@ -37,9 +37,19 @@ export class GameMatchGateway {
   }
 
   @SubscribeMessage('game/invite')
-  inviteUser(client: Socket, payload: { uid: number; speed: number }) {
+  async inviteUser(client: Socket, payload: { uid: number; speed: number }) {
     console.log(`game/invite ${client.id}`);
-    this.gameMatchService.inviteUser(client, payload);
+    const sockets = await this.server.in(`dm${payload.uid}`).fetchSockets();
+    for (const sock of sockets) {
+      if (sock.data.uid == payload.uid) {
+        this.gameMatchService.inviteUser(client, payload);
+        sock.emit('invite/game', { uid: client.data.uid });
+        return;
+      }
+    }
+
+    // except
+    client.emit('game/error');
   }
 
   @SubscribeMessage('game/invited')

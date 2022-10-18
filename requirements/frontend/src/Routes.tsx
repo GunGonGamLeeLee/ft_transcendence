@@ -63,12 +63,12 @@ export const Routes = createBrowserRouter(
               element={<RoomChecker />}
               errorElement={<ErrorHandler />}
             />
-            <Route
-              path='game'
-              element={<Game />}
-              errorElement={<ErrorHandler />}
-            />
           </Route>
+          <Route
+            path='game'
+            element={<Game />}
+            errorElement={<ErrorHandler />}
+          />
         </Route>
       </Route>
     </Route>,

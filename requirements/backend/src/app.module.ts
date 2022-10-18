@@ -19,7 +19,6 @@ import { ChatModule } from './chat/chat.module';
 import { DmModule } from './dm/dm.module';
 import { AppGateway } from './app.gateway';
 import { LoggerMiddleware } from './logger.middleware';
-import { GameModule } from './game/game.module';
 import { GameRoomModule } from './game/game.room.module';
 import { GameMatchModule } from './game/game.match.module';
 
@@ -58,7 +57,6 @@ const dbOptions: TypeOrmModuleOptions = {
     TypeOrmModule.forRoot(dbOptions),
     DatabaseModule,
     DmModule,
-    GameModule,
     GameRoomModule,
     GameMatchModule,
   ],
