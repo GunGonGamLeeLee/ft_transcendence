@@ -19,6 +19,7 @@ import { currRoleState } from '../../atoms/currRoleState';
 import { currUserCountState } from '../../atoms/currUserCount';
 import { refreshChannelListState } from '../../atoms/refreshChannelListState';
 import { currChatState } from '../../atoms/currChatState';
+import { sortUserByName } from '../../utils/sortUserByName';
 
 export function Room() {
   const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
@@ -39,34 +40,41 @@ export function Room() {
 
   React.useEffect(() => {
     const setDefaultInfo = async () => {
-      const payload: {
-        inChatRoom: ChatUserType[];
-        muteList: number[];
-        banList: number[];
-      } = await fetcher(
-        token,
-        'GET',
-        `chat/channelusers?chid=${getChId(currRoom?.roomId)}`,
-      );
+      try {
+        const payload: {
+          inChatRoom: ChatUserType[];
+          muteList: number[];
+          banList: number[];
+        } = await fetcher(
+          token,
+          'GET',
+          `chat/channelusers?chid=${getChId(currRoom?.roomId)}`,
+        );
 
-      if (
-        payload.banList.find((uid) => uid === userProfile.uid) !== undefined
-      ) {
-        alert('이 방에서 밴 당했습니다!');
+        if (
+          payload.banList.find((uid) => uid === userProfile.uid) !== undefined
+        ) {
+          alert('YOU HAVE BEEN BANNED!');
+          setRefreshChannelList(true);
+          setCurrRoom(null);
+          navigator('/channel', { replace: true });
+          return;
+        }
+
+        setCurrUserList(payload.inChatRoom.sort(sortUserByName));
+        setCurrBanList(payload.banList);
+        setCurrMuteList(payload.muteList);
+        setCurrRole(
+          payload.inChatRoom.find((user) => user.uid === userProfile.uid)
+            ?.role ?? RoleType.USER,
+        );
+        if (currRoom) setCurrUserCount(currRoom.userCount);
+        setIsFetchDone(true);
+      } catch {
+        alert('불러오기 오류!');
         setCurrRoom(null);
-        navigator('/channel', { replace: true });
-        return;
+        navigator('/channel');
       }
-
-      setCurrUserList(payload.inChatRoom);
-      setCurrBanList(payload.banList);
-      setCurrMuteList(payload.muteList);
-      setCurrRole(
-        payload.inChatRoom.find((user) => user.uid === userProfile.uid)?.role ??
-          RoleType.USER,
-      );
-      if (currRoom) setCurrUserCount(currRoom.userCount);
-      setIsFetchDone(true);
     };
 
     if (currRoom === null) {
@@ -79,6 +87,7 @@ export function Room() {
     } catch {
       alert('불러오기 오류!');
       setCurrRoom(null);
+      navigator('/channel');
     }
   }, [currRoom, setCurrRoom]);
 

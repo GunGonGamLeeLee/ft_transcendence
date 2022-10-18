@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { blockedListState } from '../../atoms/blockedListState';
 import { ChatUserType, RoleType } from '../../atoms/chatUserType';
 import { currChatState } from '../../atoms/currChatState';
 import { currRoleState } from '../../atoms/currRoleState';
@@ -16,11 +17,12 @@ import { refreshChannelListState } from '../../atoms/refreshChannelListState';
 import { userProfileState } from '../../atoms/userProfileState';
 import { socket } from '../../components/Socket/SocketChecker';
 import { getChId } from '../../utils/getChId';
+import { sortUserByName } from '../../utils/sortUserByName';
 
 export function RoomSocket({ children }: { children: React.ReactNode }) {
   const userProfile = useRecoilValue(userProfileState);
   const setCurrUserList = useSetRecoilState(currUserListState);
-  const setCurrMuteList = useSetRecoilState(currMuteListState);
+  const [currMuteList, setCurrMuteList] = useRecoilState(currMuteListState);
   const setCurrBanList = useSetRecoilState(currBanListState);
   const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
   const [currRole, setCurrRole] = useRecoilState(currRoleState);
@@ -30,6 +32,7 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
   const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
   const setChatUserModal = useSetRecoilState(chatProfileModalState);
   const setCurrChatState = useSetRecoilState(currChatState);
+  const blockList = useRecoilValue(blockedListState);
   const navigator = useNavigate();
 
   if (currRole === null) throw new Error();
@@ -59,7 +62,7 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       setCurrUserList((curr) => {
         if (curr.find((currUser) => currUser.uid === user.uid) === undefined) {
           setIsChange(1);
-          return [...curr, user];
+          return [...curr, user].sort(sortUserByName);
         }
         return curr;
       });
@@ -81,10 +84,15 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
     });
 
     socket.on('chat/msg', (chid: number, msg: string, myUid: number) => {
-      setCurrChatState((curr) => [
-        ...curr,
-        { uid: myUid, msg, index: curr.length },
-      ]);
+      if (
+        currMuteList.find((muted) => muted === myUid) === undefined &&
+        blockList.find((blocked) => blocked.uid === myUid) === undefined
+      ) {
+        setCurrChatState((curr) => [
+          ...curr,
+          { uid: myUid, msg, index: curr.length },
+        ]);
+      }
     });
 
     socket.on('chat/addAdmin', (chid: number, targetUid: number) => {
@@ -152,7 +160,16 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       socket.off('chat/deleteMute');
       socket.off('chat/deleteBan');
     };
-  }, [userProfile, currRoom, isEnter, setIsEnter, currRole]);
+  }, [
+    userProfile,
+    currRoom,
+    isEnter,
+    setIsEnter,
+    currRole,
+    currMuteList,
+    setCurrMuteList,
+    blockList,
+  ]);
 
   return <>{children}</>;
 }

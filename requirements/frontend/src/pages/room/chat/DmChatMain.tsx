@@ -1,17 +1,17 @@
-import * as React from 'react';
 import styles from './ChatMain.module.css';
 import backStyle from '../../../components/BackButton.module.css';
 import pagestyles from '../../pages.module.css';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currDmRoomState } from '../../../atoms/currDmRoomState';
-import { DmLogState } from '../../../atoms/DmLogState';
-import { ChatInput } from './ChatInput';
 import { DmChatInfo } from './DmChatInfo';
+import { DmChatInput } from './DmChatInput';
+import { DmChat } from './DmChat';
+import { refreshChannelListState } from '../../../atoms/refreshChannelListState';
+import { socket } from '../../../components/Socket/SocketChecker';
 
 export function DmChatMain() {
   const currDmRoom = useRecoilValue(currDmRoomState);
-  const dmLog = useRecoilValue(DmLogState);
 
   return (
     <>
@@ -19,16 +19,15 @@ export function DmChatMain() {
         <div className={pagestyles.page__header}>
           <BackRoomButton to='/channel' />
           <div className={styles.chatmain__icons}>
-            <LeaveRoomButton />
+            <LeaveRoomButton uid={currDmRoom?.userId} />
           </div>
         </div>
         <div className={pagestyles.page__main}>
           <DmChatInfo />
-          {/* <Chat /> */}
+          <DmChat />
         </div>
         <div className={pagestyles.page__footer}>
-          {/* 아마 dm chat input */}
-          <ChatInput />
+          <DmChatInput />
         </div>
       </div>
     </>
@@ -53,11 +52,14 @@ function BackRoomButton({ to }: { to: string }) {
   );
 }
 
-function LeaveRoomButton() {
+function LeaveRoomButton({ uid }: { uid: number | undefined }) {
+  const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
   const setCurrDmRoom = useSetRecoilState(currDmRoomState);
 
   const onClick = () => {
+    if (uid !== undefined) socket.emit('dm/deleteUserInChannel', uid);
     setCurrDmRoom(null);
+    setRefreshChannelList(true);
   };
 
   return (

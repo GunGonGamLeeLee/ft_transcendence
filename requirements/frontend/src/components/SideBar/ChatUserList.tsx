@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ChatUserType, RoleType } from '../../atoms/chatUserType';
 import { currUserListState } from '../../atoms/currRoomState';

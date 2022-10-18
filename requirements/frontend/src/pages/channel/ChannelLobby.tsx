@@ -92,7 +92,7 @@ export function ChannelLobby() {
     setAllRoomList(data.allRoom.sort(sortRoomByTitle));
     setJoinedRoomList(data.inRoom.sort(sortRoomByTitle));
     setDmRoomList(data.dmRoom.sort(sortRoomByUser));
-  }, 5000);
+  }, 3000);
 
   return (
     <>

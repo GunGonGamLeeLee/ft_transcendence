@@ -1,19 +1,22 @@
+import * as React from 'react';
 import { ChangeEvent, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { setRoomModalState } from '../../atoms/modals/setRoomModalState';
 import styles from './setRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState, RoomModeType } from '../../atoms/currRoomState';
+import { authState } from '../../atoms/authState';
 
 export default function SetRoom() {
   const setsetRoomModal = useSetRecoilState(setRoomModalState);
-  const currRoom = useRecoilValue(currRoomState);
+  const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
   const [isPrivate, setIsPrivate] = useState(
     currRoom?.mode === RoomModeType.PRIVATE,
   );
   const [title, setTitle] = useState(currRoom?.title);
   const [password, setPassword] = useState<string>('');
+  const { token } = useRecoilValue(authState);
 
   const onClick = () => {
     setsetRoomModal(false);
@@ -29,6 +32,26 @@ export default function SetRoom() {
 
   const onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+  };
+
+  const handleChangeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const newRoomInfo = await response.json();
+
+      setCurrRoom(newRoomInfo);
+    } catch {
+      alert('CHANGE ROOM FAIL');
+    }
   };
 
   return (
@@ -84,7 +107,12 @@ export default function SetRoom() {
               </div>
             </div>
             <div className={styles.set__buttons}>
-              <button className={styles.set__button}>만둘깅</button>
+              <button
+                className={styles.set__button}
+                onClick={handleChangeClick}
+              >
+                CHANGE
+              </button>
             </div>
           </div>
         </div>

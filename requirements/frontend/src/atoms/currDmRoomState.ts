@@ -5,6 +5,7 @@ export interface DmRoomType {
   roomId: string;
   userId: number;
   userDisplayName: string;
+  imgUri: string;
   mode: RoomModeType.DM;
 }
 

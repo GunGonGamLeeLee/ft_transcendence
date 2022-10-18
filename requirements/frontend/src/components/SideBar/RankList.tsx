@@ -29,7 +29,7 @@ export function RankList() {
       user.status = Status.RANK;
     }
     setRankList(data);
-  }, 10000);
+  }, 3000);
 
   return (
     <>

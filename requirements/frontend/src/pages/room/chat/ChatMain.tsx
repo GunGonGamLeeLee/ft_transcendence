@@ -4,7 +4,7 @@ import backStyle from '../../../components/BackButton.module.css';
 import pagestyles from '../../pages.module.css';
 import { Chat } from './Chat';
 import { ChatInput } from './ChatInput';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { setRoomModalState } from '../../../atoms/modals/setRoomModalState';
 import { userProfileState } from '../../../atoms/userProfileState';
 import {
@@ -25,6 +25,7 @@ import { ChatUserType } from '../../../atoms/chatUserType';
 import { useInterval } from '../../../hooks/useInterval';
 import { currUserCountState } from '../../../atoms/currUserCount';
 import { Link, useNavigate } from 'react-router-dom';
+import { sortUserByName } from '../../../utils/sortUserByName';
 
 export function ChatMain() {
   const userProfile = useRecoilValue(userProfileState);
@@ -34,42 +35,56 @@ export function ChatMain() {
   const setCurrUserCount = useSetRecoilState(currUserCountState);
   const [isRefresh, setIsRefresh] = React.useState<boolean>(true);
   const fetcher = useFetch();
+  const navigator = useNavigate();
   const { token } = useRecoilValue(authState);
   if (token === null) throw new Error();
-  const currRoom = useRecoilValue(currRoomState);
-  if (currRoom === null) throw new Error();
+  const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
 
   React.useEffect(() => {
     const syncInfo = async () => {
-      const payload: {
-        inChatRoom: ChatUserType[];
-        muteList: number[];
-        banList: number[];
-      } = await fetcher(
-        token,
-        'GET',
-        `chat/channelusers?chid=${getChId(currRoom.roomId)}`,
-        undefined,
-        true,
-      );
+      try {
+        const payload: {
+          inChatRoom: ChatUserType[];
+          muteList: number[];
+          banList: number[];
+        } = await fetcher(
+          token,
+          'GET',
+          `chat/channelusers?chid=${getChId(currRoom?.roomId)}`,
+          undefined,
+          true,
+        );
 
-      setCurrUserList(payload.inChatRoom);
-      setCurrMuteList(payload.muteList);
-      setCurrBanList(payload.banList);
-      setCurrUserCount(payload.inChatRoom.length);
-      setIsRefresh(false);
+        setCurrUserList(payload.inChatRoom.sort(sortUserByName));
+        setCurrMuteList(payload.muteList);
+        setCurrBanList(payload.banList);
+        setCurrUserCount(payload.inChatRoom.length);
+        setIsRefresh(false);
+      } catch {
+        throw new Error();
+      }
     };
+
+    if (currRoom === null) {
+      navigator('/channel');
+    }
 
     if (isRefresh === false) return;
 
-    syncInfo();
-  }, [isRefresh]);
+    try {
+      syncInfo();
+    } catch {
+      alert('불러오기 오류!');
+      setCurrRoom(null);
+      navigator('/channel');
+    }
+  }, [isRefresh, currRoom]);
 
   useInterval(() => {
     setIsRefresh(true);
-  }, 50000);
+  }, 3000);
 
-  return (
+  return currRoom === null ? null : (
     <>
       <div className={pagestyles.page}>
         <div className={pagestyles.page__header}>

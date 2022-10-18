@@ -15,19 +15,20 @@ function LeftChat({
   user: ChatUserType | undefined;
   lastId: number | undefined;
 }) {
-  if (user === undefined) {
-    alert('유저 불러오기 실패');
-    throw new Error();
-  }
-
   return (
     <>
       {chat.uid === lastId ? (
         <></>
       ) : (
         <div className={`${styles.chat__profile} ${styles.chat__left}`}>
-          <img src={user.imgUri} className={styles.chat__img} />
-          <div className={styles.chat__name}>{user.displayName}</div>
+          {user === undefined ? null : (
+            <img src={user.imgUri} className={styles.chat__img} />
+          )}
+          {user === undefined ? (
+            'unknown'
+          ) : (
+            <div className={styles.chat__name}>{user.displayName}</div>
+          )}
         </div>
       )}
       <div className={styles.chat__msgbox}>
