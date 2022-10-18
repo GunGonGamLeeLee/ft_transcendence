@@ -9,19 +9,12 @@ import {
   StartGameRoomState,
 } from './game.room.dto';
 
-interface GameEndInfo {
-  roomId: string;
-  winer: Socket;
-  loser: Socket;
-  broadcast: NodeJS.Timeout;
-}
-
 const GameInfo = {
   width: 640,
-  height: 360,
+  height: 660,
   paddlex: 10,
   paddley: 80,
-  maxy: (360 - 80) / 2, // (height - paddley) / 2
+  maxy: (660 - 80) / 2, // (height - paddley) / 2
   ballr: 10,
 };
 
@@ -60,7 +53,6 @@ export class GameRoomService {
       broadcast: null,
     };
 
-    // console.log(`game.room.service.ts:makeGameRoomInfo: ${roomId}`);
     return roomInfo;
   }
 
@@ -79,6 +71,19 @@ export class GameRoomService {
     return startState;
   }
 
+  makeUserState(state: GameRoomState) {
+    const userGameRoomState: UserGameRoomState = {
+      paddle1: state.paddle1,
+      paddle2: state.paddle2,
+      ballx: state.ball.x,
+      bally: state.ball.y,
+      score1: state.score1,
+      score2: state.score2,
+    };
+
+    return userGameRoomState;
+  }
+
   async createRoom(
     player1: Socket,
     player2: Socket,
@@ -95,14 +100,16 @@ export class GameRoomService {
 
     player1.join(roomId.toString());
     player2.join(roomId.toString());
-    console.log(player1.id, player2.id);
     player1.data = { ...player1.data, roomId: roomId };
     player2.data = { ...player2.data, roomId: roomId };
+
+    console.log(
+      `Create Game {roomId: ${roomId}, p1: ${player1.id}, p2: ${player2.id}}`,
+    );
 
     const startState = this.makeStartState(roomInfo);
     player1.emit('game/start', startState);
     player2.emit('game/start', startState);
-    // console.log('game/start ' + roomInfo.roomId);
 
     this.broadcastStateInRoom = this.broadcastStateInRoom.bind(this);
     this.roomInfos[roomId] = roomInfo;
@@ -110,17 +117,29 @@ export class GameRoomService {
       this.broadcastStateInRoom,
       25,
       this.roomInfos[roomId],
-    ); // micro task ?
+    );
     this.roomInfos[roomId].broadcast = broadcast;
   }
 
-  private sendEndingMessageToClient(gameEndInfo: GameEndInfo) {
-    const { roomId, winer, loser, broadcast } = gameEndInfo;
-    winer.emit('game/end', 'YOU WIN  ^_^');
-    loser.emit('game/end', 'YOU LOSE T.T');
+  private endGame(
+    roomInfo: GameRoomInfo,
+    userGameRoomState: UserGameRoomState,
+  ) {
+    const { roomId, player1, player2, crowd, broadcast } = roomInfo;
+    player1.emit('game/end', userGameRoomState);
+    player1.leave(roomId);
+    player1.data.roomId = null;
+    player2.emit('game/end', userGameRoomState);
+    player2.leave(roomId);
+    player2.data.roomId = null;
+    for (const c of crowd) {
+      c.emit('game/end', userGameRoomState);
+      c.leave(roomId);
+      c.data.roomId = null;
+    }
     clearInterval(broadcast);
     this.roomInfos[roomId] = null;
-    // console.log('game/end');
+    // TO DO: SAVE MATCH HISTORY
   }
 
   broadcastStateInRoom(roomInfo: GameRoomInfo) {
@@ -195,29 +214,10 @@ export class GameRoomService {
       state.ball = { x: 0, y: 0, dx: 4, dy: 1 };
     }
 
-    const userGameRoomState: UserGameRoomState = {
-      paddle1: state.paddle1,
-      paddle2: state.paddle2,
-      ballx: state.ball.x,
-      bally: state.ball.y,
-      score1: state.score1,
-      score2: state.score2,
-    };
+    const userGameRoomState: UserGameRoomState = this.makeUserState(state);
 
     if (state.score1 >= 3 || state.score2 >= 3) {
-      player1.emit('game/end', state);
-      player1.leave(roomId);
-      player1.data.roomId = null;
-      player2.emit('game/end', state);
-      player2.leave(roomId);
-      player2.data.roomId = null;
-      for (const c of crowd) {
-        c.emit('game/end', state);
-        c.leave(roomId);
-        c.data.roomId = null;
-      }
-      clearInterval(broadcast);
-      this.roomInfos[roomId] = null;
+      this.endGame(roomInfo, userGameRoomState);
     }
 
     player1.emit('game/state', userGameRoomState);
@@ -227,7 +227,7 @@ export class GameRoomService {
     }
   }
 
-  updateRoom(client: Socket, payload: Code, keyState: number) {
+  updateKeyState(client: Socket, payload: Code, keyState: number) {
     const room = client.data.roomId;
     try {
       const { roomId, player1, player2, crowd, state, broadcast } =
@@ -238,11 +238,6 @@ export class GameRoomService {
         state.keyState2 += payload.code * keyState;
       }
     } catch (error) {}
-  }
-
-  exitRoom(client: Socket) {
-    console.log('exit');
-    this.loseByDisconnect(client);
   }
 
   specStart(client: Socket, payload: { roomId: number }) {
@@ -262,25 +257,13 @@ export class GameRoomService {
     this.roomInfos[roomId].crowd.push(client);
   }
 
-  loseByDisconnect(client: Socket) {
+  exitGame(client: Socket) {
     try {
       const room = client.data.roomId;
       const { roomId, player1, player2, crowd, state, broadcast } =
         this.roomInfos[room];
       if (player1 === client || player2 === client) {
-        player1.emit('game/end', state);
-        player1.leave(roomId);
-        player1.data.roomId = null;
-        player2.emit('game/end', state);
-        player2.leave(roomId);
-        player2.data.roomId = null;
-        for (const c of crowd) {
-          c.emit('game/end', state);
-          c.leave(roomId);
-          c.data.roomId = null;
-        }
-        clearInterval(broadcast);
-        this.roomInfos[roomId] = null;
+        this.endGame(this.roomInfos[room], this.makeUserState(state));
       } else {
         const index = crowd.findIndex((crowd) => crowd === client);
         if (index !== -1) {
