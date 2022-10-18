@@ -33,7 +33,7 @@ export function InviteGame({ uid }: { uid: number }) {
   return (
     <>
       <button className={styles.buttons} onClick={openModal}>
-        GAME
+        INVITE GAME
       </button>
       <div
         className={`${modalstyles.modal} ${
@@ -41,21 +41,31 @@ export function InviteGame({ uid }: { uid: number }) {
         }`}
       >
         <div className={modalstyles.modal__blank} onClick={closeModal}></div>
-        <div className={modalstyles.speed}>
+        <div className={modalstyles.speed__}>
           <div className={modalstyles.speed__header}>
             <div className={modalstyles.speed__headertitle}>INVITE GAME</div>
             <RedCross onClick={closeModal} />
           </div>
-          <input
-            type='range'
-            min='0.5'
-            max='4'
-            step='0.1'
-            value={speed}
-            onChange={onChange}
-          />
-          <span>{speed}</span>
-          <button onClick={onClick}>gogo</button>
+          <div className={modalstyles.speed__main}>
+            <div className={modalstyles.speed__input}>
+              <span className={modalstyles.speed__title}>SPEED</span>
+              <input
+                type='range'
+                min='0.5'
+                max='4'
+                step='0.1'
+                value={speed}
+                onChange={onChange}
+                className={modalstyles.speed__range}
+              />
+              <span className={modalstyles.speed__value}>x{speed}</span>
+            </div>
+            <div className={modalstyles.speed__buttons}>
+              <button onClick={onClick} className={modalstyles.speed__button}>
+                INVITE
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>
