@@ -53,6 +53,7 @@ const dbOptions: TypeOrmModuleOptions = {
     LoginModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+      renderPath: 'img',
     }),
     TypeOrmModule.forRoot(dbOptions),
     DatabaseModule,
