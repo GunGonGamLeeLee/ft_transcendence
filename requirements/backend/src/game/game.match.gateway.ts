@@ -9,7 +9,7 @@ import {
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
-import { MatchMakingService } from './match.service';
+import { GameMatchService } from './game.match.service';
 
 @WebSocketGateway({
   cors: {
@@ -18,28 +18,28 @@ import { MatchMakingService } from './match.service';
 })
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
-export class MatchMakingGateway {
+export class GameMatchGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private matchMakingService: MatchMakingService) {}
+  constructor(private gameMatchService: GameMatchService) {}
 
   @SubscribeMessage('game/match')
   matchWaiting(client: Socket, payload: any) {
     // payload 쓸데 있나..?
     // waiting queue에 등록.
     console.log(client.id);
-    this.matchMakingService.matchRegister(client);
+    this.gameMatchService.matchRegister(client);
   }
 
   @SubscribeMessage('game/invite')
   inviteUser(client: Socket, payload: { uid: number; speed: number }) {
-    this.matchMakingService.inviteUser(client, payload);
+    this.gameMatchService.inviteUser(client, payload);
   }
 
   @SubscribeMessage('game/invited')
   invitedUser(client: Socket, payload: { uid: number }) {
-    this.matchMakingService.invitedUser(client, payload);
+    this.gameMatchService.invitedUser(client, payload);
   }
 
   handleConnection(client: Socket) {
@@ -48,7 +48,7 @@ export class MatchMakingGateway {
 
   handleDisconnect(client: Socket) {
     // console.log('D Game');
-    this.matchMakingService.matchUnregister(client);
+    this.gameMatchService.matchUnregister(client);
     // console.log('match unregistered ' + client.id);
   }
 }

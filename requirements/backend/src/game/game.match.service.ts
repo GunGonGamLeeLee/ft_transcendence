@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { GameRoomService } from './game.service';
+import { GameRoomService } from './game.room.service';
 import { Socket } from 'socket.io';
-import { gameType, InviteRoomType } from './game.dto';
+import { gameType, InviteRoomType } from './game.room.dto';
 
 @Injectable()
-export class MatchMakingService {
+export class GameMatchService {
   private waitingQueue: Socket[] = [];
   private inviteQueue: InviteRoomType[] = [];
 
   constructor(private gameRoomService: GameRoomService) {
-    setInterval(this.matchMaking.bind(this), 1000);
+    setInterval(this.gameMatch.bind(this), 1000);
   }
 
-  matchMaking() {
+  gameMatch() {
     // match 성사
     const length = this.waitingQueue.length;
     for (let i = 1; i < length; i += 2) {
