@@ -61,4 +61,12 @@ export class ChatService {
   async listMuteUserInChannel(chid: number): Promise<UserInChannelEntity[]> {
     return await this.database.listMuteUserInChannel(chid);
   }
+
+  async isInBlockList(fromUid: number, toUid: number): Promise<boolean> {
+    const blockList = await this.database.listUserBlock(fromUid);
+    for (const block of blockList) {
+      if (block.toUid == toUid) return true;
+    }
+    return false;
+  }
 }
