@@ -390,6 +390,16 @@ export class DatabaseService {
     return await this.dbChannelService.setPassword(chid, password);
   }
 
+  async updateUserGameRoom(uid1: number, uid2: number, roomId: string) {
+    await this.dbUserService.updateUserGameRoom(uid1, roomId);
+    await this.dbUserService.updateUserGameRoom(uid2, roomId);
+  }
+
+  async updateUserExitGameRoom(uid1: number, uid2: number) {
+    await this.dbUserService.updateUserExitGameRoom(uid1);
+    await this.dbUserService.updateUserExitGameRoom(uid2);
+  }
+
   async banUserInChannel(myUid: number, targetUid: number, chid: number) {
     await this.checkPermissionInChannel(
       myUid,

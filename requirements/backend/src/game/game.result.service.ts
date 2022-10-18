@@ -21,7 +21,7 @@ export class GameResultService {
     this.dmGateway.updateUser(gameResult.loserUid);
   }
 
-  async updateRating(gameResult: MatchHistoryDto) {
+  private async updateRating(gameResult: MatchHistoryDto) {
     const winner = await this.database.findOneUser(gameResult.winnerUid);
     const loser = await this.database.findOneUser(gameResult.loserUid);
 
@@ -39,7 +39,7 @@ export class GameResultService {
     await this.database.updateUserRating(loser.uid, loser.rating);
   }
 
-  calcRating(player1: number, player2: number, isWin: boolean): number {
+  private calcRating(player1: number, player2: number, isWin: boolean): number {
     const we = 1 / (Math.pow(10, (player2 - player1) / 400) + 1);
     const w = isWin ? 1 : 0;
     return Math.floor(player1 + K * (w - we));

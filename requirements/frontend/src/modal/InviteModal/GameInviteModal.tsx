@@ -1,5 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { gameState } from '../../atoms/gameState';
 import { gameInviteModalState } from '../../atoms/modals/gameInviteModalState';
 import { RedCross } from '../buttons/RedCross';
 import modalstyles from '../Modal.module.css';
@@ -11,17 +13,25 @@ export function GameInviteModal() {
   return (
     <>
       {gameInviteModal === undefined ? null : (
-        <GameInvite id={gameInviteModal} />
+        <GameInvite uid={gameInviteModal} />
       )}
     </>
   );
 }
 
-function GameInvite({ id }: { id: number }) {
+function GameInvite({ uid }: { uid: number }) {
+  const [game, SetGame] = useRecoilState(gameState);
+  const navigator = useNavigate();
   const setgameInviteModal = useSetRecoilState(gameInviteModalState);
 
   const onClick = () => {
     setgameInviteModal(undefined);
+  };
+
+  const onAccept = () => {
+    SetGame({ mode: 2, Id: uid, speed: 1 });
+    setgameInviteModal(undefined);
+    navigator('/game');
   };
 
   return (
@@ -32,16 +42,16 @@ function GameInvite({ id }: { id: number }) {
           <span className={styles.invite__headertitle}>게임 초대</span>
           <RedCross onClick={onClick} />
         </div>
-        <div className={styles.invite__main}>{id}번 방에서 초대 옴</div>
+        <div className={styles.invite__main}>{uid}에게서 초대 옴</div>
         <div className={styles.invite__footer}>
-          <InviteButton text='거절' />
-          <InviteButton text='수락' />
+          <button className={styles.invite__button} onClick={onAccept}>
+            OK
+          </button>
+          <button className={styles.invite__button} onClick={onAccept}>
+            NO
+          </button>
         </div>
       </div>
     </div>
   );
-}
-
-function InviteButton({ text }: { text: string }) {
-  return <button className={styles.invite__button}>{text}</button>;
 }

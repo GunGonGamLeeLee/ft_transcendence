@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { DatabaseService } from 'src/database/database.service';
+import { DmGateway } from 'src/dm/dm.gateway';
+import { GameResultService } from './game.result.service';
 import {
   GameRoomInfo,
   GameRoomState,
@@ -20,9 +22,13 @@ const GameInfo = {
 
 @Injectable()
 export class GameRoomService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly gameResult: GameResultService,
+    private readonly dmGateway: DmGateway,
+  ) {}
   private roomInfos: GameRoomInfo[] = [];
-  private lastId: number = 1;
+  private lastId = 1;
 
   private async makeGameRoomInfo(
     player1: Socket,
@@ -98,8 +104,8 @@ export class GameRoomService {
     );
     const roomId = roomInfo.roomId;
 
-    player1.join(roomId.toString());
-    player2.join(roomId.toString());
+    player1.join(roomId);
+    player2.join(roomId);
     player1.data = { ...player1.data, roomId: roomId };
     player2.data = { ...player2.data, roomId: roomId };
 
@@ -107,6 +113,13 @@ export class GameRoomService {
       `Create Game {roomId: ${roomId}, p1: ${player1.id}, p2: ${player2.id}}`,
     );
 
+    await this.database.updateUserGameRoom(
+      player1.data.uid,
+      player2.data.uid,
+      roomId,
+    );
+    this.dmGateway.updateUser(player1.data.uid);
+    this.dmGateway.updateUser(player2.data.uid);
     const startState = this.makeStartState(roomInfo);
     player1.emit('game/start', startState);
     player2.emit('game/start', startState);
@@ -122,10 +135,14 @@ export class GameRoomService {
   }
 
   private endGame(
+    winner: Socket,
+    loser: Socket,
     roomInfo: GameRoomInfo,
     userGameRoomState: UserGameRoomState,
   ) {
     const { roomId, player1, player2, crowd, broadcast } = roomInfo;
+
+    this.database.updateUserExitGameRoom(player1.data.uid, player2.data.uid);
     player1.emit('game/end', userGameRoomState);
     player1.leave(roomId);
     player1.data.roomId = null;
@@ -139,12 +156,20 @@ export class GameRoomService {
     }
     clearInterval(broadcast);
     this.roomInfos[roomId] = null;
-    // TO DO: SAVE MATCH HISTORY
+    this.saveResult(winner, loser, roomInfo);
+  }
+
+  private saveResult(winner: Socket, loser: Socket, roomInfo: GameRoomInfo) {
+    const { mode } = roomInfo;
+    this.gameResult.saveResult({
+      winnerUid: winner.data.uid,
+      loserUid: loser.data.uid,
+      isRank: mode == 0 ? true : false,
+    });
   }
 
   broadcastStateInRoom(roomInfo: GameRoomInfo) {
-    const { roomId, speed, player1, player2, crowd, state, broadcast } =
-      roomInfo;
+    const { speed, player1, player2, crowd, state } = roomInfo;
 
     // move paddle
     state.paddle1 += state.keyState1 * 4 * 2 * speed;
@@ -216,8 +241,10 @@ export class GameRoomService {
 
     const userGameRoomState: UserGameRoomState = this.makeUserState(state);
 
-    if (state.score1 >= 3 || state.score2 >= 3) {
-      this.endGame(roomInfo, userGameRoomState);
+    if (state.score1 >= 3) {
+      this.endGame(player1, player2, roomInfo, userGameRoomState);
+    } else if (state.score2 >= 3) {
+      this.endGame(player2, player1, roomInfo, userGameRoomState);
     }
 
     player1.emit('game/state', userGameRoomState);
@@ -230,8 +257,7 @@ export class GameRoomService {
   updateKeyState(client: Socket, payload: Code, keyState: number) {
     const room = client.data.roomId;
     try {
-      const { roomId, player1, player2, crowd, state, broadcast } =
-        this.roomInfos[room];
+      const { player1, player2, state } = this.roomInfos[room];
       if (player1 === client) {
         state.keyState1 += payload.code * keyState;
       } else if (player2 === client) {
@@ -260,10 +286,21 @@ export class GameRoomService {
   exitGame(client: Socket) {
     try {
       const room = client.data.roomId;
-      const { roomId, player1, player2, crowd, state, broadcast } =
-        this.roomInfos[room];
-      if (player1 === client || player2 === client) {
-        this.endGame(this.roomInfos[room], this.makeUserState(state));
+      const { player1, player2, crowd, state } = this.roomInfos[room];
+      if (player1 === client) {
+        this.endGame(
+          player2,
+          player1,
+          this.roomInfos[room],
+          this.makeUserState(state),
+        );
+      } else if (player2 === client) {
+        this.endGame(
+          player1,
+          player2,
+          this.roomInfos[room],
+          this.makeUserState(state),
+        );
       } else {
         const index = crowd.findIndex((crowd) => crowd === client);
         if (index !== -1) {

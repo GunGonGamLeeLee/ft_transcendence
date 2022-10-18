@@ -4,6 +4,7 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { io } from 'socket.io-client';
 import { authState } from '../../atoms/authState';
 import { pendingFriendState } from '../../atoms/friendListState';
+import { gameInviteModalState } from '../../atoms/modals/gameInviteModalState';
 
 export const socket = io(`${import.meta.env.VITE_BACKEND_EP}`, {
   autoConnect: false,
@@ -16,6 +17,7 @@ export function SocketChecker() {
     socket.connected === true,
   );
   const setPendingFriend = useSetRecoilState(pendingFriendState);
+  const setGameInviteModal = useSetRecoilState(gameInviteModalState);
   const resetToken = useResetRecoilState(authState);
   if (token === null) throw new Error();
 
@@ -73,11 +75,16 @@ export function SocketChecker() {
       ]);
     });
 
+    socket.on('invite/game', (payload) => {
+      setGameInviteModal(payload.uid);
+    });
+
     return () => {
       socket.off('dm/status');
       socket.off('connect');
       socket.off('disconnect');
       socket.off('login/dupCheck');
+      socket.off('invite/game');
     };
   }, [setPendingFriend, setIsConnect]);
 

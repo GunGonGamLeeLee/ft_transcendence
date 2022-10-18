@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GameRoomService } from './game.room.service';
 import { Socket } from 'socket.io';
-import { gameType, InviteRoomType } from './game.room.dto';
+import { InviteRoomType } from './game.room.dto';
 
 @Injectable()
 export class GameMatchService {
@@ -74,7 +74,11 @@ export class GameMatchService {
       );
       this.inviteQueue.splice(idx, 1);
     } else {
-      // TO DO 초대 받았지만 방 없음. throw error?
+      if (client.data.roomId !== undefined) {
+        return;
+      } else {
+        client.emit('game/error');
+      }
     }
   }
 }

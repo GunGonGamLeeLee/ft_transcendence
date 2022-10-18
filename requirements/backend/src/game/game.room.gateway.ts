@@ -1,6 +1,5 @@
 import { UseFilters, UsePipes } from '@nestjs/common';
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -10,7 +9,9 @@ import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
 import { GameRoomService } from './game.room.service';
-import { GameRoomState, Code } from './game.room.dto';
+import { Code } from './game.room.dto';
+import { UserStatus } from 'src/database/entity/entity.user';
+import { DatabaseService } from 'src/database/database.service';
 
 @WebSocketGateway({
   cors: {
@@ -23,7 +24,10 @@ export class GameRoomGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private gameRoomService: GameRoomService) {}
+  constructor(
+    private gameRoomService: GameRoomService,
+    private readonly database: DatabaseService,
+  ) {}
 
   @SubscribeMessage('keydown')
   keydown(client: Socket, payload: Code): void {
@@ -54,5 +58,6 @@ export class GameRoomGateway {
   handleDisconnect(client: Socket) {
     console.log('Disconnect match ' + client.id);
     this.gameRoomService.exitGame(client);
+    this.database.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
   }
 }
