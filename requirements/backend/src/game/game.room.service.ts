@@ -231,12 +231,12 @@ export class GameRoomService {
       state.score1 += 1;
       state.paddle1 = 0;
       state.paddle2 = 0;
-      state.ball = { x: 0, y: 0, dx: 4, dy: 1 };
+      state.ball = { x: 0, y: 0, dx: 4, dy: 0 };
     } else if (state.ball.x <= -(GameInfo.width / 2 - GameInfo.ballr)) {
       state.score2 += 1;
       state.paddle1 = 0;
       state.paddle2 = 0;
-      state.ball = { x: 0, y: 0, dx: 4, dy: 1 };
+      state.ball = { x: 0, y: 0, dx: 4, dy: 0 };
     }
 
     const userGameRoomState: UserGameRoomState = this.makeUserState(state);
@@ -266,21 +266,22 @@ export class GameRoomService {
     } catch (error) {}
   }
 
-  specStart(client: Socket, payload: { roomId: number }) {
-    const roomId = payload.roomId.toString();
-
-    const idx = this.roomInfos[roomId].crowd.findIndex(
-      (inqueue) => inqueue === client,
-    );
-
-    if (idx !== -1) {
-      // TO DO 중복 요청
+  specStart(client: Socket, roomId: string) {
+    try {
+      const idx = this.roomInfos[roomId].crowd.findIndex(
+        (inqueue) => inqueue === client,
+      );
+      if (idx !== -1) {
+        // TO DO 중복 요청
+      } else {
+        client.join(roomId);
+        client.data = { ...client.data, roomId: roomId };
+        client.emit('game/start', this.makeStartState(this.roomInfos[roomId]));
+        this.roomInfos[roomId].crowd.push(client);
+      }
+    } catch (error) {
+      client.emit('game/error');
     }
-
-    client.join(roomId);
-    client.data = { ...client.data, payload };
-    client.emit('game/start', this.makeStartState(this.roomInfos[roomId]));
-    this.roomInfos[roomId].crowd.push(client);
   }
 
   exitGame(client: Socket) {

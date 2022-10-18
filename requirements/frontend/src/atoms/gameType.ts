@@ -10,4 +10,4 @@ export interface GameType {
 
 // mode: 2 =? Id: uid = invited
 
-// mode: 3 => Id: roomId = spec
+// mode: 3 => Id: uid = spec

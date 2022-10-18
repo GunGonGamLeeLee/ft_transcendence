@@ -47,7 +47,6 @@ export class GameMatchGateway {
         return;
       }
     }
-
     // except
     client.emit('game/error');
   }
