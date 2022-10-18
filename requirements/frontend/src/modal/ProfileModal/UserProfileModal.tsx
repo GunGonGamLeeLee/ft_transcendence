@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { UserDataType } from '../../atoms/userDataType';
+import { Status, UserDataType } from '../../atoms/userDataType';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
 import { userProfileState } from '../../atoms/userProfileState';
 import { friendListState } from '../../atoms/friendListState';
@@ -22,6 +22,7 @@ import {
 import { InviteGame } from './buttons/InviteGame';
 import { DM } from './buttons/DirectMessage';
 import { InviteRoom } from './buttons/InviteRoom';
+import { SpecGame } from './buttons/SpecGame';
 
 export function UserProfileModal() {
   const userProfileModal = useRecoilValue(userProfileModalState);
@@ -102,10 +103,16 @@ function UserProfile({ user }: { user: UserDataType }) {
                 <Follow />
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
-              <div className={styles.profile__buttons}>
-                <InviteGame uid={user.uid} />
-                <DM user={user} />
-              </div>
+              {user.status !== Status.RANK ? (
+                <div className={styles.profile__buttons}>
+                  {user.status === Status.ONLINE ? (
+                    <InviteGame uid={user.uid} />
+                  ) : user.status === Status.GAMING ? (
+                    <SpecGame uid={user.uid} />
+                  ) : null}
+                  <DM user={user} />
+                </div>
+              ) : null}
             </>
           )}
         </div>

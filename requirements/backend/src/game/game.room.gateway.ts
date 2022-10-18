@@ -46,9 +46,18 @@ export class GameRoomGateway {
   }
 
   @SubscribeMessage('game/spec')
-  specStart(client: Socket, payload: { roomId: number }): void {
-    console.log(`game/invited ${client.id}`);
-    this.gameRoomService.specStart(client, payload);
+  async specStart(client: Socket, payload: { uid: number }) {
+    console.log(`game/spec ${client.id}`);
+    const sockets = await this.server.in(`dm${payload.uid}`).fetchSockets();
+    for (const sock of sockets) {
+      if (sock.data.uid == payload.uid) {
+        if (sock.data.roomId === undefined) break;
+        this.gameRoomService.specStart(client, sock.data.roomId);
+        return;
+      }
+    }
+    // except
+    client.emit('game/error');
   }
 
   handleConnection(client: Socket) {

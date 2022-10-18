@@ -160,7 +160,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
               <div className={styles.profile__buttons}>
-                <InviteGame />
+                <InviteGame uid={user.uid} />
                 <DM user={user} />
               </div>
             </>

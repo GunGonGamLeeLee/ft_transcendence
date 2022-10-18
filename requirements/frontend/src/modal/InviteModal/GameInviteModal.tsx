@@ -7,19 +7,24 @@ import { RedCross } from '../buttons/RedCross';
 import modalstyles from '../Modal.module.css';
 import styles from './InviteModal.module.css';
 
+interface InviteType {
+  uid: number;
+  displayName: string;
+}
+
 export function GameInviteModal() {
   const gameInviteModal = useRecoilValue(gameInviteModalState);
 
   return (
     <>
       {gameInviteModal === undefined ? null : (
-        <GameInvite uid={gameInviteModal} />
+        <GameInvite userInfo={gameInviteModal} />
       )}
     </>
   );
 }
 
-function GameInvite({ uid }: { uid: number }) {
+function GameInvite({ userInfo }: { userInfo: InviteType }) {
   const [game, SetGame] = useRecoilState(gameState);
   const navigator = useNavigate();
   const setgameInviteModal = useSetRecoilState(gameInviteModalState);
@@ -29,7 +34,7 @@ function GameInvite({ uid }: { uid: number }) {
   };
 
   const onAccept = () => {
-    SetGame({ mode: 2, Id: uid, speed: 1 });
+    SetGame({ mode: 2, Id: userInfo.uid, speed: 1 });
     setgameInviteModal(undefined);
     navigator('/game');
   };
@@ -39,10 +44,12 @@ function GameInvite({ uid }: { uid: number }) {
       <div className={modalstyles.modal__blank} onClick={onClick}></div>
       <div className={styles.invite}>
         <div className={styles.invite__header}>
-          <span className={styles.invite__headertitle}>게임 초대</span>
+          <span className={styles.invite__headertitle}>GAME INVITE</span>
           <RedCross onClick={onClick} />
         </div>
-        <div className={styles.invite__main}>{uid}에게서 초대 옴</div>
+        <div className={styles.invite__main}>
+          {userInfo.displayName} INVITED YOU.
+        </div>
         <div className={styles.invite__footer}>
           <button className={styles.invite__button} onClick={onAccept}>
             OK

@@ -45,7 +45,7 @@ export function Game() {
         socket.emit('game/invited', { uid: game.Id });
         break;
       case 3:
-        socket.emit('game/spec', { roomId: game.Id });
+        socket.emit('game/spec', { uid: game.Id });
         break;
       default:
         throw new Error();

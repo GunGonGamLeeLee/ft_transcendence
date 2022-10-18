@@ -2,6 +2,7 @@ export const enum Status {
   OFFLINE,
   ONLINE,
   GAMING,
+  RANK,
 }
 
 export interface UserDataType {
