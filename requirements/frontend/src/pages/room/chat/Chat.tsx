@@ -1,38 +1,48 @@
+import * as React from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { currChatState } from '../../../atoms/currChatState';
+import { ChatUserType } from '../../../atoms/chatUserType';
+import { ChatLogType, currChatState } from '../../../atoms/currChatState';
+import { currUserListState } from '../../../atoms/currRoomState';
 import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './Chat.module.css';
 
 function LeftChat({
-  info,
+  chat,
+  user,
   lastId,
 }: {
-  info: ChatType;
+  chat: ChatLogType;
+  user: ChatUserType | undefined;
   lastId: number | undefined;
 }) {
+  if (user === undefined) {
+    alert('유저 불러오기 실패');
+    throw new Error();
+  }
+
   return (
     <>
-      {info.uid === lastId ? (
+      {chat.uid === lastId ? (
         <></>
       ) : (
         <div className={`${styles.chat__profile} ${styles.chat__left}`}>
-          <img src={info.imgUri} className={styles.chat__img} />
-          <div className={styles.chat__name}>{info.displayName}</div>
+          <img src={user.imgUri} className={styles.chat__img} />
+          <div className={styles.chat__name}>{user.displayName}</div>
         </div>
       )}
       <div className={styles.chat__msgbox}>
-        <div className={`${styles.chat__msg}`}>{info.msg}</div>
+        <div className={`${styles.chat__msg}`}>{chat.msg}</div>
       </div>
     </>
   );
 }
 
-function RightChat({ info }: { info: ChatType }) {
+function RightChat({ chat }: { chat: ChatLogType }) {
   return (
     <>
       <div className={`${styles.chat__msgbox} ${styles.chat__right}`}>
         <div className={`${styles.chat__msg} ${styles.chat__msg__right}`}>
-          {info.msg}
+          {chat.msg}
         </div>
       </div>
     </>
@@ -40,23 +50,40 @@ function RightChat({ info }: { info: ChatType }) {
 }
 
 export function Chat() {
-  const userProfile = useRecoilValue(userProfileState);
-  const currChat = useRecoilState(currChatState);
-  // 백엔드에서 어떻게 관리하냐에 따라 다르게 처리해야함... 내가 보낸 메세지를 바로 띄울것인지 / 받아와서 띄울것인지
+  const { uid: myUid } = useRecoilValue(userProfileState);
+  const currUserList = useRecoilValue(currUserListState);
+  const currChat = useRecoilValue(currChatState);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (scrollRef.current === null) return;
+    if (currChat.slice(-1)[0]?.uid !== myUid) return;
+
+    scrollRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }, [scrollRef, currChat]);
 
   let lastId: number | undefined;
   let tempId: number | undefined;
   return (
     <div className={styles.chatbox}>
-      {/* {array2.map((info, key) => {
+      {currChat.map((chat) => {
         tempId = lastId;
-        lastId = info.uid;
-        return info.uid === userProfile.uid ? (
-          <RightChat info={info} key={key} />
+        lastId = chat.uid;
+        return chat.uid === myUid ? (
+          <RightChat chat={chat} key={chat.index} />
         ) : (
-          <LeftChat info={info} lastId={tempId} key={key} />
+          <LeftChat
+            chat={chat}
+            user={currUserList.find((user) => user.uid === chat.uid)}
+            lastId={tempId}
+            key={chat.index}
+          />
         );
-      })} */}
+      })}
+      <div ref={scrollRef} />
     </div>
   );
 }

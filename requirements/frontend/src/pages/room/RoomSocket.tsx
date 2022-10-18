@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ChatUserType, RoleType } from '../../atoms/chatUserType';
+import { currChatState } from '../../atoms/currChatState';
 import { currRoleState } from '../../atoms/currRoleState';
 import {
   currBanListState,
@@ -26,9 +27,10 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
   const [isEnter, setIsEnter] = React.useState<boolean>(true);
   const setCurrUserCount = useSetRecoilState(currUserCountState);
   const [isChange, setIsChange] = React.useState<number>(0);
-  const navigator = useNavigate();
   const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
   const setChatUserModal = useSetRecoilState(chatProfileModalState);
+  const setCurrChatState = useSetRecoilState(currChatState);
+  const navigator = useNavigate();
 
   if (currRole === null) throw new Error();
   if (currRoom === null) throw new Error();
@@ -79,7 +81,10 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
     });
 
     socket.on('chat/msg', (chid: number, msg: string, myUid: number) => {
-      console.log(`chat/msg recived from ${myUid} : ${msg}`);
+      setCurrChatState((curr) => [
+        ...curr,
+        { uid: myUid, msg, index: curr.length },
+      ]);
     });
 
     socket.on('chat/addAdmin', (chid: number, targetUid: number) => {
@@ -140,7 +145,7 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       socket.off('deleteUserInChannel');
       socket.off('chat/msg');
       socket.off('chat/addAdmin');
-      socket.off('chat/deleteAddmin');
+      socket.off('chat/deleteAdmin');
       socket.off('chat/addMute');
       socket.off('chat/addBan');
       // socket.off('chat/announce');

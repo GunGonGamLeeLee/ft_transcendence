@@ -18,6 +18,7 @@ import { userProfileState } from '../../atoms/userProfileState';
 import { currRoleState } from '../../atoms/currRoleState';
 import { currUserCountState } from '../../atoms/currUserCount';
 import { refreshChannelListState } from '../../atoms/refreshChannelListState';
+import { currChatState } from '../../atoms/currChatState';
 
 export function Room() {
   const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
@@ -31,6 +32,7 @@ export function Room() {
   const setCurrRole = useSetRecoilState(currRoleState);
   const setCurrUserCount = useSetRecoilState(currUserCountState);
   const setRefreshChannelList = useSetRecoilState(refreshChannelListState);
+  const setCurrChat = useSetRecoilState(currChatState);
   const { token } = useRecoilValue(authState);
   const [isFetchDone, setIsFetchDone] = React.useState<boolean>(false);
   if (token === null) throw new Error();
@@ -76,6 +78,7 @@ export function Room() {
       setDefaultInfo();
     } catch {
       alert('불러오기 오류!');
+      setCurrRoom(null);
     }
   }, [currRoom, setCurrRoom]);
 
@@ -92,6 +95,7 @@ export function Room() {
       setCurrMuteList([]);
       setCurrRole(null);
       setRefreshChannelList(true);
+      setCurrChat([]);
     };
   }, [
     isFirstRender,
@@ -102,6 +106,7 @@ export function Room() {
     setCurrMuteList,
     setCurrRole,
     setRefreshChannelList,
+    setCurrChat,
   ]);
 
   return isFetchDone ? (
