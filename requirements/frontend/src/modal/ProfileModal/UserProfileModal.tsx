@@ -103,14 +103,16 @@ function UserProfile({ user }: { user: UserDataType }) {
                 <Follow />
                 {!isBlocked ? <Block /> : <Unblock />}
               </div>
-              <div className={styles.profile__buttons}>
-                {user.status === Status.ONLINE ? (
-                  <InviteGame uid={user.uid} />
-                ) : user.status === Status.GAMING ? (
-                  <SpecGame uid={user.uid} />
-                ) : null}
-                <DM user={user} />
-              </div>
+              {user.status !== Status.RANK ? (
+                <div className={styles.profile__buttons}>
+                  {user.status === Status.ONLINE ? (
+                    <InviteGame uid={user.uid} />
+                  ) : user.status === Status.GAMING ? (
+                    <SpecGame uid={user.uid} />
+                  ) : null}
+                  <DM user={user} />
+                </div>
+              ) : null}
             </>
           )}
         </div>

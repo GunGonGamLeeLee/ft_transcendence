@@ -2,7 +2,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { authState } from '../../atoms/authState';
 import { rankListState } from '../../atoms/rankListState';
 import { useInterval } from '../../hooks/useInterval';
-import { UserDataType } from '../../atoms/userDataType';
+import { Status, UserDataType } from '../../atoms/userDataType';
 import styles from './UserList.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userProfileModalState } from '../../atoms/modals/userProfileModalState';
@@ -25,6 +25,9 @@ export function RankList() {
     if (!response.ok) throw new Error();
 
     const data = await response.json();
+    for (const user of data) {
+      user.status = Status.RANK;
+    }
     setRankList(data);
   }, 10000);
 
