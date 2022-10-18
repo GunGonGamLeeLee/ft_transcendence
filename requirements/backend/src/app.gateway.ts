@@ -21,18 +21,17 @@ export class AppGateway {
     private readonly dmGateway: DmGateway,
   ) {}
 
+  private sockets = new Set();
   @WebSocketServer()
   server: Server;
 
   async handleConnection(client: Socket) {
     await this.validateUser(client);
+    if (client.data.uid === undefined) return;
     client.join(`dm${client.data.uid}`);
-    // FIXME 테스트용.
-    // if (client.data.uid === 99857) {
-    //   client.join(`channel7`);
-    //   console.log(`socketInit: ${client.data.uid} join channel7`);
-    // }
-    console.log(`socketInit: ${client.data.uid} join dm${client.data.uid}`);
+    console.log(
+      `socketInit: ${client.data.uid} join dm${client.data.uid} (${client.id})`,
+    );
     await this.dmGateway.updateUser(client.data.uid);
   }
 
@@ -40,19 +39,22 @@ export class AppGateway {
     if (client.data.uid === undefined) return;
     await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     await this.dmGateway.updateUser(client.data.uid);
-    console.log(this.server.of('/').adapter.sids);
+    this.sockets.delete(client.data.uid);
+    // console.log(this.server.of('/').adapter.sids);
   }
 
   private async validateUser(client: Socket) {
     const token = this.getToken(client);
     const user = await this.dmService.validateUser(token);
+    const alreadyExist = this.sockets.has(user.uid);
 
-    if (!user) {
+    client.emit('login/dupCheck', !alreadyExist);
+    if (!user || alreadyExist) {
       client.disconnect();
       return;
     }
-
-    client.data = { uid: user.uid, status: user.status };
+    this.sockets.add(user.uid);
+    client.data = { uid: user.uid };
   }
 
   private getToken(client: Socket) {
@@ -61,8 +63,8 @@ export class AppGateway {
     let token = client.handshake.headers.token;
     if (token === undefined) token = client.handshake.auth.token;
     if (!isString(token)) token = token[0];
-    //////////////////////////////////////////////////////////////////
-    // const { token } = client.handshake.auth; // 실제 사용
     return token;
+    //////////////////////////////////////////////////////////////////
+    // return client.handshake.auth.token; // 실제 사용
   }
 }
