@@ -1,9 +1,0 @@
-version: "3.3"
-
-services:
-  backend:
-    container_name: backend
-
-networks:
-  net:
-    driver: bridge

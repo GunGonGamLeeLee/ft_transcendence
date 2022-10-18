@@ -49,7 +49,7 @@ export class LoginController {
     res.cookie('token', this.loginService.issueToken(payload));
     res.header('Cache-Control', 'no-store');
 
-    return res.redirect(301, 'http://localhost:4242/login');
+    return res.redirect(301, `${process.env.FRONTEND}/login`);
   }
 
   @UseGuards(AuthGuard)

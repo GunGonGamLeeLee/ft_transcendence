@@ -12,10 +12,16 @@ import { Socket, Server } from 'socket.io';
 import { GameMatchService } from './game.match.service';
 import { DatabaseService } from 'src/database/database.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
+});
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:4242',
+    origin: process.env.FRONTEND,
   },
 })
 @UseGuards(AuthGuard)

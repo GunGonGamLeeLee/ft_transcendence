@@ -7,7 +7,6 @@ import { DatabaseModule } from './database/database.module';
 import { UserEntity } from './database/entity/entity.user';
 import { FriendListEntity } from './database/entity/entity.friend.list';
 import { BlockListEntity } from './database/entity/entity.block.list';
-import * as dotenv from 'dotenv';
 import { ChannelEntity } from './database/entity/entity.channel';
 import { UserInChannelEntity } from './database/entity/entity.user.in.channel';
 import { DmLogEntity } from './database/entity/entity.dm.log';
@@ -21,9 +20,11 @@ import { AppGateway } from './app.gateway';
 import { LoggerMiddleware } from './logger.middleware';
 import { GameRoomModule } from './game/game.room.module';
 import { GameMatchModule } from './game/game.match.module';
+import * as dotenv from 'dotenv';
 
 dotenv.config({
-  path: '/backend.env',
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
 });
 
 const dbOptions: TypeOrmModuleOptions = {
@@ -65,6 +66,6 @@ const dbOptions: TypeOrmModuleOptions = {
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('/chat/pwd');
+    consumer.apply(LoggerMiddleware).forRoutes('/login/oauth');
   }
 }

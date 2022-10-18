@@ -17,10 +17,16 @@ import { ChatPasswordDto } from './dto/chat.password.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
+});
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:4242'],
+    origin: process.env.FRONTEND,
   },
 })
 @UseGuards(AuthGuard)

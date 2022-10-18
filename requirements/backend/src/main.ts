@@ -14,6 +14,12 @@ import { DmModule } from './dm/dm.module';
 import { AuthModule } from './auth/auth.module';
 import { LoginModule } from './login/login.module';
 import { GameModule } from './game/game.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
+});
 
 const configDb = new DocumentBuilder()
   .setTitle('db controller')
@@ -55,7 +61,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentApi);
 
   app.enableCors({
-    origin: 'http://localhost:4242',
+    origin: process.env.FRONTEND,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: '*',
     credentials: true,
