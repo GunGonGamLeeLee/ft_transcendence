@@ -9,8 +9,8 @@ import {
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
-import { GameRoomService } from './game.service';
-import { GameRoomState, Code } from './game.dto';
+import { GameRoomService } from './game.room.service';
+import { GameRoomState, Code } from './game.room.dto';
 
 @WebSocketGateway({
   cors: {

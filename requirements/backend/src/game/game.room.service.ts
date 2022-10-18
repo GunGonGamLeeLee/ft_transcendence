@@ -7,7 +7,7 @@ import {
   Code,
   UserGameRoomState,
   StartGameRoomState,
-} from './game.dto';
+} from './game.room.dto';
 
 interface GameEndInfo {
   roomId: string;
