@@ -5,10 +5,10 @@ import { GameRoomState, CanvasState } from './game.room.dto';
 
 const GameInfo = {
   width: 640,
-  height: 360,
+  height: 660,
   paddlex: 10,
   paddley: 80,
-  maxy: (360 - 80) / 2, // (height - paddley) / 2
+  maxy: (660 - 80) / 2, // (height - paddley) / 2
   ballr: 10,
 };
 
@@ -27,21 +27,47 @@ export function GameCanvas({ canvasState }: { canvasState: CanvasState }) {
     context.font = 'italic bold 100px Arial, sans-serif';
     context.textBaseline = 'middle';
     context.textAlign = 'center';
+    context.beginPath();
+    context.strokeStyle = '#FFFFFF';
+    context.setLineDash([20, 20]);
+    context.moveTo(GameInfo.width / 2, 0);
+    context.lineTo(GameInfo.width / 2, GameInfo.height);
+    context.stroke();
     if (status === 0) {
       context.fillText('LOADING...', GameInfo.width / 2, GameInfo.height / 2);
-    } else if (status === 1 && gameRoomState !== undefined) {
+    } else if (status === 2) {
+      context.fillText('GAME END', GameInfo.width / 2, GameInfo.height / 2);
+    }
+    if (gameRoomState !== undefined) {
+      // Score
+      //  Left
+      context.font = '50px Arial, sans-serif';
+      context.fillText(
+        gameRoomState.score1.toString(),
+        GameInfo.width / 4,
+        GameInfo.height / 4,
+      );
+      //  Right
+      context.fillText(
+        gameRoomState.score2.toString(),
+        (GameInfo.width / 4) * 3,
+        GameInfo.height / 4,
+      );
+      // Left Paddle
       context.fillRect(
         0,
         (GameInfo.height - GameInfo.paddley) / 2 + gameRoomState.paddle1,
         GameInfo.paddlex,
         GameInfo.paddley,
       );
+      // Right Paddle
       context.fillRect(
         GameInfo.width - GameInfo.paddlex,
         (GameInfo.height - GameInfo.paddley) / 2 + gameRoomState.paddle2,
         GameInfo.paddlex,
         GameInfo.paddley,
       );
+      // Ball
       context.beginPath();
       context.arc(
         gameRoomState.ballx + GameInfo.width / 2,
@@ -52,33 +78,9 @@ export function GameCanvas({ canvasState }: { canvasState: CanvasState }) {
       );
       context.fill();
       context.closePath();
-    } else if (status === 2) {
-      context.fillText('GAME END', GameInfo.width / 2, GameInfo.height / 2);
-      if (gameRoomState !== undefined) {
-        context.fillRect(
-          0,
-          (GameInfo.height - GameInfo.paddley) / 2 + gameRoomState.paddle1,
-          GameInfo.paddlex,
-          GameInfo.paddley,
-        );
-        context.fillRect(
-          GameInfo.width - GameInfo.paddlex,
-          (GameInfo.height - GameInfo.paddley) / 2 + gameRoomState.paddle2,
-          GameInfo.paddlex,
-          GameInfo.paddley,
-        );
-        context.beginPath();
-        context.arc(
-          gameRoomState.ballx + GameInfo.width / 2,
-          gameRoomState.bally + GameInfo.height / 2,
-          GameInfo.ballr,
-          0,
-          Math.PI * 2,
-        );
-        context.fill();
-        context.closePath();
-      }
+      //
     }
+    context.stroke();
   }
 
   return <canvas ref={canvasRef}></canvas>;

@@ -1,34 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { gameState } from '../../atoms/gameState';
-import { userProfileState } from '../../atoms/userProfileState';
 import { socket } from '../../components/Socket/SocketChecker';
-import {
-  CanvasState,
-  ProfileStateType,
-  SmallProfileType,
-} from './game.room.dto';
+import { CanvasState, ProfileStateType } from './game.room.dto';
 import { GameCanvas } from './GameCanvas';
 import styles from './Game.module.css';
-
-function DefaultProfile() {
-  const userProfile = useRecoilValue(userProfileState);
-  return (
-    <div>
-      <img src={userProfile.imgUri} className={styles.game_profile__img} />
-      <span>{userProfile.displayName}</span>
-    </div>
-  );
-}
-
-function GameProfile({ profile }: { profile: SmallProfileType }) {
-  return (
-    <div>
-      <img src={profile.imgUri} className={styles.game_profile__img} />
-      <span>{profile.displayName}</span>
-    </div>
-  );
-}
+import { BackButton } from '../../components/BackButton';
+import { DefaultProfile, DefaultProfile2, GameProfile } from './GameProfile';
 
 export function Game() {
   const [game, SetGame] = useRecoilState(gameState);
@@ -44,12 +22,51 @@ export function Game() {
   const [downState, setDownState] = useState<Boolean>(false);
 
   useEffect(() => {
-    setCanvasState({
-      status: 0,
-      gameRoomState: undefined,
-    });
+    // setCanvasState({
+    //   status: 0,
+    //   gameRoomState: undefined,
+    // });
 
-    socket.emit('game/match');
+    console.log(game);
+    if (game === null) {
+      throw new Error();
+    }
+
+    switch (game.mode) {
+      case 0:
+        socket.emit('game/match');
+        break;
+      case 1:
+        socket.emit('game/invite', { uid: game.Id, speed: game.speed });
+        break;
+      case 2:
+        socket.emit('game/invited', { uid: game.Id });
+        break;
+      case 3:
+        socket.emit('game/spec', { roomId: game.Id });
+        break;
+      default:
+        throw new Error();
+    }
+
+    if (game.mode !== 3) {
+      document.addEventListener('keydown', (key) => {
+        if (key.repeat) return;
+        if (key.keyCode === 38) {
+          setUpState(true);
+        } else if (key.keyCode === 40) {
+          setDownState(true);
+        }
+      });
+      document.addEventListener('keyup', (key) => {
+        if (key.repeat) return;
+        if (key.keyCode === 38) {
+          setUpState(false);
+        } else if (key.keyCode === 40) {
+          setDownState(false);
+        }
+      });
+    }
 
     socket.on('game/start', (payload) => {
       SetProfileState({
@@ -69,25 +86,9 @@ export function Game() {
       setCanvasState((prev) => ({ ...prev, gameRoomState: payload }));
     });
 
-    document.addEventListener('keydown', (key) => {
-      if (key.repeat) return;
-      if (key.keyCode === 38) {
-        setUpState(true);
-      } else if (key.keyCode === 40) {
-        setDownState(true);
-      }
-    });
-
-    document.addEventListener('keyup', (key) => {
-      if (key.repeat) return;
-      if (key.keyCode === 38) {
-        setUpState(false);
-      } else if (key.keyCode === 40) {
-        setDownState(false);
-      }
-    });
-
     return () => {
+      SetGame(null);
+      socket.emit('game/unmatch');
       socket.emit('game/exit');
       socket.off('game/start');
       socket.off('game/end');
@@ -115,17 +116,35 @@ export function Game() {
       }
     }
   }, [downState]);
+
   return (
-    <div>
-      {profileState === null ? (
-        <DefaultProfile />
-      ) : (
-        <>
-          <GameProfile profile={profileState.profile1} />
-          <GameProfile profile={profileState.profile2} />
-        </>
-      )}
-      <GameCanvas canvasState={canvasState} />
+    <div className={styles.game__page}>
+      <div className={styles.game__header}>
+        <BackButton to='/lobby' />
+        <div className={styles.game_warning}>
+          <img src='/warning.png' className={styles.game_warning__icon} />
+          <div className={styles.game_warning__text}>
+            게임 중 나가거나 새로고침 시 패배 처리됩니다.
+          </div>
+        </div>
+      </div>
+      <div className={styles.game__main}>
+        {profileState === null ? (
+          <DefaultProfile />
+        ) : (
+          <>
+            <GameProfile profile={profileState.profile1} />
+          </>
+        )}
+        <GameCanvas canvasState={canvasState} />
+        {profileState === null ? (
+          <DefaultProfile2 />
+        ) : (
+          <>
+            <GameProfile profile={profileState.profile2} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

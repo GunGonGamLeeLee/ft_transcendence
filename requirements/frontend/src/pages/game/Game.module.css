@@ -1,5 +1,121 @@
+.game__page {
+  width: 1280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.game__header {
+  width: 1280px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px 30px;
+  box-sizing: border-box;
+}
+
+.game_warning {
+  display: flex;
+  flex-direction: row;
+  margin-left: 20px;
+}
+
+.game_warning__icon {
+  width: 30px;
+  height: 30px;
+}
+
+.game_warning__text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game__main {
+  width: 1280px;
+  height: 660px;
+  display: flex;
+  flex-direction: row;
+}
+
+.game_profile_div {
+  width: 320px;
+  height: 660px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game_profile {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game_profile__header {
+  width: 320px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-2);
+  background-color: white;
+}
+
+.game_profile__img_div {
+  width: 320px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid white;
+  background-color: var(--color-2);
+}
+
 .game_profile__img {
-  width: 100px;
-  height: 100px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
+  border: 2px solid white;
+}
+
+.game_profile__img_default {
+  width: 130px;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid white;
+  font-size: 130px;
+  color: white;
+  background-color: black;
+}
+
+.game_profile__name {
+  width: 320px;
+  font-size: 45px;
+  font-weight: 500;
+  color: var(--color-2);
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.game_profile__rating {
+  width: 320px;
+  font-size: 25px;
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid white;
+  background-color: var(--color-2);
 }

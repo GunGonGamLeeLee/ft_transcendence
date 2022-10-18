@@ -25,25 +25,31 @@ export class GameMatchGateway {
   constructor(private gameMatchService: GameMatchService) {}
 
   @SubscribeMessage('game/match')
-  matchWaiting(client: Socket, payload: any) {
-    // payload 쓸데 있나..?
-    // waiting queue에 등록.
-    console.log(client.id);
+  match(client: Socket, payload: any) {
+    console.log(`game/match ${client.id}`);
     this.gameMatchService.matchRegister(client);
+  }
+
+  @SubscribeMessage('game/unmatch')
+  unMatch(client: Socket) {
+    console.log(`game/unmatch ${client.id}`);
+    this.gameMatchService.matchUnregister(client);
   }
 
   @SubscribeMessage('game/invite')
   inviteUser(client: Socket, payload: { uid: number; speed: number }) {
+    console.log(`game/invite ${client.id}`);
     this.gameMatchService.inviteUser(client, payload);
   }
 
   @SubscribeMessage('game/invited')
   invitedUser(client: Socket, payload: { uid: number }) {
+    console.log(`game/invited ${client.id}`);
     this.gameMatchService.invitedUser(client, payload);
   }
 
   handleConnection(client: Socket) {
-    console.log('Connect match ' + client.id);
+    // console.log('Connect match ' + client.id);
   }
 
   handleDisconnect(client: Socket) {

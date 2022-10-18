@@ -13,7 +13,6 @@ export class GameMatchService {
   }
 
   gameMatch() {
-    // match 성사
     const length = this.waitingQueue.length;
     for (let i = 1; i < length; i += 2) {
       const player1 = this.waitingQueue[0];
@@ -21,9 +20,6 @@ export class GameMatchService {
       this.gameRoomService.createRoom(player1, player2, 0, 1);
       this.waitingQueue.splice(0, 2);
     }
-
-    // match 실패
-    // -> 아무것도 안함..?
   }
 
   matchRegister(client: Socket) {
