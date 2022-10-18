@@ -29,7 +29,12 @@ export class DbUserInChannelService {
   }
 
   async CountUsersInChannel(chid: number) {
-    return (await this.userInChannelRepo.findBy({ chid })).length;
+    const allUserCount: number = (await this.userInChannelRepo.findBy({ chid }))
+      .length;
+    const banUserCount: number = (await this.findBanUsersInChannel(chid))
+      .length;
+    const userCount = allUserCount - banUserCount;
+    return userCount;
   }
 
   async findUsersInChannelWithUserInfo(chid: number) {
