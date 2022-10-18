@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { UserDataChatType } from 'src/chat/chat.room.users.service';
 import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
@@ -35,6 +36,7 @@ export class DatabaseService {
     private readonly dbChannelService: DbChannelService,
     private readonly dbUserInChannelService: DbUserInChannelService,
     private readonly dbMatchHistoryService: DbMatchHistoryService,
+    private dataSource: DataSource,
   ) {}
 
   // NOTE list
@@ -191,42 +193,78 @@ export class DatabaseService {
   }
 
   // NOTE add
-
   async addUser(userDto: UserDto): Promise<void> {
     // TODO transaction
-    const user = await this.dbUserService.saveOne(userDto);
-    await this.dbChannelService.saveOne(
-      {
-        chName: `dm${user.uid}`,
-        chOwnerId: user.uid,
-        mode: ChannelMode.dm,
-        password: '',
-      },
-      user,
-    );
+    const queryRunner = await this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user = await this.dbUserService.saveOne(userDto);
+      await queryRunner.manager.save(user);
+      // throw new InternalServerErrorException(); //test error
+      await this.dbChannelService.saveOne(
+        {
+          chName: `dm${user.uid}`,
+          chOwnerId: user.uid,
+          mode: ChannelMode.dm,
+          password: '',
+        },
+        user,
+      );
+      await queryRunner.commitTransaction();
+      throw new HttpException(`test error`, 400); //test error
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async addFriend(myUid: number, friendUid: number) {
     // TODO transaction
-    const user: UserEntity = await this.dbUserService.findOne(friendUid);
-    if (user == null || myUid === friendUid)
-      throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
-    await this.dbFriendListService.saveOne(
-      { fromUid: myUid, toUid: friendUid },
-      user,
-    );
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user: UserEntity = await this.dbUserService.findOne(friendUid);
+
+      if (user == null || myUid === friendUid)
+        throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
+
+      await this.dbFriendListService.saveOne(
+        { fromUid: myUid, toUid: friendUid },
+        user,
+      );
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
     return await this.dbUserService.findOneProfile(friendUid);
   }
 
   async addBlock(myUid: number, blockUid: number) {
     // TODO transaction
-    const user: UserEntity = await this.dbUserService.findOne(blockUid);
-    if (user == null || myUid === blockUid)
-      throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
-    await this.dbBlockListService.saveOne(
-      { fromUid: myUid, toUid: blockUid },
-      user,
-    );
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user: UserEntity = await this.dbUserService.findOne(blockUid);
+
+      if (user == null || myUid === blockUid)
+        throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
+
+      await this.dbBlockListService.saveOne(
+        { fromUid: myUid, toUid: blockUid },
+        user,
+      );
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async addChannel(channelDto: ChannelDto) {
@@ -508,6 +546,7 @@ export class DatabaseService {
     msg: string,
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
+    console.log(uic);
     if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
     if (uic.role === UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
