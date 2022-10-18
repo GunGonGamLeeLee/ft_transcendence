@@ -49,14 +49,14 @@ export class GameMatchService {
 
     if (idx !== -1) {
       // TO DO 중복 요청 처리
+    } else {
+      this.inviteQueue.push({
+        player1: client,
+        uid1: client.data.uid,
+        uid2: payload.uid,
+        speed: payload.speed,
+      });
     }
-
-    this.inviteQueue.push({
-      player1: client,
-      uid1: client.data.uid,
-      uid2: payload.uid,
-      speed: payload.speed,
-    });
   }
 
   invitedUser(client: Socket, payload: { uid: number }) {

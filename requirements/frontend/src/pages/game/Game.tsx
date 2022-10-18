@@ -31,6 +31,7 @@ export function Game() {
 
     console.log(game);
     if (game === null) {
+      navigator('/lobby', { replace: true });
       throw new Error();
     }
 
