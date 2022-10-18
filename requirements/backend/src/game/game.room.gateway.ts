@@ -12,10 +12,16 @@ import { GameRoomService } from './game.room.service';
 import { Code } from './game.room.dto';
 import { UserStatus } from 'src/database/entity/entity.user';
 import { DatabaseService } from 'src/database/database.service';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
+});
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:4242',
+    origin: process.env.FRONTEND,
   },
 })
 @UseFilters(new WsExceptionFilter())

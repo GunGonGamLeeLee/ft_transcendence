@@ -80,4 +80,19 @@ $(DEV_IMG_DIR):
 
 # prod operations	
 
+prod-up-build: 
+	@$(DOCKER_COMPOSE) up --build
+
+prod-down:
+	@$(DOCKER_COMPOSE) down
+
+prod-clean: prod-down
+	@$(RM) $(DEV_DATABASE_DIR)/*
+	@$(RM) $(DEV_IMG_DIR)/*
+
+prod-fclean: prod-down
+	@$(MAKE) prod-clean
+	@docker rmi $(shell docker images -aq)
+
+
 .PHONY: help dependencies up start stop restart status ps clean build build-up volume

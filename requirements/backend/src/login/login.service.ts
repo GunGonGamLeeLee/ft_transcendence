@@ -13,7 +13,8 @@ import { UserDto } from 'src/database/dto/user.dto';
 import { IntraInfoDto } from './intra.info.dto';
 
 dotenv.config({
-  path: '/backend.env',
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
 });
 
 export const redirectUri = process.env.API_URI;
@@ -102,7 +103,7 @@ export class LoginService {
       const newUser: UserDto = {
         uid,
         displayName: displayName,
-        imgUri: `http://localhost:4243/img/${uid}.png`,
+        imgUri: `${process.env.BACKEND}/img/${uid}.png`,
         rating: 1000,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
