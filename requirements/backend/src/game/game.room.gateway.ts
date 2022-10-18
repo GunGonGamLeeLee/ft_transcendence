@@ -66,7 +66,7 @@ export class GameRoomGateway {
 
   handleDisconnect(client: Socket) {
     console.log('Disconnect match ' + client.id);
-    this.gameRoomService.exitGame(client);
     this.database.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
+    this.gameRoomService.exitGame(client);
   }
 }

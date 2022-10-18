@@ -54,7 +54,7 @@ function GameInvite({ userInfo }: { userInfo: InviteType }) {
           <button className={styles.invite__button} onClick={onAccept}>
             OK
           </button>
-          <button className={styles.invite__button} onClick={onAccept}>
+          <button className={styles.invite__button} onClick={onClick}>
             NO
           </button>
         </div>
