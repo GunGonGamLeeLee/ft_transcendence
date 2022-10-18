@@ -29,12 +29,9 @@ export class AppGateway {
     await this.validateUser(client);
     if (client.data.uid === undefined) return;
     client.join(`dm${client.data.uid}`);
-    // FIXME 테스트용.
-    // if (client.data.uid === 99857) {
-    //   client.join(`channel7`);
-    //   console.log(`socketInit: ${client.data.uid} join channel7`);
-    // }
-    console.log(`socketInit: ${client.data.uid} join dm${client.data.uid}`);
+    console.log(
+      `socketInit: ${client.data.uid} join dm${client.data.uid} (${client.id})`,
+    );
     await this.dmGateway.updateUser(client.data.uid);
   }
 
@@ -51,7 +48,7 @@ export class AppGateway {
     const user = await this.dmService.validateUser(token);
     const alreadyExist = this.sockets.has(user.uid);
 
-    if (alreadyExist) client.emit('already-exist', 'hey'); // FIXME 프론트와 얘기 해보자.
+    client.emit('login/dupCheck', !alreadyExist);
     if (!user || alreadyExist) {
       client.disconnect();
       return;
@@ -66,8 +63,8 @@ export class AppGateway {
     let token = client.handshake.headers.token;
     if (token === undefined) token = client.handshake.auth.token;
     if (!isString(token)) token = token[0];
-    //////////////////////////////////////////////////////////////////
-    // const { token } = client.handshake.auth; // 실제 사용
     return token;
+    //////////////////////////////////////////////////////////////////
+    // return client.handshake.auth.token; // 실제 사용
   }
 }
