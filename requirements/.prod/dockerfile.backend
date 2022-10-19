@@ -1,9 +1,7 @@
 FROM node:16.17.1-alpine3.15 as builder
 COPY ./backend /app
-COPY ./.prod/builder.backend.sh /
-COPY ./environment/prod.backend.env /
 WORKDIR /app
-RUN npm install && /builder.backend.sh
+RUN npm install && /app/node_modules/.bin/nest build
 
 FROM node:16.17.1-alpine3.15
 COPY --from=builder /app/dist /app/dist

@@ -1,17 +1,8 @@
-FROM node:16.17.1-alpine3.15 as builder
-COPY ./frontend /app
-COPY ./.prod/builder.frontend.sh /
-COPY ./environment/prod.frontend.env /app/.env
-WORKDIR /app
-RUN npm install && /builder.frontend.sh
-
 FROM alpine:3.15
 RUN apk add --no-cache nginx
-COPY --from=builder /app/dist /var/www/html
 COPY ./environment/nginx.conf /etc/nginx/http.d/
 COPY ./.prod/entrypoint.frontend.sh / 
 
 EXPOSE 4242
 
 ENTRYPOINT ["/entrypoint.frontend.sh"]
-# ENTRYPOINT ["/bin/sh"]

@@ -5,3 +5,4 @@ then
 fi
 
 npm run build
+cp -R /app/dist/* /frontend/
