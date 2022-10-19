@@ -72,6 +72,14 @@ export class DatabaseController {
     return await this.databaseService.listAllChannel();
   }
 
+  @ApiTags('database/Channel')
+  @ApiOperation({ summary: '특정 유저의 Dm 채널 보기' })
+  @ApiHeader({ name: 'uid' })
+  @Get('dm-channel-of-user')
+  async showDmChannel(@Headers() header) {
+    return await this.databaseService.findOneDmChannelByOwnerId(header.uid);
+  }
+
   @ApiTags('database/UserInChannel')
   @ApiOperation({ summary: '전체 유저-채널 목록 보기' })
   @Get('show-user-in-channel-table')

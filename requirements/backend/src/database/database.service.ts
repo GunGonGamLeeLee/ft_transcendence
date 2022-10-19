@@ -328,7 +328,7 @@ export class DatabaseService {
     return await this.dbChannelService.findOne(chid);
   }
 
-  async findOneChannelByOwnerId(chOwnerId: number) {
+  async findOneDmChannelByOwnerId(chOwnerId: number) {
     return await this.dbChannelService.findOneByOwnerId(chOwnerId);
   }
 

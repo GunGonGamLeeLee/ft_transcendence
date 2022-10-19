@@ -45,6 +45,7 @@ export class DmGateway {
       payload.targetUid,
       payload.msg,
     );
+    await this.dmService.addDmRoom(client.data.uid, payload.targetUid);
   }
 
   async updateUser(uid: number) {
