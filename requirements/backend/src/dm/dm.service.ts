@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { UserStatus } from 'src/database/entity/entity.user';
@@ -22,7 +23,8 @@ export class DmService {
   async validateUser(token: string) {
     const { id } = this.authService.verify(token);
     await this.updateUserStatus(id, UserStatus.ONLINE);
-    return await this.getUser(id);
+    const user = await this.getUser(id);
+    return user;
   }
 
   async getUser(uid: number) {

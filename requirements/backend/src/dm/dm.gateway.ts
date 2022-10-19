@@ -1,4 +1,4 @@
-import { UseFilters, UsePipes } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
@@ -12,12 +12,14 @@ import { WsExceptionFilter } from '../ws.exception.filter';
 import { DmService } from './dm.service';
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { UserEntity } from 'src/database/entity/entity.user';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost:4242',
   },
 })
+@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class DmGateway {
@@ -28,6 +30,7 @@ export class DmGateway {
 
   @SubscribeMessage('test')
   handleTest(@MessageBody() data): void {
+    console.log('hey');
     throw new WsException(data.one);
     // throw new HttpException(data.one, 400);
   }

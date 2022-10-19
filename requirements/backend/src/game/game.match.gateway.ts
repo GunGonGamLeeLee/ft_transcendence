@@ -1,4 +1,4 @@
-import { UseFilters, UsePipes } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
@@ -11,12 +11,14 @@ import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
 import { GameMatchService } from './game.match.service';
 import { DatabaseService } from 'src/database/database.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @WebSocketGateway({
   cors: {
     origin: 'http://localhost:4242',
   },
 })
+@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class GameMatchGateway {
@@ -73,8 +75,6 @@ export class GameMatchGateway {
   }
 
   handleDisconnect(client: Socket) {
-    // console.log('D Game');
     this.gameMatchService.matchUnregister(client);
-    // console.log('match unregistered ' + client.id);
   }
 }
