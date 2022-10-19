@@ -80,8 +80,12 @@ export class DbChannelService {
     return await this.channelRepo.update({ chid }, { chName });
   }
 
-  async updateDisplay(chid: number, mode: ChannelMode) {
-    return await this.channelRepo.update({ chid }, { mode });
+  async updateDisplay(chid: number, mode: ChannelMode, password: string) {
+    if (mode === ChannelMode.protected) this.setPassword(chid, password);
+
+    const data = await this.channelRepo.save({ chid, mode });
+
+    return data;
   }
 
   async setPassword(chid: number, password: string) {

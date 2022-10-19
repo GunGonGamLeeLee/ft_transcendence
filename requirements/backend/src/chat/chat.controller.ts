@@ -51,6 +51,9 @@ export class ChatController {
   @Get('channelusers')
   async roomUsers(@Query('chid', ParseIntPipe) chid) {
     const ret = await this.chatRoomUsersService.getRoomUsers(chid);
+    if (ret.inChatRoom.length === 0) {
+      throw new HttpException(`존재하지 않는 방입니다`, HttpStatus.NOT_FOUND);
+    }
     return ret;
   }
 
