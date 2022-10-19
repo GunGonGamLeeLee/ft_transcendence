@@ -60,12 +60,7 @@ export class GameRoomGateway {
     client.emit('game/error');
   }
 
-  handleConnection(client: Socket) {
-    // console.log('Connect game ' + client.id);
-  }
-
   handleDisconnect(client: Socket) {
-    console.log('Disconnect match ' + client.id);
     this.database.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     this.gameRoomService.exitGame(client);
   }

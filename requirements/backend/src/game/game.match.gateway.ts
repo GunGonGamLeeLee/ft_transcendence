@@ -70,10 +70,6 @@ export class GameMatchGateway {
     this.gameMatchService.invitedUser(client, payload);
   }
 
-  handleConnection(client: Socket) {
-    // console.log('Connect match ' + client.id);
-  }
-
   handleDisconnect(client: Socket) {
     this.gameMatchService.matchUnregister(client);
   }
