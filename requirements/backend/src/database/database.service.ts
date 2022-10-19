@@ -245,7 +245,7 @@ export class DatabaseService {
       isMute: false,
       isBan: false,
     };
-    this.dbUserInChannelService.saveOne(userInChannelDto, user, channel);
+    await this.dbUserInChannelService.saveOne(userInChannelDto, user, channel);
     return channel;
   }
 
@@ -363,13 +363,18 @@ export class DatabaseService {
     return await this.dbChannelService.updateChName(chid, chName);
   }
 
-  async updateChDisplay(uid: number, chid: number, mode: ChannelMode) {
+  async updateChDisplay(
+    uid: number,
+    chid: number,
+    mode: ChannelMode,
+    password: string,
+  ) {
     await this.checkPermissionInChannel(
       uid,
       chid,
       'you can`t edit channel display state.',
     );
-    return await this.dbChannelService.updateDisplay(chid, mode);
+    return await this.dbChannelService.updateDisplay(chid, mode, password);
   }
 
   async updateChRemovePassword(uid: number, chid: number) {
@@ -518,7 +523,8 @@ export class DatabaseService {
     msg: string,
   ) {
     const uic = await this.dbUserInChannelService.findOne(myUid, chid);
-    if (uic == null) throw new HttpException(msg, HttpStatus.NOT_FOUND);
+    if (uic == null)
+      throw new HttpException(`NOT FOUND USER`, HttpStatus.NOT_FOUND);
     if (uic.role === UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
   }
