@@ -126,6 +126,7 @@ export class DbUserInChannelService {
       },
       where: {
         uid,
+        isBan: false,
         channel: {
           mode: Not(Equal(ChannelMode.dm)),
         },

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserDataChatType } from 'src/chat/chat.room.users.service';
+import { ChannelUpdateDto } from 'src/chat/dto/channel.update.dto';
 import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
 import { UserDataType } from 'src/users/dto/user.data.type.dto';
@@ -393,6 +394,15 @@ export class DatabaseService {
       'you can`t set channel password.',
     );
     return await this.dbChannelService.setPassword(chid, password);
+  }
+
+  async updateChannel(uid: number, channelDto: ChannelUpdateDto) {
+    await this.checkPermissionInChannel(
+      uid,
+      channelDto.chid,
+      '채팅방의 설정을 바꿀 수 없습니다.',
+    );
+    return await this.dbChannelService.updateChannel(channelDto);
   }
 
   async updateUserGameRoom(uid1: number, uid2: number, roomId: string) {

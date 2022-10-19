@@ -162,7 +162,7 @@ export class DatabaseController {
   @ApiOperation({ summary: '채널의 유저 목록 보기' })
   @ApiHeader({ name: 'chid' })
   @Get('list-user-in-channel-with-user-info')
-  async listUserInChannelWithUserInco(@Headers() header) {
+  async listUserInChannelWithUserInfo(@Headers() header) {
     return await this.databaseService.listUserInChannelWithUserInfo(
       header.chid,
     );
@@ -172,7 +172,7 @@ export class DatabaseController {
   @ApiOperation({ summary: '채널의 음소거 유저 목록 보기' })
   @ApiHeader({ name: 'chid' })
   @Get('list-mute-user-in-channel-with-user-info')
-  async listMuteUserInChannelWithUserInco(@Headers() header) {
+  async listMuteUserInChannelWithUserInfo(@Headers() header) {
     return await this.databaseService.listMuteUserInChannelWithUserInfo(
       header.chid,
     );

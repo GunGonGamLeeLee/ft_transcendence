@@ -88,7 +88,7 @@ export class ChatRoomListService {
     return await this.makeChatRoomType(channel);
   }
 
-  private async makeChatRoomType(channel: ChannelEntity) {
+  async makeChatRoomType(channel: ChannelEntity) {
     return {
       ownerId: channel.chOwner.uid,
       ownerDisplayName: channel.chOwner.displayName,

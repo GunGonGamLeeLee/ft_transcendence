@@ -6,6 +6,7 @@ import {
   UserRoleInChannel,
 } from 'src/database/entity/entity.user.in.channel';
 import { UserDataChatType } from './chat.room.users.service';
+import { ChannelUpdateDto } from './dto/channel.update.dto';
 
 @Injectable()
 export class ChatService {
@@ -34,6 +35,10 @@ export class ChatService {
 
   async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
     await this.database.unbanUserInChannel(myUid, targetUid, chid);
+  }
+
+  async updateChannel(uid: number, channelDto: ChannelUpdateDto) {
+    return await this.database.updateChannel(uid, channelDto);
   }
 
   async updateChRemovePassword(myUid: number, chid: number) {

@@ -107,7 +107,7 @@ export class DbUserService {
     }
   }
 
-  async updateImgFile(filepath: string, filename: string, imgData: any) {
+  updateImgFile(filepath: string, filename: string, imgData: any) {
     if (imgData === '') return;
     const base64 = imgData.replace(/^data:image\/\w+;base64,/, '');
     const pngfile = Buffer.from(base64, 'base64');
