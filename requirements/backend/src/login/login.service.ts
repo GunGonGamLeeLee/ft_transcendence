@@ -95,9 +95,13 @@ export class LoginService {
     const { uid } = intraInfo;
     let user: UserEntity | UserDto = await this.database.findOneUser(uid);
     if (user == null) {
+      const displayName =
+        uid === 98324
+          ? 'ljeongout'
+          : Math.random().toString(36).substring(2, 11);
       const newUser: UserDto = {
         uid,
-        displayName: Math.random().toString(36).substring(2, 11),
+        displayName: displayName,
         imgUri: `http://localhost:4243/img/${uid}.png`,
         rating: 42,
         mfaNeed: false,
