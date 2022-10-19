@@ -18,7 +18,7 @@ export function DmRoomPreview({ room }: { room: DmRoomType }) {
 
   return (
     <li className={styles.li__li} onClick={onClick}>
-      <div className={styles.li__id}>{room.roomId}</div>
+      <div className={styles.li__id}>{room.roomId.replace('channel', '')}</div>
       <div className={`${styles.li__dm}`}>{room.userDisplayName}</div>
     </li>
   );

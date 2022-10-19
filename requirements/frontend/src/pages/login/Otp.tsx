@@ -41,6 +41,7 @@ export function Otp() {
         <input
           name='pin'
           type='text'
+          autoComplete='off'
           placeholder='code'
           maxLength={6}
           className={styles.otp__input}

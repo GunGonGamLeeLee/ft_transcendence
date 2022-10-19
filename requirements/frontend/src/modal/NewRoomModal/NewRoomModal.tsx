@@ -116,6 +116,7 @@ function NewRoom() {
                   <input
                     required
                     type='text'
+                    autoComplete='off'
                     className={styles.new__input}
                     maxLength={20}
                     placeholder={`${userProfile.displayName}님의 방`}
@@ -143,7 +144,7 @@ function NewRoom() {
                   <input
                     type='password'
                     className={styles.new__input}
-                    maxLength={10}
+                    maxLength={4}
                     placeholder='PASSWORD'
                     value={password}
                     onChange={onChangePassword}

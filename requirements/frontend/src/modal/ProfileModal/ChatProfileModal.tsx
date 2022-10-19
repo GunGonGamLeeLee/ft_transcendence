@@ -11,6 +11,7 @@ import { Block } from './buttons/Block';
 import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
 import styles from './ProfileModal.module.css';
+import buttonstyles from './buttons/Buttons.module.css';
 import modalstyles from '../Modal.module.css';
 import { InviteGame } from './buttons/InviteGame';
 import { DM } from './buttons/DirectMessage';
@@ -94,7 +95,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
           </div>
           <div className={styles.profile__display}>
             <img src={user.imgUri} className={styles.profile__img} />
-            <div>
+            <div className={styles.profile__text}>
               <div className={styles.profile__name}>{user.displayName}</div>
               <div className={styles.profile__rating}>
                 Rating: {user.rating}
@@ -200,7 +201,7 @@ function ProfileButton({
   onClick: () => void;
 }) {
   return (
-    <button className={styles.profile__buttons} onClick={onClick}>
+    <button className={buttonstyles.buttons} onClick={onClick}>
       {text}
     </button>
   );
@@ -208,7 +209,7 @@ function ProfileButton({
 
 function ProfileButtonDisabled({ text }: { text: string }) {
   return (
-    <button className={styles.profile__buttons} disabled={true}>
+    <button className={buttonstyles.buttons} disabled={true}>
       {text}
     </button>
   );

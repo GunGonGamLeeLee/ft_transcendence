@@ -220,6 +220,7 @@ function UserSetting() {
             <div>
               <input
                 type='text'
+                autoComplete='off'
                 placeholder={userProfile.displayName}
                 value={displayName}
                 maxLength={8}

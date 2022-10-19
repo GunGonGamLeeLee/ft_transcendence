@@ -61,6 +61,8 @@ export function RoomChecker() {
           name='password'
           type='password'
           placeholder='PASSWORD'
+          minLength={4}
+          maxLength={4}
           className={styles.checker__input}
         />
         <button type='submit' className={styles.checker__button}>
