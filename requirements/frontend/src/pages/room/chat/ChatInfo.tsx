@@ -11,7 +11,9 @@ export function ChatInfo() {
     <div className={styles.chat_info}>
       {currRoom !== null ? (
         <>
-          <div className={styles.chat_info__id}>{currRoom.roomId}</div>
+          <div className={styles.chat_info__id}>
+            {currRoom.roomId.replace('channel', '')}
+          </div>
           <div className={`${styles.chat_info__mode}`}>
             <img
               src={

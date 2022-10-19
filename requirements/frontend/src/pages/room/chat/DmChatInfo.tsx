@@ -15,7 +15,9 @@ export function DmChatInfo() {
   return (
     <div className={styles.chat_info}>
       <>
-        <div className={styles.chat_info__id}>{currDmRoom?.roomId}</div>
+        <div className={styles.chat_info__id}>
+          {currDmRoom?.roomId.replace('channel', '')}
+        </div>
         <div className={`${styles.chat_info__mode}`}>
           <img src={'/private.png'} className={styles.chat_info__icon} />
         </div>
