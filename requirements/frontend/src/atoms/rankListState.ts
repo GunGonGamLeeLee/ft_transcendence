@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
 import { authState } from './authState';
-import { UserDataType } from './userDataType';
+import { Status, UserDataType } from './userDataType';
 
 export const rankListState = atom<UserDataType[]>({
   key: 'rankList',
@@ -28,5 +28,8 @@ const requestRankList = async (token: string): Promise<UserDataType[]> => {
   if (!response.ok) throw new Error();
 
   const data = await response.json();
+  for (const user of data) {
+    user.status = Status.RANK;
+  }
   return data;
 };
