@@ -76,8 +76,8 @@ function UserProfile({ user }: { user: UserDataType }) {
       <div className={modalstyles.modal}>
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
-          <div className={styles.profile__header}>
-            <span className={styles.profile__headertitle}>PROFILE</span>
+          <div className={modalstyles.modal__header}>
+            <span className={modalstyles.modal__headertitle}>PROFILE</span>
             <RedCross onClick={onClick} />
           </div>
           <div className={styles.profile__display}>
