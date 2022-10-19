@@ -61,7 +61,12 @@ export class DmService {
       isMute: false,
       isBan: false,
     };
-
     await this.database.addUserInChannel(user);
+  }
+
+  async deleteDmRoom(fromUid: number, toUid: number) {
+    const targetChid = (await this.database.findOneDmChannelByOwnerId(toUid))
+      .chid;
+    await this.database.deleteUserInChannel(fromUid, targetChid);
   }
 }

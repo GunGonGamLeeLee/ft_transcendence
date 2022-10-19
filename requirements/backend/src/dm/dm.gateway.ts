@@ -36,7 +36,7 @@ export class DmGateway {
   }
 
   @SubscribeMessage('dm/msg')
-  async msg(client: Socket, payload: DmChatDto) {
+  async handleMsg(client: Socket, payload: DmChatDto) {
     await client.join(`dm${payload.targetUid}`);
     this.server.to(`dm${payload.targetUid}`).emit('dm/msg', payload.msg);
     await client.leave(`dm${payload.targetUid}`);
@@ -46,6 +46,12 @@ export class DmGateway {
       payload.msg,
     );
     await this.dmService.addDmRoom(client.data.uid, payload.targetUid);
+    await this.dmService.addDmRoom(payload.targetUid, client.data.uid);
+  }
+
+  @SubscribeMessage('dm/deleteUserInChannel')
+  async handleDeleteUserInChannel(client: Socket, targetUid: number) {
+    await this.dmService.deleteDmRoom(client.data.uid, targetUid);
   }
 
   async updateUser(uid: number) {
