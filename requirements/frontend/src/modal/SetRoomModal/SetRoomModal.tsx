@@ -72,6 +72,7 @@ export default function SetRoom() {
                 <input
                   required
                   type='text'
+                  autoComplete='off'
                   className={styles.set__input}
                   maxLength={20}
                   placeholder={`${currRoom.ownerDisplayName}님의 방`}
@@ -99,7 +100,7 @@ export default function SetRoom() {
                 <input
                   type='password'
                   className={styles.set__input}
-                  maxLength={10}
+                  maxLength={4}
                   placeholder='비밀번호'
                   value={password}
                   onChange={onChangePassword}
