@@ -43,19 +43,25 @@ function GameInvite({ userInfo }: { userInfo: InviteType }) {
     <div className={modalstyles.modal}>
       <div className={modalstyles.modal__blank} onClick={onClick}></div>
       <div className={styles.invite}>
-        <div className={styles.invite__header}>
-          <span className={styles.invite__headertitle}>GAME INVITE</span>
+        <div className={modalstyles.modal__header}>
+          <span className={modalstyles.modal__headertitle}>GAME INVITED</span>
           <RedCross onClick={onClick} />
         </div>
         <div className={styles.invite__main}>
           {userInfo.displayName} INVITED YOU.
         </div>
         <div className={styles.invite__footer}>
-          <button className={styles.invite__button} onClick={onAccept}>
-            OK
-          </button>
-          <button className={styles.invite__button} onClick={onClick}>
+          <button
+            className={`${styles.invite__button} ${styles.invite__no}`}
+            onClick={onClick}
+          >
             NO
+          </button>
+          <button
+            className={`${styles.invite__button} ${styles.invite__ok}`}
+            onClick={onAccept}
+          >
+            OK
           </button>
         </div>
       </div>
