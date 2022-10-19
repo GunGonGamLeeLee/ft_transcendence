@@ -2,6 +2,8 @@ version: "3.3"
 
 services:
   backend:
+    depends_on: 
+     - database
     container_name: backend
     build:
       context: ./
@@ -12,7 +14,8 @@ services:
     ports:
       - 4243:4243
     env_file:
-      - environment/prod.backend.docker.env
+      - environment/prod.docker.env
+    tty: true
 
   frontend:
     container_name: frontend
@@ -24,6 +27,8 @@ services:
       - net
     ports:
       - 4242:4242
+    env_file:
+      - environment/prod.docker.env
 
   database:
     container_name: database
