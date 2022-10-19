@@ -23,6 +23,12 @@ import {
 } from '../../atoms/currRoomState';
 import { getChId } from '../../utils/getChId';
 import { UserDataType } from '../../atoms/userDataType';
+import { authState } from '../../atoms/authState';
+import {
+  matchHistoryListState,
+  requestMatchHistory,
+} from '../../atoms/modals/matchHistoryListState';
+import { MatchHistoryList } from './MatchHistoryList';
 
 export function ChatProfileModal() {
   const chatProfileModal = useRecoilValue(chatProfileModalState);
@@ -51,6 +57,10 @@ function ChatProfile({ user }: { user: ChatUserType }) {
   const [isAdmin, setIsAdmin] = React.useState<boolean>(
     user.role === RoleType.ADMIN,
   );
+  const setMatchHistory = useSetRecoilState(matchHistoryListState);
+
+  const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
 
   const onClick = () => {
     setChatProfileModal(undefined);
@@ -61,6 +71,17 @@ function ChatProfile({ user }: { user: ChatUserType }) {
       blockedList.find((curr) => curr.uid === user.uid) !== undefined,
     );
   }, [friendList, blockedList]);
+
+  React.useEffect(() => {
+    const matchHistoryQuery = async () => {
+      const newHistory = await requestMatchHistory(token, user.uid);
+      setMatchHistory(newHistory);
+    };
+
+    matchHistoryQuery();
+
+    return setMatchHistory([]);
+  }, [token, user]);
 
   return (
     <>
@@ -80,7 +101,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
               </div>
             </div>
           </div>
-          <div className={styles.profile__stat}>매칭 기록이 없습니다.</div>
+          <MatchHistoryList myUid={user.uid} />
           {userProfile.uid === user.uid ? (
             <></>
           ) : (
