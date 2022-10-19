@@ -12,9 +12,9 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  width: 260px;
+  width: 265px;
   height: 120px;
-  padding: 10px;
+  margin-left: 10px;
   box-sizing: border-box;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .myprofile__text {
-  width: 150px;
+  width: 185px;
   height: 80px;
   display: flex;
   flex-direction: column;
@@ -35,10 +35,18 @@
 
 .myprofile__name {
   font-size: 30px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .myprofile__rating {
   font-size: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .myprofile__icons {
@@ -46,7 +54,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  width: 60px;
+  width: 30px;
 }
 
 .myprofile__icon {

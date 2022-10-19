@@ -104,55 +104,57 @@ function NewRoom() {
       <div className={modalstyles.modal}>
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.new}>
-          <div className={styles.new__header}>
-            <span className={styles.new__headertitle}>NEW ROOM</span>
+          <div className={modalstyles.modal__header}>
+            <span className={modalstyles.modal__headertitle}>NEW ROOM</span>
             <RedCross onClick={onClick} />
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.new__options}>
-              <div className={styles.new__option}>
-                <span className={styles.new__title}>TITLE</span>
-                <input
-                  required
-                  type='text'
-                  className={styles.new__input}
-                  maxLength={20}
-                  placeholder={`${userProfile.displayName}님의 방`}
-                  value={title}
-                  onChange={onChangeTitle}
-                />
-              </div>
-              <div className={styles.new__option}>
-                <span className={styles.new__title}>PRIVATE</span>
-                <div className={styles.new__checkboxdiv}>
+          <div className={styles.new__main}>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.new__options}>
+                <div className={styles.new__option}>
+                  <span className={styles.new__title}>TITLE</span>
                   <input
-                    type='checkbox'
-                    className={styles.new__checkbox}
-                    checked={isPrivate}
-                    onChange={onChangeIsPrivate}
+                    required
+                    type='text'
+                    className={styles.new__input}
+                    maxLength={20}
+                    placeholder={`${userProfile.displayName}님의 방`}
+                    value={title}
+                    onChange={onChangeTitle}
+                  />
+                </div>
+                <div className={styles.new__option}>
+                  <span className={styles.new__title}>PRIVATE</span>
+                  <div className={styles.new__checkboxdiv}>
+                    <input
+                      type='checkbox'
+                      className={styles.new__checkbox}
+                      checked={isPrivate}
+                      onChange={onChangeIsPrivate}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={`${styles.new__option} ${
+                    isPrivate ? styles.new__inactive : ''
+                  }`}
+                >
+                  <span className={styles.new__title}>PASSWORD</span>
+                  <input
+                    type='password'
+                    className={styles.new__input}
+                    maxLength={10}
+                    placeholder='PASSWORD'
+                    value={password}
+                    onChange={onChangePassword}
                   />
                 </div>
               </div>
-              <div
-                className={`${styles.new__option} ${
-                  isPrivate ? styles.new__inactive : ''
-                }`}
-              >
-                <span className={styles.new__title}>PASSWORD</span>
-                <input
-                  type='password'
-                  className={styles.new__input}
-                  maxLength={10}
-                  placeholder='PASSWORD'
-                  value={password}
-                  onChange={onChangePassword}
-                />
+              <div className={modalstyles.modal__buttons}>
+                <button className={modalstyles.modal__button}>CREATE</button>
               </div>
-            </div>
-            <div className={styles.new__buttons}>
-              <button className={styles.new__button}>CREATE</button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </>

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import { UserProfileModal } from './ProfileModal/UserProfileModal';
 import { ChatProfileModal } from './ProfileModal/ChatProfileModal';
-import { ChatInviteModal } from './InviteModal/ChatInviteModal';
 import { GameInviteModal } from './InviteModal/GameInviteModal';
 import { UserSettingModal } from './UserSettingModal/UserSettingModal';
 import { NewRoomModal } from './NewRoomModal/NewRoomModal';
@@ -17,7 +16,6 @@ export function Modal() {
       <React.Suspense fallback={<div>Loading...</div>}>
         <ChatProfileModal />
       </React.Suspense>
-      <ChatInviteModal />
       <GameInviteModal />
       <NewRoomModal />
       <SetRoomModal />

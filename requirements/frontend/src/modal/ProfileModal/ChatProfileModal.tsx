@@ -23,6 +23,12 @@ import {
 } from '../../atoms/currRoomState';
 import { getChId } from '../../utils/getChId';
 import { UserDataType } from '../../atoms/userDataType';
+import { authState } from '../../atoms/authState';
+import {
+  matchHistoryListState,
+  requestMatchHistory,
+} from '../../atoms/modals/matchHistoryListState';
+import { MatchHistoryList } from './MatchHistoryList';
 
 export function ChatProfileModal() {
   const chatProfileModal = useRecoilValue(chatProfileModalState);
@@ -51,6 +57,10 @@ function ChatProfile({ user }: { user: ChatUserType }) {
   const [isAdmin, setIsAdmin] = React.useState<boolean>(
     user.role === RoleType.ADMIN,
   );
+  const setMatchHistory = useSetRecoilState(matchHistoryListState);
+
+  const { token } = useRecoilValue(authState);
+  if (token === null) throw new Error();
 
   const onClick = () => {
     setChatProfileModal(undefined);
@@ -62,13 +72,24 @@ function ChatProfile({ user }: { user: ChatUserType }) {
     );
   }, [friendList, blockedList]);
 
+  React.useEffect(() => {
+    const matchHistoryQuery = async () => {
+      const newHistory = await requestMatchHistory(token, user.uid);
+      setMatchHistory(newHistory);
+    };
+
+    matchHistoryQuery();
+
+    return setMatchHistory([]);
+  }, [token, user]);
+
   return (
     <>
       <div className={modalstyles.modal}>
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.profile}>
-          <div className={styles.profile__header}>
-            <span className={styles.profile__headertitle}>PROFILE</span>
+          <div className={modalstyles.modal__header}>
+            <span className={modalstyles.modal__headertitle}>PROFILE</span>
             <RedCross onClick={onClick} />
           </div>
           <div className={styles.profile__display}>
@@ -80,7 +101,7 @@ function ChatProfile({ user }: { user: ChatUserType }) {
               </div>
             </div>
           </div>
-          <div className={styles.profile__stat}>매칭 기록이 없습니다.</div>
+          <MatchHistoryList myUid={user.uid} />
           {userProfile.uid === user.uid ? (
             <></>
           ) : (
