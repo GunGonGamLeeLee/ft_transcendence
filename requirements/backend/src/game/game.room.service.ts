@@ -37,7 +37,7 @@ export class GameRoomService {
   }
 
   private ballInit(): Ball {
-    return { x: 0, y: 0, dx: this.randomSpeed(), dy: this.randomSpeed() / 2 };
+    return { x: 0, y: 0, dx: this.randomSpeed(), dy: this.randomSpeed() };
   }
 
   private async makeGameRoomInfo(
