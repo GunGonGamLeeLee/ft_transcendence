@@ -82,7 +82,7 @@ function UserProfile({ user }: { user: UserDataType }) {
           </div>
           <div className={styles.profile__display}>
             <img src={user.imgUri} className={styles.profile__img} />
-            <div>
+            <div className={styles.profile__text}>
               <div className={styles.profile__name}>{user.displayName}</div>
               <div className={styles.profile__rating}>
                 Rating: {user.rating}
