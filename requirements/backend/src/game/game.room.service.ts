@@ -9,6 +9,7 @@ import {
   Code,
   UserGameRoomState,
   StartGameRoomState,
+  Ball,
 } from './game.room.dto';
 
 const GameInfo = {
@@ -29,6 +30,15 @@ export class GameRoomService {
   ) {}
   private roomInfos: GameRoomInfo[] = [];
   private lastId = 1;
+
+  private randomSpeed() {
+    const n = Math.random();
+    return (3 + n * 3) * ((Math.floor(n * 10) % 2) * 2 - 1);
+  }
+
+  private ballInit(): Ball {
+    return { x: 0, y: 0, dx: this.randomSpeed(), dy: this.randomSpeed() };
+  }
 
   private async makeGameRoomInfo(
     player1: Socket,
@@ -52,7 +62,7 @@ export class GameRoomService {
         keyState2: 0,
         paddle1: 0,
         paddle2: 0,
-        ball: { x: 0, y: 0, dx: -5, dy: 2 },
+        ball: this.ballInit(),
         score1: 0,
         score2: 0,
       },
@@ -172,8 +182,8 @@ export class GameRoomService {
     const { speed, player1, player2, crowd, state } = roomInfo;
 
     // move paddle
-    state.paddle1 += state.keyState1 * 4 * 2 * speed;
-    state.paddle2 += state.keyState2 * 4 * 2 * speed;
+    state.paddle1 += state.keyState1 * 4 * 3 * speed;
+    state.paddle2 += state.keyState2 * 4 * 3 * speed;
 
     if (state.paddle1 > GameInfo.maxy) state.paddle1 = GameInfo.maxy;
     else if (state.paddle1 < -GameInfo.maxy) state.paddle1 = -GameInfo.maxy;
@@ -231,12 +241,12 @@ export class GameRoomService {
       state.score1 += 1;
       state.paddle1 = 0;
       state.paddle2 = 0;
-      state.ball = { x: 0, y: 0, dx: 4, dy: 0 };
+      state.ball = this.ballInit();
     } else if (state.ball.x <= -(GameInfo.width / 2 - GameInfo.ballr)) {
       state.score2 += 1;
       state.paddle1 = 0;
       state.paddle2 = 0;
-      state.ball = { x: 0, y: 0, dx: 4, dy: 0 };
+      state.ball = this.ballInit();
     }
 
     const userGameRoomState: UserGameRoomState = this.makeUserState(state);
@@ -272,7 +282,7 @@ export class GameRoomService {
         (inqueue) => inqueue === client,
       );
       if (idx !== -1) {
-        // TO DO 중복 요청
+        // 중복 요청
       } else {
         client.join(roomId);
         client.data = { ...client.data, roomId: roomId };

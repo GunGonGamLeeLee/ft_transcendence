@@ -26,6 +26,7 @@ export class GameMatchService {
     if (this.waitingQueue.find((queue) => queue === client) === undefined) {
       this.waitingQueue.push(client);
       console.log('match-register ' + client.id);
+      console.log(`waitingQueue.length = ${this.waitingQueue.length}`);
     }
   }
 
@@ -48,7 +49,7 @@ export class GameMatchService {
     );
 
     if (idx !== -1) {
-      // TO DO 중복 요청 처리
+      // 중복 요청
     } else {
       this.inviteQueue.push({
         player1: client,
@@ -56,6 +57,7 @@ export class GameMatchService {
         uid2: payload.uid,
         speed: payload.speed,
       });
+      console.log(`inviteQueue.length = ${this.inviteQueue.length}`);
     }
   }
 
