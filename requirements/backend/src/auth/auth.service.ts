@@ -7,7 +7,8 @@ import { Socket } from 'socket.io';
 import { isString } from 'class-validator';
 
 dotenv.config({
-  path: '/backend.env',
+  path:
+    process.env.NODE_ENV === 'dev' ? '/dev.backend.env' : '/prod.backend.env',
 });
 
 const jwtSecret = process.env.JWT_SECRET;

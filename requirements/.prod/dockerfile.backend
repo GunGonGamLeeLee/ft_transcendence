@@ -1,0 +1,18 @@
+FROM node:16.17.1-alpine3.15 as builder
+COPY ./backend /app
+WORKDIR /app
+RUN npm install && /app/node_modules/.bin/nest build
+
+FROM node:16.17.1-alpine3.15
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/*.json /app/
+COPY ./environment/prod.backend.env /
+COPY ./.prod/entrypoint.backend.sh /
+WORKDIR /app
+RUN npm install --omit=dev
+
+STOPSIGNAL SIGKILL
+EXPOSE 4243
+
+ENTRYPOINT ["/entrypoint.backend.sh"]
+# ENTRYPOINT ["/bin/sh"]

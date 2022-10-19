@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  frontend-builder:
+    container_name: frontend-builder
+    build:
+      context: ./
+      dockerfile: ./.prod/dockerfile.frontend.builder   
+    env_file:
+      - environment/prod.docker.env
+    volumes:
+      - frontend:/frontend
+
+  frontend:
+    depends_on:
+      - frontend-builder
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: ./.prod/dockerfile.frontend
+    restart: always
+    networks:
+      - net
+    ports:
+      - 4242:4242
+    volumes:
+      - frontend:/var/www/html
+
+  backend:
+    depends_on: 
+     - database
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: ./.prod/dockerfile.backend
+    restart: always
+    networks:
+      - net
+    ports:
+      - 4243:4243
+    env_file:
+      - environment/prod.docker.env
+
+  database:
+    container_name: database
+    build:
+      context: ./
+      dockerfile: ./.prod/dockerfile.database
+    restart: always
+    volumes:
+      - ./database:/database
+    networks:
+      - net
+    env_file:
+      - environment/prod.database.env
+
+networks:
+  net:
+    driver: bridge
+
+volumes:
+  frontend:

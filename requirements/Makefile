@@ -3,7 +3,7 @@ DOCKER_COMPOSE						= docker-compose
 DEV_DOCKER_COMPOSE_FILE		= ./.dev/docker-compose.yaml
 DEV_DOCKER_COMPOSE_FLAGS	= -f $(DEV_DOCKER_COMPOSE_FILE)
 DEV_DATABASE_DIR = ./database
-DEV_IMG_DIR = ./public/img
+DEV_IMG_DIR = ./backend/public/img
 
 PROD_DOCKER_COMPOSE_FILE	= ./.prod/docker-compose.yaml
 
@@ -79,5 +79,19 @@ $(DEV_IMG_DIR):
 	@$(MKDIR) $@
 
 # prod operations	
+
+prod-up-build: 
+	@$(DOCKER_COMPOSE) up --build
+
+prod-down:
+	@$(DOCKER_COMPOSE) down
+
+prod-clean: prod-down
+	@$(RM) $(DEV_DATABASE_DIR)/*
+
+prod-fclean: prod-down
+	@$(MAKE) prod-clean
+	@docker rmi $(shell docker images -aq)
+
 
 .PHONY: help dependencies up start stop restart status ps clean build build-up volume
