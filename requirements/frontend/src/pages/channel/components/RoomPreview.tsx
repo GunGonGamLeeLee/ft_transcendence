@@ -36,7 +36,7 @@ export function RoomPreview({ room }: { room: RoomType }) {
 
   return (
     <li className={styles.li__li} onClick={onClick}>
-      <div className={styles.li__id}>{room.roomId}</div>
+      <div className={styles.li__id}>{room.roomId.replace('channel', '')}</div>
       <div className={`${styles.li__mode}`}>
         <img
           src={
