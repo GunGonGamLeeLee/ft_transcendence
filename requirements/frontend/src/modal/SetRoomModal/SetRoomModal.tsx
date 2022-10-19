@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ChangeEvent, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { setRoomModalState } from '../../atoms/modals/setRoomModalState';
-import styles from './setRoomModal.module.css';
+import styles from './SetRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState, RoomModeType } from '../../atoms/currRoomState';
@@ -63,57 +63,61 @@ export default function SetRoom() {
           <div className={modalstyles.modal__blank} onClick={onClick}></div>
           <div className={styles.set}>
             <div className={styles.set__header}>
-              <span className={styles.set__headertitle}>설정</span>
+              <span className={styles.set__headertitle}>SETTING</span>
               <RedCross onClick={onClick} />
             </div>
-            <div className={styles.set__options}>
-              <div className={styles.set__option}>
-                <span className={styles.set__title}>방 제목</span>
-                <input
-                  required
-                  type='text'
-                  autoComplete='off'
-                  className={styles.set__input}
-                  maxLength={20}
-                  placeholder={`${currRoom.ownerDisplayName}님의 방`}
-                  value={title}
-                  onChange={onChangeTitle}
-                />
-              </div>
-              <div className={styles.set__option}>
-                <span className={styles.set__title}>초대 only</span>
-                <div className={styles.set__checkboxdiv}>
-                  <input
-                    type='checkbox'
-                    className={styles.set__checkbox}
-                    checked={isPrivate}
-                    onChange={onChangeIsPrivate}
-                  />
+            <div className={styles.set__main}>
+              <div>
+                <div className={styles.set__options}>
+                  <div className={styles.set__option}>
+                    <span className={styles.set__title}>방 제목</span>
+                    <input
+                      required
+                      type='text'
+                      autoComplete='off'
+                      className={styles.set__input}
+                      maxLength={20}
+                      placeholder={`${currRoom.ownerDisplayName}님의 방`}
+                      value={title}
+                      onChange={onChangeTitle}
+                    />
+                  </div>
+                  <div className={styles.set__option}>
+                    <span className={styles.set__title}>초대 only</span>
+                    <div className={styles.set__checkboxdiv}>
+                      <input
+                        type='checkbox'
+                        className={styles.set__checkbox}
+                        checked={isPrivate}
+                        onChange={onChangeIsPrivate}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className={`${styles.set__option} ${
+                      isPrivate ? styles.set__inactive : ''
+                    }`}
+                  >
+                    <span className={styles.set__title}>비밀번호</span>
+                    <input
+                      type='password'
+                      className={styles.set__input}
+                      maxLength={4}
+                      placeholder='비밀번호'
+                      value={password}
+                      onChange={onChangePassword}
+                    />
+                  </div>
+                </div>
+                <div className={modalstyles.modal__buttons}>
+                  <button
+                    className={modalstyles.modal__button}
+                    onClick={handleChangeClick}
+                  >
+                    CHANGE
+                  </button>
                 </div>
               </div>
-              <div
-                className={`${styles.set__option} ${
-                  isPrivate ? styles.set__inactive : ''
-                }`}
-              >
-                <span className={styles.set__title}>비밀번호</span>
-                <input
-                  type='password'
-                  className={styles.set__input}
-                  maxLength={4}
-                  placeholder='비밀번호'
-                  value={password}
-                  onChange={onChangePassword}
-                />
-              </div>
-            </div>
-            <div className={styles.set__buttons}>
-              <button
-                className={styles.set__button}
-                onClick={handleChangeClick}
-              >
-                CHANGE
-              </button>
             </div>
           </div>
         </div>
