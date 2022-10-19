@@ -5,6 +5,8 @@ import { ChannelDto } from '../dto/channel.dto';
 import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
 import * as bcrypt from 'bcrypt';
+import { ChannelUpdateDto } from 'src/chat/dto/channel.update.dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class DbChannelService {
@@ -65,6 +67,21 @@ export class DbChannelService {
       channel.password = await this.encryptedPassword(channel.password);
     const ch = this.channelRepo.create({ ...channel, chOwner });
     return await this.channelRepo.save(ch);
+  }
+
+  async updateChannel(body: ChannelUpdateDto): Promise<ChannelEntity> {
+    const channel = await this.findOne(body.chid);
+    channel.chName = body.chName;
+    channel.mode = body.mode;
+    if (channel.password !== '') {
+      channel.password = await this.encryptedPassword(body.password);
+    }
+    try {
+      await this.channelRepo.update({ chid: body.chid }, channel);
+    } catch (err) {
+      throw new WsException('update channel error');
+    }
+    return channel;
   }
 
   async updateChName(chid: number, chName: string) {

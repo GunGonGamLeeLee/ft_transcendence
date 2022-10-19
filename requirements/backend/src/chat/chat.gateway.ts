@@ -13,10 +13,11 @@ import { WsValidationPipe } from 'src/ws.validation.pipe';
 import { UserRoleInChannel } from 'src/database/entity/entity.user.in.channel';
 import { ChatRoleDto } from './dto/chat.role.dto';
 import { ChatMessageDto } from './dto/chat.message.dto';
-import { ChatPasswordDto } from './dto/chat.password.dto';
+import { ChannelUpdateDto } from './dto/channel.update.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ChatRoomListService } from './chat.room.list.service';
 
 @WebSocketGateway({
   cors: {
@@ -27,7 +28,10 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class ChatGateway {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly chatRoomListService: ChatRoomListService,
+  ) {}
   @WebSocketServer()
   server: Server;
 
@@ -126,24 +130,19 @@ export class ChatGateway {
     }); // FIXME 시간.
   }
 
-  // password, 4글자 스트링 | 빈 스트링 - 4글자 스트링이면 비밀번호 추가, 반대의 경우 삭제
-  @SubscribeMessage('chat/password')
-  async handlePassword(@MessageBody() payload: ChatPasswordDto) {
-    if (payload.password === '') {
-      await this.chatService.updateChRemovePassword(
-        payload.myUid,
-        payload.chid,
-      );
-    } else {
-      await this.chatService.updateChSetPassword(
-        payload.myUid,
-        payload.chid,
-        payload.password,
-      );
-    }
-    this.server
-      .to(`channel${payload.chid}`)
-      .emit('chat/password', payload.chid);
+  // updateChannel
+  @SubscribeMessage('chat/updateChannel')
+  async handleUpdateChannel(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: ChannelUpdateDto,
+  ) {
+    console.log(payload);
+    const updateChannel = await this.chatService.updateChannel(
+      client.data.uid,
+      payload,
+    );
+    const ret = await this.chatRoomListService.makeChatRoomType(updateChannel);
+    this.server.to(`channel${payload.chid}`).emit('chat/updateChannel', ret);
   }
 
   // announce, msg: string - 공지
