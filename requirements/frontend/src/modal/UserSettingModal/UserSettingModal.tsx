@@ -198,71 +198,83 @@ function UserSetting() {
       <div className={modalstyles.modal}>
         <div className={modalstyles.modal__blank} onClick={onClick}></div>
         <div className={styles.setting}>
-          <div className={styles.setting__header}>
-            <span className={styles.setting__headertitle}>프로필 수정</span>
+          <div className={modalstyles.modal__header}>
+            <span className={modalstyles.modal__headertitle}>SETTING</span>
             <RedCross onClick={onClick} />
           </div>
           <div className={styles.setting__img}>
             <img src={previewImg} className={styles.setting__preview} />
-            <input type='file' accept='image/*' onChange={onChange} />
-          </div>
-          <div className={styles.setting__displayname}>
+            <label htmlFor='input-img' className={styles.setting__img_label}>
+              UPLOAD IMAGE
+            </label>
             <input
-              type='text'
-              placeholder={userProfile.displayName}
-              value={displayName}
-              maxLength={20}
-              onChange={onChangeName}
-              className={styles.setting__displayname_input}
+              id='input-img'
+              type='file'
+              accept='image/*'
+              onChange={onChange}
+              className={styles.setting__img_input}
             />
-            <button
-              className={styles.setting__displayname_button}
-              onClick={handleDupCheckClick}
-            >
-              중복확인
-            </button>
           </div>
-          <div className={styles.setting__displayname_warning}>
-            {dupCheckStatus}
+          <div className={styles.setting__options}>
+            <div className={styles.setting__title}>NAME</div>
+            <div>
+              <input
+                type='text'
+                placeholder={userProfile.displayName}
+                value={displayName}
+                maxLength={8}
+                onChange={onChangeName}
+                className={styles.setting__displayname_input}
+              />
+              <button
+                className={styles.setting__displayname_button}
+                onClick={handleDupCheckClick}
+              >
+                CHECK
+              </button>
+            </div>
           </div>
-          <div className={styles.setting__2FA}>
-            <div>2차인증</div>
-            <input
-              type='checkbox'
-              checked={isChecked}
-              onChange={onChangeChecked}
-              className={styles.setting__2FA_checkbox}
-            />
+          <div className={styles.setting__warning}>{dupCheckStatus}</div>
+          <div className={styles.setting__options}>
+            <div className={styles.setting__title}>2FA</div>
+            <div className={styles.setting__2FA_div}>
+              <input
+                type='checkbox'
+                checked={isChecked}
+                onChange={onChangeChecked}
+                className={styles.setting__2FA_checkbox}
+              />
+            </div>
           </div>
           {isChecked ? (
             <>
               <img src={qrcode} className={styles.setting__qrcode} />
-              <div className={styles.setting__displayname}>
-                <div className={styles.setting__displayname_warning}>
-                  {qrCheckStatus}
+              <div>
+                <div className={styles.setting__qr_input}>
+                  <input
+                    value={qrPin}
+                    type='password'
+                    placeholder='PIN'
+                    maxLength={6}
+                    className={styles.setting__displayname_input}
+                    onChange={handleQrPinChange}
+                    disabled={qrCheckStatus === 'qr확인완료'}
+                  />
+                  <button
+                    className={styles.setting__displayname_button}
+                    onClick={handlePinCheckClick}
+                    disabled={qrCheckStatus === 'qr확인완료'}
+                  >
+                    SEND
+                  </button>
                 </div>
-                <input
-                  value={qrPin}
-                  type='password'
-                  placeholder='pin'
-                  maxLength={6}
-                  className={styles.setting__displayname_input}
-                  onChange={handleQrPinChange}
-                  disabled={qrCheckStatus === 'qr확인완료'}
-                />
-                <button
-                  className={styles.setting__displayname_button}
-                  onClick={handlePinCheckClick}
-                  disabled={qrCheckStatus === 'qr확인완료'}
-                >
-                  핀 확인
-                </button>
+                <div className={styles.setting__warning}>{qrCheckStatus}</div>
               </div>
             </>
           ) : null}
-          <div className={styles.setting__buttons}>
+          <div className={modalstyles.modal__buttons}>
             <button className={styles.setting__apply} onClick={onSubmitClick}>
-              적용하기
+              APPLY
             </button>
           </div>
         </div>

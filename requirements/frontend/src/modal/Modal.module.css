@@ -50,9 +50,6 @@
 }
 
 .modal__button {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
   align-items: center;
   width: 130px;
   height: 40px;
