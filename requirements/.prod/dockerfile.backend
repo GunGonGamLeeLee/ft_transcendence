@@ -1,4 +1,5 @@
 FROM node:16.17.1-alpine3.15
+COPY ./backend /app
 WORKDIR /app
 COPY ./.prod/entrypoint.backend.sh /
 COPY ./environment/prod.backend.env /

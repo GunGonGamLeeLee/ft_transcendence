@@ -11,4 +11,5 @@ then
 fi
 sed -i "s/plz-input-api-uid/$API_UID/g" /prod.backend.env
 sed -i "s/plz-input-api-secret/$API_SECRET/g" /prod.backend.env
-exec  /app/node_modules/.bin/nest start --watch --preserveWatchOutput
+/app/node_modules/.bin/nest build
+exec /app/node_modules/.bin/nest start

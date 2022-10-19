@@ -1,8 +1,4 @@
 #!/bin/sh
 
-if [ ! -d "/app/node_modules" ]
-then
-	npm i
-fi
-
-exec npm run dev
+/bin/rm -rf /etc/nginx/http.d/default.conf
+exec /usr/sbin/nginx -g "daemon off;";
