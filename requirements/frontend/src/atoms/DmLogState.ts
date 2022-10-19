@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 export interface DmLogType {
-  targetUid: number;
+  toUid: number;
   msg: string;
 }
 

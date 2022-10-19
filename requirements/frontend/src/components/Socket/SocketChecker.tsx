@@ -1,6 +1,7 @@
+import Cookies from 'js-cookie';
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { io } from 'socket.io-client';
 import { authState } from '../../atoms/authState';
 import { pendingFriendState } from '../../atoms/friendListState';
@@ -12,13 +13,12 @@ export const socket = io(`${import.meta.env.VITE_BACKEND_EP}`, {
 
 export function SocketChecker() {
   const navigator = useNavigate();
-  const { token } = useRecoilValue(authState);
+  const [{ token }, setToken] = useRecoilState(authState);
   const [isConnect, setIsConnect] = React.useState<boolean>(
     socket.connected === true,
   );
   const setPendingFriend = useSetRecoilState(pendingFriendState);
   const setGameInviteModal = useSetRecoilState(gameInviteModalState);
-  const resetToken = useResetRecoilState(authState);
   if (token === null) throw new Error();
 
   React.useEffect(() => {
@@ -47,17 +47,18 @@ export function SocketChecker() {
 
       socket.disconnect();
       setIsConnect(false);
-      resetToken();
+      Cookies.remove('token');
+      setToken({ token: null });
       alert('중복 로그인 감지됨!');
       navigator('/login');
     });
 
-    socket.onAny((event, ...args) => {
-      console.debug(`[Log] event: ${event}`);
-      for (let value of args) {
-        console.debug(`[Log] arg: ${value}`);
-      }
-    });
+    // socket.onAny((event, ...args) => {
+    //   console.debug(`[Log] event: ${event}`);
+    //   for (let value of args) {
+    //     console.debug(`[Log] arg: ${value}`);
+    //   }
+    // });
 
     socket.on('dm/status', (input) => {
       setPendingFriend((curr) => [

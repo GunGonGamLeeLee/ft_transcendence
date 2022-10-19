@@ -5,6 +5,7 @@ import { authState } from '../../../atoms/authState';
 import { ChatUserType } from '../../../atoms/chatUserType';
 import { currRoomState, RoomModeType } from '../../../atoms/currRoomState';
 import { RoomType } from '../../../atoms/currRoomState';
+import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './RoomPreview.module.css';
 
 interface RoomPayloadType {
@@ -16,6 +17,7 @@ interface RoomPayloadType {
 export function RoomPreview({ room }: { room: RoomType }) {
   const navigator = useNavigate();
   const setCurrRoom = useSetRecoilState(currRoomState);
+  const { uid: myUid } = useRecoilValue(userProfileState);
   const { token } = useRecoilValue(authState);
   if (token === null) throw new Error();
 
@@ -24,7 +26,7 @@ export function RoomPreview({ room }: { room: RoomType }) {
 
     setCurrRoom(room);
 
-    if (room.mode === RoomModeType.PROTECTED) {
+    if (room.mode === RoomModeType.PROTECTED && room.ownerId !== myUid) {
       navigator('/channel/roomChecker');
       return;
     }

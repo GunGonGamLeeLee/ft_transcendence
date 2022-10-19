@@ -20,6 +20,7 @@ export function DM({ user }: { user: UserDataType }) {
       roomId: `dm${user.uid}`,
       userId: user.uid,
       userDisplayName: user.displayName,
+      imgUri: user.imgUri,
       mode: RoomModeType.DM,
     });
 

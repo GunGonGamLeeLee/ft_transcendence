@@ -12,7 +12,6 @@ import modalstyles from '../Modal.module.css';
 import { Unblock } from './buttons/Unblock';
 import { RedCross } from '../buttons/RedCross';
 import { currRoomState } from '../../atoms/currRoomState';
-import { currRoleState } from '../../atoms/currRoleState';
 import { MatchHistoryList } from './MatchHistoryList';
 import { authState } from '../../atoms/authState';
 import {
@@ -96,7 +95,7 @@ function UserProfile({ user }: { user: UserDataType }) {
             <>
               {currRoom && currRoom.ownerId === userProfile.uid ? (
                 <div className={styles.profile__buttons}>
-                  <InviteRoom />
+                  <InviteRoom uid={user.uid} />
                 </div>
               ) : null}
               <div className={styles.profile__buttons}>
@@ -119,8 +118,4 @@ function UserProfile({ user }: { user: UserDataType }) {
       </div>
     </>
   );
-}
-
-function ProfileButton({ text }: { text: string }) {
-  return <button className={styles.buttons}>{text}</button>;
 }

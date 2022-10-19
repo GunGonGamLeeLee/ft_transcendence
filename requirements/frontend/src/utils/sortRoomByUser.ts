@@ -1,4 +1,4 @@
-import { DmRoomType } from '../atoms/currRoomState';
+import { DmRoomType } from '../atoms/currDmRoomState';
 
 export function sortRoomByUser(
   { userDisplayName: first }: DmRoomType,
