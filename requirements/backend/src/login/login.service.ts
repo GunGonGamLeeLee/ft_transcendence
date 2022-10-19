@@ -103,7 +103,7 @@ export class LoginService {
         uid,
         displayName: displayName,
         imgUri: `http://localhost:4243/img/${uid}.png`,
-        rating: 42,
+        rating: 1000,
         mfaNeed: false,
         qrSecret: authenticator.generateSecret(),
       };
