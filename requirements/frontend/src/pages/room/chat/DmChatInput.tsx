@@ -1,11 +1,13 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currDmRoomState } from '../../../atoms/currDmRoomState';
+import { isScrollRefreshState } from '../../../atoms/isScrollRefresh';
 import { socket } from '../../../components/Socket/SocketChecker';
 import styles from './ChatInput.module.css';
 
 export function DmChatInput() {
   const currDmRoom = useRecoilValue(currDmRoomState);
+  const setIsRefresh = useSetRecoilState(isScrollRefreshState);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,6 +24,8 @@ export function DmChatInput() {
       targetUid: currDmRoom?.userId,
       msg,
     });
+
+    setIsRefresh(true);
 
     form.reset();
   };

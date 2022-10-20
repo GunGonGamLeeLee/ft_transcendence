@@ -5,8 +5,14 @@ import { setRoomModalState } from '../../atoms/modals/setRoomModalState';
 import styles from './SetRoomModal.module.css';
 import modalstyles from '../Modal.module.css';
 import { RedCross } from '../buttons/RedCross';
-import { currRoomState, RoomModeType } from '../../atoms/currRoomState';
+import {
+  currRoomState,
+  RoomModeType,
+  RoomType,
+} from '../../atoms/currRoomState';
 import { authState } from '../../atoms/authState';
+import { getChId } from '../../utils/getChId';
+import { socket } from '../../components/Socket/SocketChecker';
 
 export default function SetRoom() {
   const setsetRoomModal = useSetRecoilState(setRoomModalState);
@@ -37,21 +43,19 @@ export default function SetRoom() {
   const handleChangeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_EP}/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+    socket.emit('chat/updateChannel', {
+      chid: getChId(currRoom?.roomId),
+      chName: title,
+      mode:
+        isPrivate === true
+          ? RoomModeType.PRIVATE
+          : password.length === 0
+          ? RoomModeType.PUBLIC
+          : RoomModeType.PROTECTED,
+      password: password,
+    });
 
-      const newRoomInfo = await response.json();
-
-      setCurrRoom(newRoomInfo);
-    } catch {
-      alert('CHANGE ROOM FAIL');
-    }
+    setsetRoomModal(false);
   };
 
   return (
