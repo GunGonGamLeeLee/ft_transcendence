@@ -251,9 +251,9 @@ export class GameRoomService {
 
     const userGameRoomState: UserGameRoomState = this.makeUserState(state);
 
-    if (state.score1 >= 3) {
+    if (state.score1 >= 7) {
       this.endGame(player1, player2, roomInfo, userGameRoomState);
-    } else if (state.score2 >= 3) {
+    } else if (state.score2 >= 7) {
       this.endGame(player2, player1, roomInfo, userGameRoomState);
     }
 
