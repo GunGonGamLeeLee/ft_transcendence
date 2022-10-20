@@ -31,7 +31,7 @@ export function DmRoomSocket({ children }: { children: React.ReactNode }) {
     return () => {
       socket.off('dm/msg');
     };
-  }, [setDmLog]);
+  }, [setDmLog, blockList]);
 
   return <>{children}</>;
 }

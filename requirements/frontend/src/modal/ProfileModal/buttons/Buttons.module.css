@@ -11,3 +11,8 @@
   background-color: var(--color-2);
   color: var(--color-5);
 }
+
+.buttons:disabled {
+  cursor: not-allowed;
+  background-color: grey;
+}

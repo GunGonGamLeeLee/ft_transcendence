@@ -19,6 +19,7 @@ export function DmChatInput() {
 
     const msg = formData.get('msg');
     if (typeof msg !== 'string') return;
+    if (msg.length === 0) return;
 
     socket.emit('dm/msg', {
       targetUid: currDmRoom?.userId,
@@ -37,6 +38,8 @@ export function DmChatInput() {
           autoComplete='off'
           type='text'
           name='msg'
+          minLength={1}
+          maxLength={512}
           className={styles.chat__input}
           onBlur={({ target }) => target.focus()}
         />
