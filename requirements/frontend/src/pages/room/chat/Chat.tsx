@@ -26,7 +26,7 @@ function LeftChat({
             <img src={user.imgUri} className={styles.chat__img} />
           )}
           {user === undefined ? (
-            'unknown'
+            'UNKNOWN'
           ) : (
             <div className={styles.chat__name}>{user.displayName}</div>
           )}
@@ -82,7 +82,7 @@ export function Chat() {
         ) : (
           <LeftChat
             chat={chat}
-            user={currUserList.find((user) => user.uid === chat.uid)}
+            user={chat.user}
             lastId={tempId}
             key={chat.index}
           />
