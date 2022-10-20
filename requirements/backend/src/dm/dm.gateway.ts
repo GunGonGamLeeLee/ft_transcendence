@@ -52,6 +52,7 @@ export class DmGateway {
     await queryRunner.startTransaction();
     try {
       await this.dmService.addDmLog(
+        queryRunner,
         client.data.uid,
         payload.targetUid,
         payload.msg,

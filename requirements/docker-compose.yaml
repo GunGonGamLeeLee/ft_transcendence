@@ -51,6 +51,8 @@ services:
       - ./database:/database
     networks:
       - net
+    ports:
+      - 4245:4245
     env_file:
       - environment/prod.database.env
 

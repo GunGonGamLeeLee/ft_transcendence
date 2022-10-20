@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { ChannelDto } from '../dto/channel.dto';
 import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
@@ -65,11 +65,15 @@ export class DbChannelService {
     return await this.channelRepo.countBy({ chOwnerId });
   }
 
-  async saveOne(channel: ChannelDto | ChannelEntity, chOwner: UserEntity) {
+  async saveOne(
+    queryRunner: QueryRunner,
+    channel: ChannelDto | ChannelEntity,
+    chOwner: UserEntity,
+  ) {
     if (channel.password !== '')
       channel.password = await this.encryptedPassword(channel.password);
     const ch = this.channelRepo.create({ ...channel, chOwner });
-    return await this.channelRepo.save(ch);
+    return await queryRunner.manager.save(ch);
   }
 
   async updateChannel(body: ChannelUpdateDto): Promise<ChannelEntity> {

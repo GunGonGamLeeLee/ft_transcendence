@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, Not, Repository } from 'typeorm';
+import { Equal, Not, QueryRunner, Repository } from 'typeorm';
 import { UserInChannelDto } from '../dto/user.in.channel.dto';
 import { ChannelEntity, ChannelMode } from '../entity/entity.channel';
 import { UserEntity } from '../entity/entity.user';
@@ -162,6 +162,7 @@ export class DbUserInChannelService {
   }
 
   async saveOne(
+    queryRunner: QueryRunner,
     userInChannel: UserInChannelDto | UserInChannelEntity,
     user: UserEntity,
     channel: ChannelEntity,
@@ -172,7 +173,7 @@ export class DbUserInChannelService {
       channel,
     });
     try {
-      return await this.userInChannelRepo.save(uic);
+      return await queryRunner.manager.save(UserInChannelEntity, uic);
     } catch (err) {
       throw new HttpException(
         '채널에 들어갈 수 없습니다.',
