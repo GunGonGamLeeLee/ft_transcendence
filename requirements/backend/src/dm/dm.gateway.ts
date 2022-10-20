@@ -58,7 +58,9 @@ export class DmGateway {
       );
       await this.dmService.addDmRoom(client.data.uid, payload.targetUid);
       await this.dmService.addDmRoom(payload.targetUid, client.data.uid);
+      await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();

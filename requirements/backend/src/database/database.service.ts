@@ -213,6 +213,7 @@ export class DatabaseService {
       );
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new HttpException('데이터 베이스 오류', 500);
     } finally {
       await queryRunner.release();
@@ -438,6 +439,7 @@ export class DatabaseService {
       await this.dbUserService.updateUserExitGameRoom(uid2);
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();
@@ -530,6 +532,7 @@ export class DatabaseService {
       await this.dbChannelService.deleteOne(chid);
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();
@@ -565,6 +568,7 @@ export class DatabaseService {
       await this.dbUserInChannelService.deleteOne(uid, chid);
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();
@@ -603,6 +607,7 @@ export class DatabaseService {
       }
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();
@@ -618,6 +623,7 @@ export class DatabaseService {
       await this.deleteUserInChannel(targetUid, chid);
       await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       throw new WsException('데이터 베이스 오류');
     } finally {
       await queryRunner.release();
