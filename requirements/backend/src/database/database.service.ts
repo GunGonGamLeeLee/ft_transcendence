@@ -335,7 +335,7 @@ export class DatabaseService {
     if (fromUser.uid === toUser.uid)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
 
-    this.dbDmLogsService.saveOne(queryRunner, dmLog, fromUser, toUser);
+    await this.dbDmLogsService.saveOne(queryRunner, dmLog, fromUser, toUser);
   }
 
   async addMatchHistory(
@@ -463,8 +463,16 @@ export class DatabaseService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      await this.dbUserService.updateUserGameRoom(uid1, roomId);
-      await this.dbUserService.updateUserGameRoom(uid2, roomId);
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid1 },
+        { gameRoom: roomId, status: UserStatus.INGAME },
+      );
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid2 },
+        { gameRoom: roomId, status: UserStatus.INGAME },
+      );
     } catch (e) {
       throw new WsException('데이터 베이스 오류');
     } finally {

@@ -39,7 +39,11 @@ export class ChatService {
   }
 
   async unbanUser(myUid: number, targetUid: number, chid: number) {
-    this.database.unbanUser(myUid, targetUid, chid);
+    try {
+      await this.database.unbanUser(myUid, targetUid, chid);
+    } catch (e) {
+      console.log(e.error);
+    }
   }
 
   async deleteUserInChannel(targetUid: number, chid: number) {
