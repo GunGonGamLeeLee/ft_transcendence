@@ -39,6 +39,9 @@ export class DbChannelService {
 
   async findOne(chid: number) {
     return await this.channelRepo.findOne({
+      relations: {
+        chOwner: true,
+      },
       where: { chid },
     });
   }
