@@ -73,7 +73,7 @@ export class DbChannelService {
     const channel = await this.findOne(body.chid);
     channel.chName = body.chName;
     channel.mode = body.mode;
-    if (channel.password !== '') {
+    if (body.password !== '') {
       channel.password = await this.encryptedPassword(body.password);
     }
     try {
