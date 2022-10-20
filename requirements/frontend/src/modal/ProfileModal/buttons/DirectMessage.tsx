@@ -4,6 +4,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../../atoms/authState';
 import { currDmRoomState } from '../../../atoms/currDmRoomState';
 import { RoomModeType } from '../../../atoms/currRoomState';
+import { DmLogState } from '../../../atoms/DmLogState';
+import { chatProfileModalState } from '../../../atoms/modals/chatProfileModalState';
 import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
 import { UserDataType } from '../../../atoms/userDataType';
 import styles from './Buttons.module.css';
@@ -12,6 +14,8 @@ export function DM({ user }: { user: UserDataType }) {
   const setCurrDmRoom = useSetRecoilState(currDmRoomState);
   const navigator = useNavigate();
   const setUserProfileModal = useSetRecoilState(userProfileModalState);
+  const setChatProfileModal = useSetRecoilState(chatProfileModalState);
+  const setDmLog = useSetRecoilState(DmLogState);
 
   const handleDmClick = async (e: Reaact.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -24,7 +28,9 @@ export function DM({ user }: { user: UserDataType }) {
       mode: RoomModeType.DM,
     });
 
+    setDmLog([]);
     setUserProfileModal(undefined);
+    setChatProfileModal(undefined);
     navigator('/channel/dm');
   };
 

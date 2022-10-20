@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { gameState } from '../../../atoms/gameState';
+import { chatProfileModalState } from '../../../atoms/modals/chatProfileModalState';
+import { userProfileModalState } from '../../../atoms/modals/userProfileModalState';
 import { RedCross } from '../../buttons/RedCross';
 import styles from './Buttons.module.css';
 import modalstyles from './InviteGame.module.css';
 
 export function InviteGame({ uid }: { uid: number }) {
   const [game, setGame] = useRecoilState(gameState);
+  const setUserProfileModal = useSetRecoilState(userProfileModalState);
+  const setChatProfileModal = useSetRecoilState(chatProfileModalState);
   const navigator = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [speed, setSpeed] = useState('1');
@@ -15,6 +19,8 @@ export function InviteGame({ uid }: { uid: number }) {
   const onClick = () => {
     setGame({ mode: 1, Id: uid, speed: parseFloat(speed) });
     setIsOpen(false);
+    setUserProfileModal(undefined);
+    setChatProfileModal(undefined);
     navigator('/game');
   };
 

@@ -23,7 +23,7 @@ export function ChatInput() {
 
     const msg = formData.get('msg');
     if (typeof msg !== 'string') return;
-
+    if (msg.length === 0) return;
     socket.emit('chat/msg', {
       chid: getChId(currRoom.roomId),
       msg,
@@ -42,6 +42,8 @@ export function ChatInput() {
           autoComplete='off'
           type='text'
           name='msg'
+          minLength={1}
+          maxLength={512}
           className={styles.chat__input}
           autoFocus={true}
         />
