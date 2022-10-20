@@ -52,13 +52,7 @@ export class AuthService {
   }
 
   private getToken(client: Socket) {
-    // FIXME 주석 정리 필요!
-    ////////////// postman과 같이 사용할 때 필요한 부분 //////////////
-    let token = client.handshake.headers.token;
-    if (token === undefined) token = client.handshake.auth.token;
-    if (!isString(token)) token = token[0];
-    //////////////////////////////////////////////////////////////////
-    // const { token } = client.handshake.auth; // 실제 사용
+    const { token } = client.handshake.auth;
     return token;
   }
 }
