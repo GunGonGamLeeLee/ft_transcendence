@@ -23,7 +23,6 @@ dotenv.config({
     origin: process.env.FRONTEND,
   },
 })
-@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class DmGateway {
