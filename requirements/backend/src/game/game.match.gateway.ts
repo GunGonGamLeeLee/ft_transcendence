@@ -1,17 +1,14 @@
-import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { UseFilters, UsePipes } from '@nestjs/common';
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';
 import { Socket, Server } from 'socket.io';
 import { GameMatchService } from './game.match.service';
 import { DatabaseService } from 'src/database/database.service';
-import { AuthGuard } from 'src/auth/auth.guard';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
@@ -24,7 +21,6 @@ dotenv.config({
     origin: process.env.FRONTEND,
   },
 })
-@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class GameMatchGateway {

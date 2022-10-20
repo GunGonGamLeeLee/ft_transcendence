@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { UserDto } from '../dto/user.dto';
 import { UserEntity, UserStatus } from '../entity/entity.user';
 
@@ -94,14 +94,17 @@ export class DbUserService {
     });
   }
 
-  async saveOne(userDto: UserDto | UserEntity): Promise<UserEntity> {
+  async saveOne(
+    queryRunner: QueryRunner,
+    userDto: UserDto | UserEntity,
+  ): Promise<UserEntity> {
     const user = this.userRepo.create({
       ...userDto,
       status: UserStatus.OFFLINE,
       gameRoom: '',
     });
     try {
-      return await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
+      return await queryRunner.manager.save(user);
     } catch (err) {
       throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
     }
@@ -138,12 +141,12 @@ export class DbUserService {
     try {
       await this.userRepo.update({ uid }, { displayName });
     } catch (err) {
-      throw new HttpException('already existed name', HttpStatus.FORBIDDEN); // TODO 없는 유저? -> 현재는 무시됨.
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
     }
   }
 
   async updateimgUri(uid: number, imgUri: string) {
-    await this.userRepo.update({ uid }, { imgUri }); // TODO 없는 유저? -> 현재는 무시됨.
+    await this.userRepo.update({ uid }, { imgUri });
   }
 
   async updateRating(uid: number, rating: number) {

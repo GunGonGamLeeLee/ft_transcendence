@@ -3,7 +3,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { WsExceptionFilter } from '../ws.exception.filter';

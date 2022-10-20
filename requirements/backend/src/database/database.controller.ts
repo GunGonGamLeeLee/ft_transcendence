@@ -307,19 +307,19 @@ export class DatabaseController {
     return await this.databaseService.addUserInChannel(body);
   }
 
-  @ApiTags('database/Dm')
-  @ApiOperation({ summary: 'Dm 로그 추가하기' })
-  @Post('add-dm')
-  async addDmLog(@Body() body: DmLogDto) {
-    return await this.databaseService.addDmLog(body);
-  }
+  // @ApiTags('database/Dm')
+  // @ApiOperation({ summary: 'Dm 로그 추가하기' })
+  // @Post('add-dm')
+  // async addDmLog(@Body() body: DmLogDto) {
+  //   return await this.databaseService.addDmLog(body);
+  // }
 
-  @ApiTags('database/MatchHistory')
-  @ApiOperation({ summary: '전적 추가하기' })
-  @Post('add-match-history')
-  async addMatchHistory(@Body() body: MatchHistoryDto) {
-    return await this.databaseService.addMatchHistory(body);
-  }
+  // @ApiTags('database/MatchHistory')
+  // @ApiOperation({ summary: '전적 추가하기' })
+  // @Post('add-match-history')
+  // async addMatchHistory(@Body() body: MatchHistoryDto) {
+  //   return await this.databaseService.addMatchHistory(body);
+  // }
 
   //NOTE - PUT
   @ApiTags('database/User')
@@ -393,7 +393,7 @@ export class DatabaseController {
     );
   }
 
-  @ApiTags('database/Channel') // TODO 수정?
+  @ApiTags('database/Channel')
   @ApiOperation({ summary: '채널 모드 바꾸기' })
   @ApiHeader({
     name: 'mode',
@@ -479,19 +479,19 @@ export class DatabaseController {
     );
   }
 
-  @ApiTags('database/UserInChannel')
-  @ApiOperation({ summary: '채널 안의 유저 밴 풀기' })
-  @ApiHeader({ name: 'chid' })
-  @ApiHeader({ name: 'target_uid' })
-  @ApiHeader({ name: 'my_uid' })
-  @Put('unban-user-in-channel')
-  async unbanUserInChannel(@Headers() header) {
-    return await this.databaseService.unbanUserInChannel(
-      header.my_uid,
-      header.target_uid,
-      header.chid,
-    );
-  }
+  // @ApiTags('database/UserInChannel')
+  // @ApiOperation({ summary: '채널 안의 유저 밴 풀기' })
+  // @ApiHeader({ name: 'chid' })
+  // @ApiHeader({ name: 'target_uid' })
+  // @ApiHeader({ name: 'my_uid' })
+  // @Put('unban-user-in-channel')
+  // async unbanUserInChannel(@Headers() header) {
+  //   return await this.databaseService.unbanUserInChannel(
+  //     header.my_uid,
+  //     header.target_uid,
+  //     header.chid,
+  //   );
+  // }
 
   @ApiTags('database/UserInChannel')
   @ApiOperation({ summary: '채널 안의 유저 역할 바꾸기' })
@@ -521,14 +521,14 @@ export class DatabaseController {
     return await this.databaseService.deleteUser(header.uid);
   }
 
-  @ApiTags('database/Channel')
-  @ApiOperation({ summary: '채널 지우기' })
-  @ApiHeader({ name: 'chid' })
-  @ApiHeader({ name: 'uid' })
-  @Delete('delete-channel')
-  async deleteChannel(@Headers() header) {
-    return await this.databaseService.deleteChannel(header.uid, header.chid);
-  }
+  // @ApiTags('database/Channel')
+  // @ApiOperation({ summary: '채널 지우기' })
+  // @ApiHeader({ name: 'chid' })
+  // @ApiHeader({ name: 'uid' })
+  // @Delete('delete-channel')
+  // async deleteChannel(@Headers() header) {
+  //   return await this.databaseService.deleteChannel(header.uid, header.chid);
+  // }
 
   @ApiTags('database/FriendList')
   @ApiOperation({ summary: '친구 삭제하기' })
@@ -570,17 +570,17 @@ export class DatabaseController {
     return await this.databaseService.deleteBlockAll(header.my_uid);
   }
 
-  @ApiTags('database/UserInChannel')
-  @ApiOperation({ summary: '채널에서 나가기' })
-  @ApiHeader({ name: 'chid' })
-  @ApiHeader({ name: 'uid' })
-  @Delete('delete-user-in-channel')
-  async deleteUserInChannel(@Headers() header) {
-    return await this.databaseService.deleteUserInChannel(
-      +header.uid,
-      +header.chid,
-    );
-  }
+  // @ApiTags('database/UserInChannel')
+  // @ApiOperation({ summary: '채널에서 나가기' })
+  // @ApiHeader({ name: 'chid' })
+  // @ApiHeader({ name: 'uid' })
+  // @Delete('delete-user-in-channel')
+  // async deleteUserInChannel(@Headers() header) {
+  //   return await this.databaseService.deleteUserInChannel(
+  //     +header.uid,
+  //     +header.chid,
+  //   );
+  // }
 
   @ApiTags('database/MatchHistory')
   @ApiOperation({ summary: '모든 전적 삭제' })

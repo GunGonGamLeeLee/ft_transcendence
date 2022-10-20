@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { MatchHistoryDto } from '../dto/match.history.dto';
 import { MatchHistoryEntity } from '../entity/entity.matchhistory.list';
 import { UserEntity } from '../entity/entity.user';
@@ -105,6 +105,7 @@ export class DbMatchHistoryService {
   }
 
   async saveOne(
+    queryRunner: QueryRunner,
     matchHistory: MatchHistoryDto | MatchHistoryEntity,
     winner: UserEntity,
     loser: UserEntity,
@@ -115,7 +116,7 @@ export class DbMatchHistoryService {
       loser,
     });
     try {
-      await this.matchHistoryRepo.save(history);
+      await queryRunner.manager.save(history);
     } catch (err) {
       throw new HttpException('invalid game history', HttpStatus.FORBIDDEN);
     }

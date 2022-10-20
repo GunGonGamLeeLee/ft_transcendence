@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { UserDataChatType } from 'src/chat/chat.room.users.service';
 import { ChannelUpdateDto } from 'src/chat/dto/channel.update.dto';
 import { ProfileType } from 'src/users/dto/profile.type.dto';
 import { ProfileUpdateDto } from 'src/users/dto/profile.update.dto';
 import { UserDataType } from 'src/users/dto/user.data.type.dto';
+import { DataSource, QueryRunner } from 'typeorm';
 import { DbBlockListService } from './db.block.list/db.block.list.service';
 import { DbChannelService } from './db.channel/db.channel.service';
 import { DbDmLogService } from './db.dm.log/db.dm.log.service';
@@ -36,6 +38,7 @@ export class DatabaseService {
     private readonly dbChannelService: DbChannelService,
     private readonly dbUserInChannelService: DbUserInChannelService,
     private readonly dbMatchHistoryService: DbMatchHistoryService,
+    private dataSource: DataSource,
   ) {}
 
   // NOTE list
@@ -194,21 +197,31 @@ export class DatabaseService {
   // NOTE add
 
   async addUser(userDto: UserDto): Promise<void> {
-    // TODO transaction
-    const user = await this.dbUserService.saveOne(userDto);
-    await this.dbChannelService.saveOne(
-      {
-        chName: `dm${user.uid}`,
-        chOwnerId: user.uid,
-        mode: ChannelMode.dm,
-        password: '',
-      },
-      user,
-    );
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user = await this.dbUserService.saveOne(queryRunner, userDto);
+      await this.dbChannelService.saveOne(
+        queryRunner,
+        {
+          chName: `dm${user.uid}`,
+          chOwnerId: user.uid,
+          mode: ChannelMode.dm,
+          password: '',
+        },
+        user,
+      );
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new HttpException('데이터 베이스 오류', 500);
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async addFriend(myUid: number, friendUid: number) {
-    // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(friendUid);
     if (user == null || myUid === friendUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
@@ -220,7 +233,6 @@ export class DatabaseService {
   }
 
   async addBlock(myUid: number, blockUid: number) {
-    // TODO transaction
     const user: UserEntity = await this.dbUserService.findOne(blockUid);
     if (user == null || myUid === blockUid)
       throw new HttpException('user not exist', HttpStatus.NOT_FOUND);
@@ -238,15 +250,35 @@ export class DatabaseService {
         HttpStatus.FORBIDDEN,
       );
     const user = await this.dbUserService.findOne(channelDto.chOwnerId);
-    const channel = await this.dbChannelService.saveOne(channelDto, user);
-    const userInChannelDto: UserInChannelDto = {
-      uid: channelDto.chOwnerId,
-      chid: channel.chid,
-      role: UserRoleInChannel.OWNER,
-      isMute: false,
-      isBan: false,
-    };
-    await this.dbUserInChannelService.saveOne(userInChannelDto, user, channel);
+    const queryRunner = this.dataSource.createQueryRunner();
+    let channel;
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      channel = await this.dbChannelService.saveOne(
+        queryRunner,
+        channelDto,
+        user,
+      );
+      const userInChannelDto: UserInChannelDto = {
+        uid: channelDto.chOwnerId,
+        chid: channel.chid,
+        role: UserRoleInChannel.OWNER,
+        isMute: false,
+        isBan: false,
+      };
+      await this.dbUserInChannelService.saveOne(
+        queryRunner,
+        userInChannelDto,
+        user,
+        channel,
+      );
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
     return channel;
   }
 
@@ -269,12 +301,28 @@ export class DatabaseService {
       }
     }
 
-    const savedUser: UserInChannelEntity =
-      await this.dbUserInChannelService.saveOne(newUser, userInfo, channel);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    let savedUser: UserInChannelEntity;
+    try {
+      savedUser = await this.dbUserInChannelService.saveOne(
+        queryRunner,
+        newUser,
+        userInfo,
+        channel,
+      );
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new HttpException('데이터 베이스 오류', 500);
+    } finally {
+      await queryRunner.release();
+    }
     return { ...savedUser.user, role: savedUser.role };
   }
 
-  async addDmLog(dmLog: DmLogDto) {
+  async addDmLog(queryRunner: QueryRunner, dmLog: DmLogDto) {
     const fromUser: UserEntity = await this.dbUserService.findOne(
       dmLog.fromUid,
     );
@@ -286,10 +334,14 @@ export class DatabaseService {
       );
     if (fromUser.uid === toUser.uid)
       throw new HttpException('잘못된 요청입니다.', HttpStatus.FORBIDDEN);
-    this.dbDmLogsService.saveOne(dmLog, fromUser, toUser);
+
+    await this.dbDmLogsService.saveOne(queryRunner, dmLog, fromUser, toUser);
   }
 
-  async addMatchHistory(matchHistory: MatchHistoryDto) {
+  async addMatchHistory(
+    queryRunner: QueryRunner,
+    matchHistory: MatchHistoryDto,
+  ) {
     // 자기 자신과 경기 할 수 없음
     if (matchHistory.winnerUid === matchHistory.loserUid)
       throw new HttpException('invalid game history', HttpStatus.FORBIDDEN);
@@ -301,6 +353,7 @@ export class DatabaseService {
       matchHistory.loserUid,
     );
     return await this.dbMatchHistoryService.saveOne(
+      queryRunner,
       matchHistory,
       winner,
       loser,
@@ -406,13 +459,49 @@ export class DatabaseService {
   }
 
   async updateUserGameRoom(uid1: number, uid2: number, roomId: string) {
-    await this.dbUserService.updateUserGameRoom(uid1, roomId);
-    await this.dbUserService.updateUserGameRoom(uid2, roomId);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid1 },
+        { gameRoom: roomId, status: UserStatus.INGAME },
+      );
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid2 },
+        { gameRoom: roomId, status: UserStatus.INGAME },
+      );
+    } catch (e) {
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async updateUserExitGameRoom(uid1: number, uid2: number) {
-    await this.dbUserService.updateUserExitGameRoom(uid1);
-    await this.dbUserService.updateUserExitGameRoom(uid2);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid1 },
+        { gameRoom: '', status: UserStatus.ONLINE },
+      );
+      await queryRunner.manager.update(
+        UserEntity,
+        { uid: uid2 },
+        { gameRoom: '', status: UserStatus.ONLINE },
+      );
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async banUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -433,13 +522,22 @@ export class DatabaseService {
     return await this.dbUserInChannelService.muteOne(targetUid, chid);
   }
 
-  async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
+  async unbanUserInChannel(
+    queryRunner: QueryRunner,
+    myUid: number,
+    targetUid: number,
+    chid: number,
+  ) {
     await this.checkPermissionInChannel(
       myUid,
       chid,
       'you can`t unban user in channel.',
     );
-    return await this.dbUserInChannelService.unbanOne(targetUid, chid);
+    return await queryRunner.manager.update(
+      UserInChannelEntity,
+      { uid: targetUid, chid },
+      { isBan: false },
+    );
   }
 
   async unmuteUserInChannel(myUid: number, targetUid: number, chid: number) {
@@ -491,11 +589,10 @@ export class DatabaseService {
     return await this.dbUserService.deleteOne(uid);
   }
 
-  async deleteChannel(uid: number, chid: number) {
+  async deleteChannel(queryRunner: QueryRunner, uid: number, chid: number) {
     await this.checkPermissionInChannel(uid, chid, 'you can`t delete channel.');
-    // TODO 관련 목록 정리
-    await this.dbUserInChannelService.deleteAllOfChannel(chid);
-    return await this.dbChannelService.deleteOne(chid); // TODO 접속해있는 유저들한테 삭제됐다고 정보가 가야하나? -> ㅇㅇ
+    await queryRunner.manager.delete(UserInChannelEntity, { chid });
+    await queryRunner.manager.delete(ChannelEntity, { chid });
   }
 
   async deleteFriendOfUser(myUid: number, friendUid: number) {
@@ -514,13 +611,18 @@ export class DatabaseService {
     return await this.dbBlockListService.deleteAll(uid);
   }
 
-  async deleteUserInChannel(uid: number, chid: number) {
+  async deleteUserInChannel(
+    queryRunner: QueryRunner,
+    uid: number,
+    chid: number,
+  ) {
     const channel = await this.dbChannelService.findOne(chid);
     if (channel == null)
       throw new HttpException('없는 채널입니다.', HttpStatus.NOT_FOUND);
 
-    if (channel.chOwnerId === uid) this.deleteChannel(uid, chid);
-    return await this.dbUserInChannelService.deleteOne(uid, chid);
+    if (channel.chOwnerId === uid)
+      await this.deleteChannel(queryRunner, uid, chid);
+    await queryRunner.manager.delete(UserInChannelEntity, { uid, chid });
   }
 
   async deleteMatchHistory() {
@@ -537,5 +639,52 @@ export class DatabaseService {
       throw new HttpException(`NOT FOUND USER`, HttpStatus.NOT_FOUND);
     if (uic.role === UserRoleInChannel.USER)
       throw new HttpException(msg, HttpStatus.FORBIDDEN);
+  }
+
+  async saveGameResult(
+    matchHistory: MatchHistoryDto,
+    winner: UserEntity,
+    loser: UserEntity,
+  ) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await this.addMatchHistory(queryRunner, matchHistory);
+      if (matchHistory.isRank) {
+        await queryRunner.manager.update(
+          UserEntity,
+          { uid: winner.uid },
+          { rating: winner.rating },
+        );
+        await queryRunner.manager.update(
+          UserEntity,
+          { uid: loser.uid },
+          { rating: loser.rating },
+        );
+      }
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async unbanUser(myUid: number, targetUid: number, chid: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await this.unbanUserInChannel(queryRunner, myUid, targetUid, chid);
+      await this.deleteUserInChannel(queryRunner, targetUid, chid);
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

@@ -114,8 +114,8 @@ export class GameRoomService {
     );
     const roomId = roomInfo.roomId;
 
-    player1.join(roomId);
-    player2.join(roomId);
+    await player1.join(roomId);
+    await player2.join(roomId);
     player1.data = { ...player1.data, roomId: roomId };
     player2.data = { ...player2.data, roomId: roomId };
 
@@ -128,8 +128,8 @@ export class GameRoomService {
       player2.data.uid,
       roomId,
     );
-    this.dmGateway.updateUser(player1.data.uid);
-    this.dmGateway.updateUser(player2.data.uid);
+    await this.dmGateway.updateUser(player1.data.uid);
+    await this.dmGateway.updateUser(player2.data.uid);
     const startState = this.makeStartState(roomInfo);
     player1.emit('game/start', startState);
     player2.emit('game/start', startState);
@@ -144,7 +144,7 @@ export class GameRoomService {
     this.roomInfos[roomId].broadcast = broadcast;
   }
 
-  private endGame(
+  private async endGame(
     winner: Socket,
     loser: Socket,
     roomInfo: GameRoomInfo,
@@ -152,7 +152,10 @@ export class GameRoomService {
   ) {
     const { roomId, player1, player2, crowd, broadcast } = roomInfo;
 
-    this.database.updateUserExitGameRoom(player1.data.uid, player2.data.uid);
+    await this.database.updateUserExitGameRoom(
+      player1.data.uid,
+      player2.data.uid,
+    );
     player1.emit('game/end', userGameRoomState);
     player1.leave(roomId);
     player1.data.roomId = null;
@@ -166,12 +169,16 @@ export class GameRoomService {
     }
     clearInterval(broadcast);
     this.roomInfos[roomId] = null;
-    this.saveResult(winner, loser, roomInfo);
+    await this.saveResult(winner, loser, roomInfo);
   }
 
-  private saveResult(winner: Socket, loser: Socket, roomInfo: GameRoomInfo) {
+  private async saveResult(
+    winner: Socket,
+    loser: Socket,
+    roomInfo: GameRoomInfo,
+  ) {
     const { mode } = roomInfo;
-    this.gameResult.saveResult({
+    await this.gameResult.saveResult({
       winnerUid: winner.data.uid,
       loserUid: loser.data.uid,
       isRank: mode == 0 ? true : false,
@@ -251,9 +258,9 @@ export class GameRoomService {
 
     const userGameRoomState: UserGameRoomState = this.makeUserState(state);
 
-    if (state.score1 >= 3) {
+    if (state.score1 >= 7) {
       this.endGame(player1, player2, roomInfo, userGameRoomState);
-    } else if (state.score2 >= 3) {
+    } else if (state.score2 >= 7) {
       this.endGame(player2, player1, roomInfo, userGameRoomState);
     }
 

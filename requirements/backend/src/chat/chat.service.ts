@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { DatabaseService } from 'src/database/database.service';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 import {
   UserInChannelEntity,
   UserRoleInChannel,
 } from 'src/database/entity/entity.user.in.channel';
+import { DataSource } from 'typeorm';
 import { UserDataChatType } from './chat.room.users.service';
 import { ChannelUpdateDto } from './dto/channel.update.dto';
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private dataSource: DataSource,
+  ) {}
 
   async changeUserRoleInChannel(
     myUid: number,
@@ -33,8 +38,27 @@ export class ChatService {
     await this.database.unmuteUserInChannel(myUid, targetUid, chid);
   }
 
-  async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
-    await this.database.unbanUserInChannel(myUid, targetUid, chid);
+  async unbanUser(myUid: number, targetUid: number, chid: number) {
+    try {
+      await this.database.unbanUser(myUid, targetUid, chid);
+    } catch (e) {
+      console.log(e.error);
+    }
+  }
+
+  async deleteUserInChannel(targetUid: number, chid: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await this.database.deleteUserInChannel(queryRunner, targetUid, chid);
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async updateChannel(uid: number, channelDto: ChannelUpdateDto) {
@@ -47,10 +71,6 @@ export class ChatService {
 
   async updateChSetPassword(myUid: number, chid: number, password: string) {
     await this.database.updateChSetPassword(myUid, chid, password);
-  }
-
-  async deleteUserInChannel(targetUid: number, chid: number) {
-    await this.database.deleteUserInChannel(targetUid, chid);
   }
 
   async addUserInChannel(

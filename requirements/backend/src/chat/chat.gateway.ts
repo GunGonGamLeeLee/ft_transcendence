@@ -1,4 +1,4 @@
-import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { UseFilters, UsePipes } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -16,7 +16,6 @@ import { ChatMessageDto } from './dto/chat.message.dto';
 import { ChannelUpdateDto } from './dto/channel.update.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { ChatRoomListService } from './chat.room.list.service';
 import * as dotenv from 'dotenv';
 
@@ -30,7 +29,6 @@ dotenv.config({
     origin: process.env.FRONTEND,
   },
 })
-@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class ChatGateway {
@@ -100,7 +98,7 @@ export class ChatGateway {
     setTimeout(this.handleDeleteMute.bind(this), 10000, client, {
       targetUid: payload.targetUid,
       chid: payload.chid,
-    }); // FIXME 시간.
+    });
   }
 
   // addBan, uid - ban user
@@ -133,7 +131,7 @@ export class ChatGateway {
     setTimeout(this.handleDeleteBan.bind(this), 10000, client, {
       targetUid: payload.targetUid,
       chid: payload.chid,
-    }); // FIXME 시간.
+    });
   }
 
   // updateChannel
@@ -142,7 +140,6 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: ChannelUpdateDto,
   ) {
-    console.log(payload);
     const updateChannel = await this.chatService.updateChannel(
       client.data.uid,
       payload,
@@ -176,12 +173,11 @@ export class ChatGateway {
   // deleteBan, targetUid - unban user, 위와 같음
   @SubscribeMessage('chat/deleteBan')
   async handleDeleteBan(client: Socket, payload: ChatDeleteStateDto) {
-    await this.chatService.unbanUserInChannel(
+    await this.chatService.unbanUser(
       client.data.uid,
       payload.targetUid,
       payload.chid,
     );
-    await this.chatService.deleteUserInChannel(payload.targetUid, payload.chid);
     console.log(`chat.gateway: handleDeleteBan: unban ${payload.targetUid}`);
     this.server
       .to(`channel${payload.chid}`)

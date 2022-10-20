@@ -13,13 +13,6 @@ export class AppController {
 
   @Get()
   getHello() {
-    // FIXME to delete
-    console.log(process.env.FRONTEND);
-    console.log(process.env.BACKEND);
-    console.log(process.env.API_URI);
-    console.log(process.env.API_UID);
-    console.log(process.env.API_SECRET);
-    // console.log(process.env.);
     return this.appService.getHello();
   }
 }

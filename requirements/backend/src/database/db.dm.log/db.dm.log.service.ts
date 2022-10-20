@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, Repository } from 'typeorm';
+import { Equal, QueryRunner, Repository } from 'typeorm';
 import { DmLogDto } from '../dto/dm.log.dto';
 import { DmLogEntity } from '../entity/entity.dm.log';
 import { UserEntity } from '../entity/entity.user';
@@ -44,6 +44,7 @@ export class DbDmLogService {
   }
 
   async saveOne(
+    queryRunner: QueryRunner,
     directMessage: DmLogDto | DmLogEntity,
     fromUser: UserEntity,
     toUser: UserEntity,
@@ -54,13 +55,12 @@ export class DbDmLogService {
       toUser,
     });
     try {
-      await this.dmLogRepo.save(dm);
+      await queryRunner.manager.save(DmLogEntity, dm);
+      if ((await this.dmLogRepo.count()) > this.maximumLog)
+        await this.deleteExceeded(queryRunner);
     } catch (error) {
       throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    if ((await this.dmLogRepo.count()) > this.maximumLog)
-      await this.deleteExceeded();
   }
 
   async deleteUserAll(uid: number) {
@@ -68,7 +68,7 @@ export class DbDmLogService {
     await this.dmLogRepo.delete({ toUser: { uid: Equal(uid) } });
   }
 
-  private async deleteExceeded() {
+  private async deleteExceeded(queryRunner: QueryRunner) {
     const results = await this.dmLogRepo.find({
       select: {
         index: true,
@@ -79,7 +79,7 @@ export class DbDmLogService {
       skip: this.maximumLog,
     });
     for (const ret of results) {
-      await this.dmLogRepo.delete({ index: ret.index });
+      await queryRunner.manager.delete(DmLogEntity, { index: ret.index });
     }
   }
 }

@@ -5,21 +5,39 @@ import { DatabaseService } from 'src/database/database.service';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
 import { UserStatus } from 'src/database/entity/entity.user';
 import { UserRoleInChannel } from 'src/database/entity/entity.user.in.channel';
+import { DataSource, QueryRunner } from 'typeorm';
 
 @Injectable()
 export class DmService {
   constructor(
     private readonly authService: AuthService,
     private readonly database: DatabaseService,
+    private dataSource: DataSource,
   ) {}
 
-  async addDmLog(fromUid: number, toUid: number, msg: string) {
-    await this.database.addDmLog({
+  async addDmLog(
+    queryRunner: QueryRunner,
+    fromUid: number,
+    toUid: number,
+    msg: string,
+  ) {
+    await this.database.addDmLog(queryRunner, {
       fromUid,
       toUid,
       msg,
       time: new Date(),
     });
+  }
+
+  async addDmRoom(fromUid: number, toUid: number) {
+    const user: UserInChannelDto = {
+      uid: fromUid,
+      chid: (await this.database.findOneDmChannelByOwnerId(toUid)).chid,
+      role: UserRoleInChannel.USER,
+      isMute: false,
+      isBan: false,
+    };
+    await this.database.addUserInChannel(user);
   }
 
   async validateUser(token: string) {
@@ -53,20 +71,20 @@ export class DmService {
     return await this.database.listChannelOfUser(uid);
   }
 
-  async addDmRoom(fromUid: number, toUid: number) {
-    const user: UserInChannelDto = {
-      uid: fromUid,
-      chid: (await this.database.findOneDmChannelByOwnerId(toUid)).chid,
-      role: UserRoleInChannel.USER,
-      isMute: false,
-      isBan: false,
-    };
-    await this.database.addUserInChannel(user);
-  }
-
   async deleteDmRoom(fromUid: number, toUid: number) {
     const targetChid = (await this.database.findOneDmChannelByOwnerId(toUid))
       .chid;
-    await this.database.deleteUserInChannel(fromUid, targetChid);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await this.database.deleteUserInChannel(queryRunner, fromUid, targetChid);
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
