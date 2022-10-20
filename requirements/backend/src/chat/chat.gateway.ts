@@ -176,12 +176,11 @@ export class ChatGateway {
   // deleteBan, targetUid - unban user, 위와 같음
   @SubscribeMessage('chat/deleteBan')
   async handleDeleteBan(client: Socket, payload: ChatDeleteStateDto) {
-    await this.chatService.unbanUserInChannel(
+    await this.chatService.unbanUser(
       client.data.uid,
       payload.targetUid,
       payload.chid,
     );
-    await this.chatService.deleteUserInChannel(payload.targetUid, payload.chid);
     console.log(`chat.gateway: handleDeleteBan: unban ${payload.targetUid}`);
     this.server
       .to(`channel${payload.chid}`)

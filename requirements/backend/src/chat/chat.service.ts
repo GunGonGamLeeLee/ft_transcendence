@@ -33,8 +33,12 @@ export class ChatService {
     await this.database.unmuteUserInChannel(myUid, targetUid, chid);
   }
 
-  async unbanUserInChannel(myUid: number, targetUid: number, chid: number) {
-    await this.database.unbanUserInChannel(myUid, targetUid, chid);
+  async unbanUser(myUid: number, targetUid: number, chid: number) {
+    this.database.unbanUser(myUid, targetUid, chid);
+  }
+
+  async deleteUserInChannel(targetUid: number, chid: number) {
+    await this.database.deleteUserInChannel(targetUid, chid);
   }
 
   async updateChannel(uid: number, channelDto: ChannelUpdateDto) {
@@ -47,10 +51,6 @@ export class ChatService {
 
   async updateChSetPassword(myUid: number, chid: number, password: string) {
     await this.database.updateChSetPassword(myUid, chid, password);
-  }
-
-  async deleteUserInChannel(targetUid: number, chid: number) {
-    await this.database.deleteUserInChannel(targetUid, chid);
   }
 
   async addUserInChannel(

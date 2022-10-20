@@ -14,6 +14,7 @@ import { WsValidationPipe } from '../ws.validation.pipe';
 import { UserEntity } from 'src/database/entity/entity.user';
 import { AuthGuard } from 'src/auth/auth.guard';
 import * as dotenv from 'dotenv';
+import { DataSource } from 'typeorm';
 
 dotenv.config({
   path:
@@ -29,7 +30,10 @@ dotenv.config({
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class DmGateway {
-  constructor(private readonly dmService: DmService) {}
+  constructor(
+    private readonly dmService: DmService,
+    private dataSource: DataSource,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -43,13 +47,22 @@ export class DmGateway {
 
   @SubscribeMessage('dm/msg')
   async handleMsg(client: Socket, payload: DmChatDto) {
-    await this.dmService.addDmLog(
-      client.data.uid,
-      payload.targetUid,
-      payload.msg,
-    );
-    await this.dmService.addDmRoom(client.data.uid, payload.targetUid);
-    await this.dmService.addDmRoom(payload.targetUid, client.data.uid);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await this.dmService.addDmLog(
+        client.data.uid,
+        payload.targetUid,
+        payload.msg,
+      );
+      await this.dmService.addDmRoom(client.data.uid, payload.targetUid);
+      await this.dmService.addDmRoom(payload.targetUid, client.data.uid);
+    } catch (e) {
+      throw new WsException('데이터 베이스 오류');
+    } finally {
+      await queryRunner.release();
+    }
 
     await client.join(`dm${payload.targetUid}`);
     this.server

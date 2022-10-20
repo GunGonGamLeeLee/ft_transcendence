@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { WsException } from '@nestjs/websockets';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
@@ -20,6 +19,17 @@ export class DmService {
       msg,
       time: new Date(),
     });
+  }
+
+  async addDmRoom(fromUid: number, toUid: number) {
+    const user: UserInChannelDto = {
+      uid: fromUid,
+      chid: (await this.database.findOneDmChannelByOwnerId(toUid)).chid,
+      role: UserRoleInChannel.USER,
+      isMute: false,
+      isBan: false,
+    };
+    await this.database.addUserInChannel(user);
   }
 
   async validateUser(token: string) {
@@ -51,17 +61,6 @@ export class DmService {
 
   async getChannelsOfUser(uid: number) {
     return await this.database.listChannelOfUser(uid);
-  }
-
-  async addDmRoom(fromUid: number, toUid: number) {
-    const user: UserInChannelDto = {
-      uid: fromUid,
-      chid: (await this.database.findOneDmChannelByOwnerId(toUid)).chid,
-      role: UserRoleInChannel.USER,
-      isMute: false,
-      isBan: false,
-    };
-    await this.database.addUserInChannel(user);
   }
 
   async deleteDmRoom(fromUid: number, toUid: number) {
