@@ -393,7 +393,7 @@ export class DatabaseController {
     );
   }
 
-  @ApiTags('database/Channel') // TODO 수정?
+  @ApiTags('database/Channel')
   @ApiOperation({ summary: '채널 모드 바꾸기' })
   @ApiHeader({
     name: 'mode',

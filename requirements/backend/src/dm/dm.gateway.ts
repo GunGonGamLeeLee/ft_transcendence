@@ -1,10 +1,8 @@
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { DmChatDto } from './dm.chat.dto';
@@ -33,13 +31,6 @@ export class DmGateway {
 
   @WebSocketServer()
   server: Server;
-
-  @SubscribeMessage('test')
-  handleTest(@MessageBody() data): void {
-    console.log('hey');
-    throw new WsException(data.one);
-    // throw new HttpException(data.one, 400);
-  }
 
   @SubscribeMessage('dm/msg')
   async handleMsg(client: Socket, payload: DmChatDto) {

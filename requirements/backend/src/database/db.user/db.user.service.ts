@@ -101,7 +101,7 @@ export class DbUserService {
       gameRoom: '',
     });
     try {
-      return await this.userRepo.save(user); // TODO 이미 있는 유저? -> 현재는 업데이트 됨.
+      return await this.userRepo.save(user);
     } catch (err) {
       throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
     }
@@ -138,12 +138,12 @@ export class DbUserService {
     try {
       await this.userRepo.update({ uid }, { displayName });
     } catch (err) {
-      throw new HttpException('already existed name', HttpStatus.FORBIDDEN); // TODO 없는 유저? -> 현재는 무시됨.
+      throw new HttpException('already existed name', HttpStatus.FORBIDDEN);
     }
   }
 
   async updateimgUri(uid: number, imgUri: string) {
-    await this.userRepo.update({ uid }, { imgUri }); // TODO 없는 유저? -> 현재는 무시됨.
+    await this.userRepo.update({ uid }, { imgUri });
   }
 
   async updateRating(uid: number, rating: number) {

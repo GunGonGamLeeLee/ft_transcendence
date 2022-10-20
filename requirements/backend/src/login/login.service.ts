@@ -21,7 +21,7 @@ export const redirectUri = process.env.API_URI;
 export const apiUid = process.env.API_UID;
 const apiSecret = process.env.API_SECRET;
 const jwtSecret = process.env.JWT_SECRET;
-const intraApiTokenUri = 'https://api.intra.42.fr/oauth/token'; // TODO env로
+const intraApiTokenUri = 'https://api.intra.42.fr/oauth/token';
 const intraApiMyInfoUri = 'https://api.intra.42.fr/v2/me';
 
 @Injectable()

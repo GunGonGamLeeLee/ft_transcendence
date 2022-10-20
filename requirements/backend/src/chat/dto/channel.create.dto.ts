@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, Length, Max, Min } from 'class-validator';
+import { IsEnum, IsString, Length, Max, Min } from 'class-validator';
 import { ChannelMode } from 'src/database/entity/entity.channel';
 
 export class ChannelCreateDto {
@@ -8,7 +8,7 @@ export class ChannelCreateDto {
   title: string;
 
   @ApiProperty()
-  @IsInt()
+  @IsEnum(ChannelMode)
   @Min(0)
   @Max(2)
   mode: ChannelMode;

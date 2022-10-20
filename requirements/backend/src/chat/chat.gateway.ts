@@ -100,7 +100,7 @@ export class ChatGateway {
     setTimeout(this.handleDeleteMute.bind(this), 10000, client, {
       targetUid: payload.targetUid,
       chid: payload.chid,
-    }); // FIXME 시간.
+    });
   }
 
   // addBan, uid - ban user
@@ -133,7 +133,7 @@ export class ChatGateway {
     setTimeout(this.handleDeleteBan.bind(this), 10000, client, {
       targetUid: payload.targetUid,
       chid: payload.chid,
-    }); // FIXME 시간.
+    });
   }
 
   // updateChannel
