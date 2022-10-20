@@ -39,6 +39,9 @@ export class DbChannelService {
 
   async findOne(chid: number) {
     return await this.channelRepo.findOne({
+      relations: {
+        chOwner: true,
+      },
       where: { chid },
     });
   }
@@ -73,7 +76,7 @@ export class DbChannelService {
     const channel = await this.findOne(body.chid);
     channel.chName = body.chName;
     channel.mode = body.mode;
-    if (channel.password !== '') {
+    if (body.password !== '') {
       channel.password = await this.encryptedPassword(body.password);
     }
     try {

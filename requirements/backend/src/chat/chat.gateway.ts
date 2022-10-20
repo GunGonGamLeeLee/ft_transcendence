@@ -147,7 +147,7 @@ export class ChatGateway {
       client.data.uid,
       payload,
     );
-    const ret = await this.chatRoomListService.makeChatRoomType(updateChannel);
+    const ret = await this.chatRoomListService.getCreatedRoom(updateChannel);
     this.server.to(`channel${payload.chid}`).emit('chat/updateChannel', ret);
   }
 

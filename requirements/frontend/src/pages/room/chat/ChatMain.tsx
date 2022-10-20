@@ -81,10 +81,6 @@ export function ChatMain() {
     }
   }, [isRefresh, currRoom]);
 
-  useInterval(() => {
-    setIsRefresh(true);
-  }, 3000);
-
   return currRoom === null ? null : (
     <>
       <div className={pagestyles.page}>
