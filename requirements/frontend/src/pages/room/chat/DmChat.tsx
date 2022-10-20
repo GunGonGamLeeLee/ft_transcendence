@@ -76,17 +76,17 @@ export function DmChat() {
     });
   }, [currRoom, setIsRefresh]);
 
-  // React.useEffect(() => {
-  //   if (scrollRef.current === null) return;
-  //   if (isRefresh === false) return;
+  React.useEffect(() => {
+    if (scrollRef.current === null) return;
+    if (isRefresh === false) return;
 
-  //   scrollRef.current.scrollIntoView({
-  //     behavior: 'smooth',
-  //     block: 'end',
-  //   });
+    scrollRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
 
-  //   setIsRefresh(false);
-  // }, [scrollRef, dmLog, isRefresh, setIsRefresh]);
+    setIsRefresh(false);
+  }, [scrollRef, dmLog, isRefresh, setIsRefresh]);
 
   let lastId: number | undefined;
   let tempId: number | undefined;

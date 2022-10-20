@@ -16,6 +16,7 @@ export class ChatRoomType {
 export interface DmRoomType {
   roomId: string;
   userId: number;
+  imgUri: string;
   userDisplayName: string;
 }
 
@@ -56,7 +57,7 @@ export class ChatRoomListService {
     const channels = await this.database.listUserDmChannel(uid);
     const roomList: DmRoomType[] = [];
     for (const uic of channels) {
-      const chatRoom = this.makeDmRoomType(uic.channel);
+      const chatRoom = await this.makeDmRoomType(uic.channel);
       roomList.push(chatRoom);
     }
     return roomList;
@@ -99,10 +100,11 @@ export class ChatRoomListService {
     };
   }
 
-  private makeDmRoomType(channel: ChannelEntity): DmRoomType {
+  private async makeDmRoomType(channel: ChannelEntity): Promise<DmRoomType> {
     return {
       roomId: 'channel' + channel.chid,
       userId: channel.chOwner.uid,
+      imgUri: (await this.database.findOneUser(channel.chOwner.uid)).imgUri,
       userDisplayName: channel.chOwner.displayName,
     };
   }

@@ -22,7 +22,7 @@ import { sortUserByName } from '../../utils/sortUserByName';
 
 export function RoomSocket({ children }: { children: React.ReactNode }) {
   const userProfile = useRecoilValue(userProfileState);
-  const setCurrUserList = useSetRecoilState(currUserListState);
+  const [currUserList, setCurrUserList] = useRecoilState(currUserListState);
   const [currMuteList, setCurrMuteList] = useRecoilState(currMuteListState);
   const setCurrBanList = useSetRecoilState(currBanListState);
   const [currRoom, setCurrRoom] = useRecoilState(currRoomState);
@@ -91,7 +91,12 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       ) {
         setCurrChatState((curr) => [
           ...curr,
-          { uid: myUid, msg, index: curr.length },
+          {
+            index: curr.length,
+            uid: myUid,
+            user: currUserList.find((user) => user.uid === myUid),
+            msg: msg,
+          },
         ]);
       }
     });
