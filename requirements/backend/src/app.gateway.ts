@@ -56,7 +56,6 @@ export class AppGateway {
     await this.dmService.updateUserStatus(client.data.uid, UserStatus.OFFLINE);
     await this.dmGateway.updateUser(client.data.uid);
     this.sockets.delete(client.data.uid);
-    // console.log(this.server.of('/').adapter.sids);
   }
 
   private async validateUser(client: Socket) {

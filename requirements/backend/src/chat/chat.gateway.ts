@@ -1,4 +1,4 @@
-import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { UseFilters, UsePipes } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -16,7 +16,6 @@ import { ChatMessageDto } from './dto/chat.message.dto';
 import { ChannelUpdateDto } from './dto/channel.update.dto';
 import { ChatDeleteStateDto } from './dto/chat.delete.state.dto';
 import { UserInChannelDto } from 'src/database/dto/user.in.channel.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { ChatRoomListService } from './chat.room.list.service';
 import * as dotenv from 'dotenv';
 
@@ -30,7 +29,6 @@ dotenv.config({
     origin: process.env.FRONTEND,
   },
 })
-@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class ChatGateway {
@@ -142,7 +140,6 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: ChannelUpdateDto,
   ) {
-    console.log(payload);
     const updateChannel = await this.chatService.updateChannel(
       client.data.uid,
       payload,

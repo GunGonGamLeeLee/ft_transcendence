@@ -1,4 +1,4 @@
-import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { UseFilters, UsePipes } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
@@ -12,7 +12,6 @@ import { WsExceptionFilter } from '../ws.exception.filter';
 import { DmService } from './dm.service';
 import { WsValidationPipe } from '../ws.validation.pipe';
 import { UserEntity } from 'src/database/entity/entity.user';
-import { AuthGuard } from 'src/auth/auth.guard';
 import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
@@ -26,7 +25,6 @@ dotenv.config({
     origin: process.env.FRONTEND,
   },
 })
-@UseGuards(AuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 export class DmGateway {
@@ -37,13 +35,6 @@ export class DmGateway {
 
   @WebSocketServer()
   server: Server;
-
-  @SubscribeMessage('test')
-  handleTest(@MessageBody() data): void {
-    console.log('hey');
-    throw new WsException(data.one);
-    // throw new HttpException(data.one, 400);
-  }
 
   @SubscribeMessage('dm/msg')
   async handleMsg(client: Socket, payload: DmChatDto) {
