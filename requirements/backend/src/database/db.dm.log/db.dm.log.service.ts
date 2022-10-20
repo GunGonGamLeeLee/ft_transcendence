@@ -12,6 +12,8 @@ export class DbDmLogService {
     private dmLogRepo: Repository<DmLogEntity>,
   ) {}
 
+  private maximumLog = 100;
+
   async findAll() {
     return await this.dmLogRepo.find();
   }
@@ -34,6 +36,9 @@ export class DbDmLogService {
           toUid: fromUid,
         },
       ],
+      order: {
+        index: 'asc',
+      },
     });
     return msg;
   }
@@ -43,7 +48,7 @@ export class DbDmLogService {
     fromUser: UserEntity,
     toUser: UserEntity,
   ) {
-    const dm = await this.dmLogRepo.create({
+    const dm = this.dmLogRepo.create({
       ...directMessage,
       fromUser,
       toUser,
@@ -53,10 +58,28 @@ export class DbDmLogService {
     } catch (error) {
       throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    if ((await this.dmLogRepo.count()) > this.maximumLog)
+      await this.deleteExceeded();
   }
 
   async deleteUserAll(uid: number) {
     await this.dmLogRepo.delete({ fromUser: { uid: Equal(uid) } });
     await this.dmLogRepo.delete({ toUser: { uid: Equal(uid) } });
+  }
+
+  private async deleteExceeded() {
+    const results = await this.dmLogRepo.find({
+      select: {
+        index: true,
+      },
+      order: {
+        index: 'desc',
+      },
+      skip: this.maximumLog,
+    });
+    for (const ret of results) {
+      await this.dmLogRepo.delete({ index: ret.index });
+    }
   }
 }
