@@ -21,7 +21,7 @@ import { UserDataType } from '../../../atoms/userDataType';
 import { getChId } from '../../../utils/getChId';
 import { authState } from '../../../atoms/authState';
 import { useFetch } from '../../../hooks/useFetch';
-import { ChatUserType } from '../../../atoms/chatUserType';
+import { ChatUserType, RoleType } from '../../../atoms/chatUserType';
 import { useInterval } from '../../../hooks/useInterval';
 import { currUserCountState } from '../../../atoms/currUserCount';
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,6 +33,7 @@ export function ChatMain() {
   const setCurrMuteList = useSetRecoilState(currMuteListState);
   const setCurrBanList = useSetRecoilState(currBanListState);
   const setCurrUserCount = useSetRecoilState(currUserCountState);
+  const currRole = useRecoilValue(currRoleState);
   const [isRefresh, setIsRefresh] = React.useState<boolean>(true);
   const fetcher = useFetch();
   const navigator = useNavigate();
@@ -90,7 +91,7 @@ export function ChatMain() {
         <div className={pagestyles.page__header}>
           <BackRoomButton to='/channel' />
           <div className={styles.chatmain__icons}>
-            {currRoom !== null && userProfile.uid === currRoom.ownerId ? (
+            {currRoom !== null && currRole !== RoleType.USER ? (
               <SetRoomButton />
             ) : null}
             <LeaveRoomButton user={userProfile} room={currRoom} />

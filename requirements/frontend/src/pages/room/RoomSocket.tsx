@@ -10,6 +10,7 @@ import {
   currMuteListState,
   currRoomState,
   currUserListState,
+  RoomType,
 } from '../../atoms/currRoomState';
 import { currUserCountState } from '../../atoms/currUserCount';
 import { chatProfileModalState } from '../../atoms/modals/chatProfileModalState';
@@ -146,6 +147,10 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       setCurrBanList((curr) => curr.filter((uid) => uid !== targetUid));
     });
 
+    socket.on('chat/updateChannel', (newRoomInfo: RoomType) => {
+      setCurrRoom(newRoomInfo);
+    });
+
     return () => {
       socket.emit('leave', { uid: userProfile.uid });
 
@@ -159,6 +164,7 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
       // socket.off('chat/announce');
       socket.off('chat/deleteMute');
       socket.off('chat/deleteBan');
+      socket.off('chat/updateChannel');
     };
   }, [
     userProfile,

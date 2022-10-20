@@ -1,6 +1,7 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currRoomState } from '../../../atoms/currRoomState';
+import { isScrollRefreshState } from '../../../atoms/isScrollRefresh';
 import { userProfileState } from '../../../atoms/userProfileState';
 import { socket } from '../../../components/Socket/SocketChecker';
 import { getChId } from '../../../utils/getChId';
@@ -8,6 +9,7 @@ import styles from './ChatInput.module.css';
 
 export function ChatInput() {
   const { uid } = useRecoilValue(userProfileState);
+  const setIsRefresh = useSetRecoilState(isScrollRefreshState);
   const currRoom = useRecoilValue(currRoomState);
   if (currRoom === null) throw new Error();
 
@@ -27,6 +29,8 @@ export function ChatInput() {
       msg,
       myUid: uid,
     });
+
+    setIsRefresh(true);
 
     form.reset();
   };

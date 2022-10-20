@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { ChatUserType } from '../../../atoms/chatUserType';
 import { ChatLogType, currChatState } from '../../../atoms/currChatState';
 import { currUserListState } from '../../../atoms/currRoomState';
+import { isScrollRefreshState } from '../../../atoms/isScrollRefresh';
 import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './Chat.module.css';
 
@@ -55,16 +56,19 @@ export function Chat() {
   const currUserList = useRecoilValue(currUserListState);
   const currChat = useRecoilValue(currChatState);
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [isRefresh, setIsRefresh] = useRecoilState(isScrollRefreshState);
 
   React.useEffect(() => {
     if (scrollRef.current === null) return;
-    if (currChat.slice(-1)[0]?.uid !== myUid) return;
+    if (isRefresh === false) return;
 
     scrollRef.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
     });
-  }, [scrollRef, currChat]);
+
+    setIsRefresh(false);
+  }, [scrollRef, currChat, isRefresh, setIsRefresh]);
 
   let lastId: number | undefined;
   let tempId: number | undefined;

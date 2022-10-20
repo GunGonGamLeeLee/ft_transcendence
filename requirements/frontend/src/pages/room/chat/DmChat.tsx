@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { currDmRoomState } from '../../../atoms/currDmRoomState';
 import { DmLogState, DmLogType } from '../../../atoms/DmLogState';
 import { friendListState } from '../../../atoms/friendListState';
+import { isScrollRefreshState } from '../../../atoms/isScrollRefresh';
 import { UserDataType } from '../../../atoms/userDataType';
 import { userProfileState } from '../../../atoms/userProfileState';
 import styles from './Chat.module.css';
@@ -57,7 +58,7 @@ export function DmChat() {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const userProfile = useRecoilValue(userProfileState);
   const [currRoom, setCurrDmRoom] = useRecoilState(currDmRoomState);
-  const [isEnter, setIsEnter] = React.useState<boolean>(true);
+  const [isRefresh, setIsRefresh] = useRecoilState(isScrollRefreshState);
   const navigator = useNavigate();
 
   React.useEffect(() => {
@@ -73,21 +74,19 @@ export function DmChat() {
         return;
       }
     });
-  }, [currRoom]);
+  }, [currRoom, setIsRefresh]);
 
-  React.useEffect(() => {
-    if (scrollRef.current === null) return;
-    if (dmLog.slice(-1)[0]?.toUid === myUid && isEnter === false) return;
+  // React.useEffect(() => {
+  //   if (scrollRef.current === null) return;
+  //   if (isRefresh === false) return;
 
-    scrollRef.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
+  //   scrollRef.current.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'end',
+  //   });
 
-    if (isEnter === true) {
-      setIsEnter(false);
-    }
-  }, [scrollRef, dmLog, isEnter]);
+  //   setIsRefresh(false);
+  // }, [scrollRef, dmLog, isRefresh, setIsRefresh]);
 
   let lastId: number | undefined;
   let tempId: number | undefined;
