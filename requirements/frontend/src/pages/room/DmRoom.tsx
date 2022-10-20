@@ -32,16 +32,6 @@ export function DmRoom() {
             'GET',
             `dm/log?target_uid=${currDmRoom?.userId}`,
           );
-
-        setCurrDmRoom((curr) => {
-          return {
-            userDisplayName: target.displayName,
-            imgUri: target.imgUri,
-            userId: target.uid,
-            roomId: curr?.roomId || 'error',
-            mode: curr?.mode || RoomModeType.DM,
-          };
-        });
         setDmLog(logs);
       } catch {
         throw new Error();
@@ -68,6 +58,7 @@ export function DmRoom() {
         return;
       }
 
+      setDmLog([]);
       setCurrDmRoom(null);
       setRefreshChannelList(true);
     };
