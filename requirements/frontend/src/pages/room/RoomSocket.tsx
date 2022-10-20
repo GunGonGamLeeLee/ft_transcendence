@@ -157,7 +157,7 @@ export function RoomSocket({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
-      socket.emit('leave', { uid: userProfile.uid });
+      // socket.emit('leave', { uid: userProfile.uid });
 
       socket.off('chat/addUserInChannel');
       socket.off('deleteUserInChannel');
