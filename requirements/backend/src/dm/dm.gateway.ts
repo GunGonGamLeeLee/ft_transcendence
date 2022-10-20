@@ -72,8 +72,8 @@ export class DmGateway {
 
   async updateUser(uid: number) {
     const user = await this.dmService.getUser(uid);
-    this.updateUserToFriends(user);
-    this.updateUserToChannels(user);
+    await this.updateUserToFriends(user);
+    await this.updateUserToChannels(user);
   }
 
   private async updateUserToFriends(user: UserEntity) {
